@@ -10,7 +10,7 @@ public class NewsViewModel extends ViewModel {
 
     public NewsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("fuck you");
+        mText.setValue("fuck gpc");
     }
 
     public LiveData<String> getText() {
