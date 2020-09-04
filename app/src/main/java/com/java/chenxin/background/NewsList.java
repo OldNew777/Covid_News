@@ -25,22 +25,24 @@ public class NewsList {
     public List<NewsPiece> getNewsList(){
         return _list;
     }
-    public NewsList(JSONObject jsonObject){
+    public NewsList(JSONObject jsonObject, String str){
         if(jsonObject == null){
             return;
         }
         try {
-            JSONObject pagination = (JSONObject) jsonObject.get("pagination");
-            _list = new ArrayList<NewsPiece>();
-            _total = pagination.getInt("total");
-            _page = pagination.getInt("page");
-            _size = pagination.getInt("size");
+            if(str.equals("paper")) {
+                JSONObject pagination = (JSONObject) jsonObject.get("pagination");
+                _list = new ArrayList<NewsPiece>();
+                _total = pagination.getInt("total");
+                _page = pagination.getInt("page");
+                _size = pagination.getInt("size");
 //            System.out.println(_total);
-            JSONArray jsonArray = (JSONArray) jsonObject.get("data");
+                JSONArray jsonArray = (JSONArray) jsonObject.get("data");
 //            System.out.println(jsonArray.toString());
-            for(int i = 0; i < jsonArray.length(); i ++){
-                NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i));
-                _list.add(tmpPiece);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i));
+                    _list.add(tmpPiece);
+                }
             }
         }catch (JSONException e){
             e.printStackTrace();

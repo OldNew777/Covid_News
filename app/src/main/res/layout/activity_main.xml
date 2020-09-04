@@ -24,8 +24,26 @@
             android:id="@+id/button1"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:text="connect"
-            ></Button>
+            android:text="普通"
+            >
+
+        </Button>
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="下拉"
+            >
+
+        </Button>
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="上拉"
+            >
+
+        </Button>
         <TextView
             android:id="@+id/textview1"
             android:layout_width="match_parent"

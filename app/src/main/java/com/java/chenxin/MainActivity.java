@@ -35,15 +35,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-        Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(this);
+        Button button1 = (Button) findViewById(R.id.button1);
+        Button button2 = (Button) findViewById(R.id.button2);
+        Button button3 = (Button) findViewById(R.id.button3);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+
         textView = (TextView) findViewById(R.id.textview1);
 
     }
     public void onClick(View view){
         if(view.getId() == R.id.button1){
             sendGet();
-//            sendGet2();
+
+        }
+        else if(view.getId() == R.id.button2){
+            sendGet1();
+        }
+        else if(view.getId() == R.id.button3){
+            sendGet2();
         }
     }
     private void sendGet1() {
@@ -52,10 +63,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
 //                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    NewsList list = NetWorkServer.viewNewExcute("all");
-                    System.out.println("1: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
-//                    list.merge(NetWorkServer.getInstance().viewOldExcute("all"));
-//                    System.out.println("2: " + NetWorkServer.getInstance().getPageNum() + " "+ NetWorkServer.getInstance().getCount());
+                    NewsList list = NetWorkServer.viewNewExcute("paper");
+                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                    showResponse(list.getNewsList().get(0).getTitle());
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -70,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
 //                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    NewsList list = NetWorkServer.excute();
-                    showResponse(list.getNewsList().toString());
+                    NewsList list = NetWorkServer.excute("paper");
+                    showResponse(list.getNewsList().get(0).getTitle());
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -86,11 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
 //                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    NetWorkServer.getInstance().viewOldExcute("all");
-                    System.out.println("3: " + NetWorkServer.getInstance().getPageNum() + " " + NetWorkServer.getInstance().getCount());
-                    NetWorkServer.getInstance().viewOldExcute("all");
-                    System.out.println("4: " + NetWorkServer.getInstance().getPageNum() + " " + NetWorkServer.getInstance().getCount());
-
+                    NewsList list = NetWorkServer.viewOldExcute("paper");
+                    System.out.println("上拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                    showResponse(list.getNewsList().get(0).getTitle());
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -99,14 +107,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-    private void showResponse(final String response)
-    {
+    private void showResponse(final String response) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 textView.setText(response);
             }
         });
-    }
 
+    }
 }

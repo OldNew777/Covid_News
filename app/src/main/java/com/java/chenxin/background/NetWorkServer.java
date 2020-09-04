@@ -24,7 +24,7 @@ import okhttp3.Response;
 
 public class NetWorkServer {
     private static int _count = 0;
-    private static int _pageNum = 0;
+    private static int _pageNum = 100;
     private final static int _SIZE = 5;
     private static NetWorkServer _netWorkServer = new NetWorkServer();
     public static int getCount(){
@@ -39,7 +39,7 @@ public class NetWorkServer {
     private NetWorkServer(){
 
     }
-    public static NewsList excute() throws JSONException{
+    public static NewsList excute(String type){
         OkHttpClient okHttpClient = new OkHttpClient();
         final Request request = new Request.Builder().url("https://covid-dashboard.aminer.cn/api/events/list?type=paper&page=1&size=5").get().build();
         final Call call = okHttpClient.newCall(request);
@@ -47,12 +47,14 @@ public class NetWorkServer {
         try {
             Response response = call.execute();
             msg += response.body().string();
-        } catch (IOException e) {
-            msg+=e.toString();
+            JSONObject jsonObject = new JSONObject(msg);
+            return new NewsList(jsonObject,type);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 //        JSONSwitcher.saveToSDCard(msg);
-        JSONObject jsonObject =new JSONObject(msg);
-        return new NewsList(jsonObject);
+
+        return null;
     }
     public static NewsList viewOldExcute(String type){
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -77,7 +79,7 @@ public class NetWorkServer {
         if(jsonObject == null){
             return null;
         }
-        return new NewsList(jsonObject);
+        return new NewsList(jsonObject, type);
     }
     public static NewsList viewNewExcute(String type){
 
@@ -110,9 +112,10 @@ public class NetWorkServer {
                 response = ccall.execute();
                 msg += response.body().string();
                 jsonObject = new JSONObject(msg);
-                return new NewsList(jsonObject);
+                return new NewsList(jsonObject, type);
             }
             else{//打印倒数两页
+                _count ++;
                 String url1 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - 1) + "&size=" + _SIZE;
                 final Request request1 = new Request.Builder().url(url1).get().build();
                 final Call call1 = okHttpClient.newCall(request1);
@@ -120,7 +123,7 @@ public class NetWorkServer {
                 response = call1.execute();
                 msg += response.body().string();
                 jsonObject = new JSONObject(msg);
-                NewsList list1 = new NewsList(jsonObject);
+                NewsList list1 = new NewsList(jsonObject, type);
 
                 String url2 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum) + "&size=" + _SIZE;
                 final Request request2 = new Request.Builder().url(url2).get().build();
@@ -129,7 +132,7 @@ public class NetWorkServer {
                 response = call2.execute();
                 msg += response.body().string();
                 jsonObject = new JSONObject(msg);
-                NewsList list2 = new NewsList(jsonObject);
+                NewsList list2 = new NewsList(jsonObject, type);
                 list1.merge(list2);
                 return list1;
             }

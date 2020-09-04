@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.Vector;
 
 public class NewsPiece {
-    private String _id, _title, _date, _content, _source;
-    private double _influence;
+    private String _id = "", _title = "", _date = "", _content = "", _source = "";
+    private double _influence = -1.0;
     private NewsType _type;
-    private Vector<String> _authors = new Vector<String>(), _region = new Vector<String>();
+    private Vector<String> _authors = null, _region = null;
     public String getTitle(){
         return _title;
     }
@@ -61,32 +61,63 @@ public class NewsPiece {
             return;
         }
         System.out.println(jsonObject.toString());
-        try{
+        try {
             _id = jsonObject.getString("_id");
-//            System.out.println("id");
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             _title = jsonObject.getString("title");
-//            System.out.println("title");
-
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             _content = jsonObject.getString("content");
-//            System.out.println("content");
-
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             _date = jsonObject.getString("date");
-//            System.out.println("date");
-
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             _source = jsonObject.getString("source");
-//            System.out.println("source");
-
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             _influence = jsonObject.getDouble("influence");
-            System.out.println("influence: " + _influence);
-
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             JSONArray authorArray = jsonObject.getJSONArray("authors");
+            _authors = new Vector<String>();
             for(int i = 0; i < authorArray.length(); i++){
                 _authors.add(authorArray.getString(i));
             }
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try {
             JSONArray regionArray = jsonObject.getJSONArray("regionIDs");
+            _region = new Vector<String>();
             for(int i = 0; i < regionArray.length(); i++){
                 _region.add(regionArray.getString(i));
             }
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        try{
             String tmps = jsonObject.getString("type");
             if(tmps.equals("paper")){
                 _type = NewsType.PAPER;
@@ -94,11 +125,13 @@ public class NewsPiece {
             else{
                 _type = NewsType.NEWS;
             }
-            System.out.println(_id + " " + _title);
         }
-        catch (JSONException e){
+        catch(JSONException e){
             e.printStackTrace();
         }
+
+        System.out.println(_id + " " + _title);
+
 
     }
 
