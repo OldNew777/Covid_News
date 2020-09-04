@@ -6,6 +6,7 @@ import android.widget.TextView;
 //import com.java.chenxin.background.T;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.java.chenxin.background.JSONProcesser;
+import com.java.chenxin.background.NewsList;
 import com.java.chenxin.background.Test;
 import com.java.chenxin.background.NetWorkServer;
 
@@ -14,6 +15,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     TextView textView;
@@ -46,9 +50,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 NetWorkServer netWorkServer = new NetWorkServer();
-                String tmp = netWorkServer.excute();
-                showResponse(tmp);
-                JSONProcesser.saveToSDCard(this, "newsList", tmp);
+                try{
+                    JSONObject tmp = netWorkServer.excute();
+                    if(tmp == null){
+                        showResponse("null error");
+                    }
+                    showResponse(tmp.toString());
+                    NewsList list = new NewsList(tmp);
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
+
             }
         }).start();
     }

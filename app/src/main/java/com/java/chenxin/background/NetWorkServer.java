@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Environment;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,11 +25,12 @@ public class NetWorkServer {
     private String _url;
     public NetWorkServer(String url){
         _url = url;
+//        _url = "https://covid-dashboard.aminer.cn/api/events/list?type=all&page=5&size=20";
     }
     public NetWorkServer(){}
-    public String excute(){
+    public JSONObject excute() throws JSONException{
         OkHttpClient okHttpClient = new OkHttpClient();
-        final Request request = new Request.Builder().url(_url).get().build();
+        final Request request = new Request.Builder().url("https://covid-dashboard.aminer.cn/api/events/list?type=paper&page=1&size=5").get().build();
         final Call call = okHttpClient.newCall(request);
         String msg = "";
         try {
@@ -36,6 +40,7 @@ public class NetWorkServer {
             msg+=e.toString();
         }
 //        JSONSwitcher.saveToSDCard(msg);
-        return msg;
+        JSONObject jsonObject =new JSONObject(msg);
+        return jsonObject;
     }
 }

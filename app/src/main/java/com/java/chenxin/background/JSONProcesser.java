@@ -14,7 +14,7 @@ public class JSONProcesser {
 //    public JSONProcesser(String type){
 //        dir = new File(Environment.getExternalStorageDirectory() + "/." + type + "/json/");
 //    }
-    public static void saveToSDCard(Activity mActivity, String filename, String content){
+    public static void saveJSON(Activity mActivity, String filename, String content){
         String en = Environment.getExternalStorageState();
         //获取SDCard状态,如果SDCard插入了手机且为非写保护状态
         if (en.equals(Environment.MEDIA_MOUNTED)) {
