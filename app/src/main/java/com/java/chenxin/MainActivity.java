@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.TextView;
 //import com.java.chenxin.background.T;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.java.chenxin.background.JSONProcesser;
 import com.java.chenxin.background.Test;
 import com.java.chenxin.background.NetWorkServer;
 
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 NetWorkServer netWorkServer = new NetWorkServer();
-                showResponse(netWorkServer.excute());
+                String tmp = netWorkServer.excute();
+                showResponse(tmp);
+                JSONProcesser.saveToSDCard(this, "newsList", tmp);
             }
         }).start();
     }
