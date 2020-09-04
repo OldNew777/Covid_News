@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_news">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_news"
         android:name="com.java.chenxin.ui.news.NewsFragment"
         android:label="@string/title_news"
         tools:layout="@layout/fragment_news" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.java.chenxin.ui.datasection.DataFragment"
+        android:id="@+id/navigation_data"
+        android:name="com.java.chenxin.ui.data.DataFragment"
         android:label="@string/title_data"
         tools:layout="@layout/fragment_data" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_scholar"
         android:name="com.java.chenxin.ui.scholar.ScholarFragment"
         android:label="@string/title_extra"
         tools:layout="@layout/fragment_scholar" />
