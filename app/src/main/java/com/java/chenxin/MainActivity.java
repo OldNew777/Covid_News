@@ -43,22 +43,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view){
         if(view.getId() == R.id.button1){
             sendGet();
+//            sendGet2();
         }
+    }
+    private void sendGet1() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                NetWorkServer netWorkServer = new NetWorkServer();
+                try{
+                    NewsList list = NetWorkServer.viewNewExcute("all");
+                    System.out.println("1: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+//                    list.merge(NetWorkServer.getInstance().viewOldExcute("all"));
+//                    System.out.println("2: " + NetWorkServer.getInstance().getPageNum() + " "+ NetWorkServer.getInstance().getCount());
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
     }
     private void sendGet() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                NetWorkServer netWorkServer = new NetWorkServer();
+//                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    JSONObject tmp = netWorkServer.excute();
-                    if(tmp == null){
-                        showResponse("null error");
-                    }
-                    showResponse(tmp.toString());
-                    NewsList list = new NewsList(tmp);
+                    NewsList list = NetWorkServer.excute();
+                    showResponse(list.getNewsList().toString());
                 }
-                catch (JSONException e){
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+    }
+    private void sendGet2() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                NetWorkServer netWorkServer = new NetWorkServer();
+                try{
+                    NetWorkServer.getInstance().viewOldExcute("all");
+                    System.out.println("3: " + NetWorkServer.getInstance().getPageNum() + " " + NetWorkServer.getInstance().getCount());
+                    NetWorkServer.getInstance().viewOldExcute("all");
+                    System.out.println("4: " + NetWorkServer.getInstance().getPageNum() + " " + NetWorkServer.getInstance().getCount());
+
+                }
+                catch (Exception e){
                     e.printStackTrace();
                 }
 
