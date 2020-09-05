@@ -28,6 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView textView;
     String str = "not changed";
     NewsList list = null;
+    String type = "news";
+    String searchContext = "北京";
+    Button button1 = (Button) findViewById(R.id.button1);
+
     Observer<NewsList> observer1 = new Observer<NewsList>() {
         @Override
         public void onSubscribe(Disposable d) {
@@ -95,14 +99,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sendGet();
         }
         else if(view.getId() == R.id.button2){
-            NetWorkServer.reFresh(observer1);
+            NetWorkServer.reFresh(observer1, type);
         }
         else if(view.getId() == R.id.button3){
-            NetWorkServer.showOld(observer1);
+            NetWorkServer.showOld(observer1, type);
         }
         else if(view.getId() == R.id.button4){
-            System.out.println("search click");
-            search();
+            NetWorkServer.search(observer1, searchContext,type);
         }
         else if(view.getId() == R.id.button5){
             searchRefresh();
@@ -153,27 +156,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-    private void sendGet1() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-//                NetWorkServer netWorkServer = new NetWorkServer();
-                try{
-                    NewsList list = NetWorkServer.viewNewExcuteNew("news");
-                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
-                    String msg = "";
-                    for(int i = 0; i < list.getNewsList().size(); i ++){
-                        msg += list.getNewsList().get(i).getTitle() + "\n";
-                    }
-                    showResponse(msg);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-    }
+//    private void sendGet1() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+////                NetWorkServer netWorkServer = new NetWorkServer();
+//                try{
+//                    NewsList list = NetWorkServer.viewNewExcuteNew("news");
+//                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+//                    String msg = "";
+//                    for(int i = 0; i < list.getNewsList().size(); i ++){
+//                        msg += list.getNewsList().get(i).getTitle() + "\n";
+//                    }
+//                    showResponse(msg);
+//                }
+//                catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }).start();
+//    }
     private void sendGet() {
         new Thread(new Runnable() {
             @Override
@@ -189,24 +192,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).start();
     }
-    private void sendGet2() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-//                NetWorkServer netWorkServer = new NetWorkServer();
-                try{
-                    NewsList list = NetWorkServer.viewOldExcuteNew("news");
-                    System.out.println("上拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
-
-//                    showResponse(msg);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-    }
+//    private void sendGet2() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+////                NetWorkServer netWorkServer = new NetWorkServer();
+//                try{
+//                    NewsList list = NetWorkServer.viewOldExcuteNew("news");
+//                    System.out.println("上拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+//
+////                    showResponse(msg);
+//                }
+//                catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }).start();
+//    }
     private void showResponse(final String response) {
         runOnUiThread(new Runnable() {
             @Override
