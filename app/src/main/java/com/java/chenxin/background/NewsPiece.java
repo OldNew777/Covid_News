@@ -14,6 +14,7 @@ public class NewsPiece {
     private double _influence = -1.0;
     private NewsType _type;
     private Vector<String> _authors = null, _region = null;
+
     public String getTitle(){
         return _title;
     }

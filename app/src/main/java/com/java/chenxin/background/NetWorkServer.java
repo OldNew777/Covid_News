@@ -16,7 +16,7 @@ public class NetWorkServer {
     private static int _readPage = 1;
     private static int _total = 1;
     private static int _pageNum = 100;
-    private final static int _SIZE = 20;
+    private final static int _SIZE = 5;
     private static String _lastId = "";
     private static NetWorkServer _netWorkServer = new NetWorkServer();
 
@@ -51,7 +51,7 @@ public class NetWorkServer {
     public static NewsList viewOldExcuteNew(String type){
         int newTotal = getTotal(type);
         int newPageNum = (newTotal - _total) / _SIZE;
-        System.out.println("newPagenum" + newPageNum);
+        System.out.println("newPagenum: " + newPageNum);
         _readPage += newPageNum + 1;
 
         if((newTotal - _total) % _SIZE == 0){//新的新闻条数是size的整数，可以直接阅读下一页
@@ -83,6 +83,7 @@ public class NetWorkServer {
             }
             NewsList list = new NewsList(jsonObject, type);
             _total = newTotal;
+            _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
             return list;
         }else {//新的新闻条数不是size的整数，需要在下一页查找到最新消息
             OkHttpClient okHttpClient = new OkHttpClient();
@@ -114,7 +115,7 @@ public class NetWorkServer {
                 k++;
             }
             k++;
-            while (list.getNewsList().size() < 20) {
+            while (list.getNewsList().size() < _SIZE) {
                 list.add(pieces.get(k));
                 k++;
             }
