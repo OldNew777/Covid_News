@@ -7,4 +7,8 @@
     <string name="epidemic_data">疫情数据</string>
     <string name="epidemic_map">疫情图谱</string>
     <string name="news_clustering">新闻聚类</string>
+
+    <string name="news_details">新闻正文</string>
+
+    <string name="share">分享</string>
 </resources>

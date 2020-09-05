@@ -4,9 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class NewsPiece {
+public class NewsPiece implements Serializable {
     private String _id, _title, _date, _content, _source;
     private double _influence;
     private NewsType _type;
@@ -50,6 +51,8 @@ public class NewsPiece {
         return _source;
     }
     public String getDate() { return _date; }
+    public String getContent() { return _content; }
+    public void setTitle(final String title){ _title = title; }
 }
 
 enum NewsType{
