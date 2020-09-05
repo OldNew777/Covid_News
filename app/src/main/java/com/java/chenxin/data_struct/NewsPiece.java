@@ -1,10 +1,9 @@
-package com.java.chenxin.background;
+package com.java.chenxin.data_struct;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.Vector;
 
 public class NewsPiece {
@@ -14,12 +13,13 @@ public class NewsPiece {
     private Vector<String> _author, _region;
 
     public NewsPiece(final String _id, final String title, final String date,
-                     Vector<String> author, final String content){
+                     Vector<String> author, final String content, final String source){
         this._id = _id;
         this._title = title;
         this._date = date;
         this._content = content;
         this._author = author;
+        this._source = source;
     }
     public NewsPiece(JSONObject jsonObject){
         try{
@@ -42,9 +42,14 @@ public class NewsPiece {
         }
 
     }
+
     public String getTitle(){
         return _title;
     }
+    public String getSource(){
+        return _source;
+    }
+    public String getDate() { return _date; }
 }
 
 enum NewsType{
