@@ -1,12 +1,9 @@
-package com.java.chenxin.background;
-
-import androidx.annotation.NonNull;
+package com.java.chenxin.data_struct;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.Vector;
 
 public class NewsPiece {

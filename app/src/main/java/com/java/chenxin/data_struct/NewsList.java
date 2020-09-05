@@ -1,5 +1,4 @@
-package com.java.chenxin.background;
-import com.java.chenxin.background.NewsPiece;
+package com.java.chenxin.data_struct;
 
 import org.json.JSONArray;
 import org.json.JSONException;

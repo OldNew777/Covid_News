@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 //import com.java.chenxin.background.T;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.java.chenxin.background.NewsList;
+import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.Search;
 
@@ -16,13 +16,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     TextView textView;
@@ -30,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     NewsList list = null;
     String type = "news";
     String searchContext = "北京";
-    Button button1 = (Button) findViewById(R.id.button1);
 
     Observer<NewsList> observer1 = new Observer<NewsList>() {
         @Override
@@ -105,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             NetWorkServer.showOld(observer1, type);
         }
         else if(view.getId() == R.id.button4){
-            NetWorkServer.search(observer1, searchContext,type);
+            Search.search(observer1, searchContext,type);
         }
         else if(view.getId() == R.id.button5){
-            searchRefresh();
+            Search.searchRefresh(observer1, searchContext,type);
         }
         else if(view.getId() == R.id.button6){
 
@@ -124,38 +118,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             textView.setText(msg);
         }
     }
-    private void search(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                NewsList list = Search.search("北京 新发地", "all");
-                System.out.println("size: " + list.getNewsList().size());
-                System.out.println("content: " + list.getNewsList().get(0).getContent());
-                System.out.println(Search.getSearchHistory().toString());
-                String msg = "";
-                for(int i = 0; i < list.getNewsList().size(); i ++){
-                    msg += list.getNewsList().get(i).getTitle() + "\n";
-                }
-                showResponse(msg);
-            }
-        }).start();
-    }
-    private void searchRefresh(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                NewsList list = Search.searchRefresh("北京 新发地", "all");
-                System.out.println("size: " + list.getNewsList().size());
-                System.out.println("content: " + list.getNewsList().get(0).getContent());
-                System.out.println(Search.getSearchHistory().toString());
-                String msg = "";
-                for(int i = 0; i < list.getNewsList().size(); i ++){
-                    msg += list.getNewsList().get(i).getTitle() + "\n";
-                }
-                showResponse(msg);
-            }
-        }).start();
-    }
+//    private void search(){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                NewsList list = Search.search("北京 新发地", "all");
+//                System.out.println("size: " + list.getNewsList().size());
+//                System.out.println("content: " + list.getNewsList().get(0).getContent());
+//                System.out.println(Search.getSearchHistory().toString());
+//                String msg = "";
+//                for(int i = 0; i < list.getNewsList().size(); i ++){
+//                    msg += list.getNewsList().get(i).getTitle() + "\n";
+//                }
+//                showResponse(msg);
+//            }
+//        }).start();
+//    }
+//    private void searchRefresh(){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                NewsList list = Search.searchRefresh("北京 新发地", "all");
+//                System.out.println("size: " + list.getNewsList().size());
+//                System.out.println("content: " + list.getNewsList().get(0).getContent());
+//                System.out.println(Search.getSearchHistory().toString());
+//                String msg = "";
+//                for(int i = 0; i < list.getNewsList().size(); i ++){
+//                    msg += list.getNewsList().get(i).getTitle() + "\n";
+//                }
+//                showResponse(msg);
+//            }
+//        }).start();
+//    }
 //    private void sendGet1() {
 //        new Thread(new Runnable() {
 //            @Override
