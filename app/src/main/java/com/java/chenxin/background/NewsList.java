@@ -25,33 +25,42 @@ public class NewsList {
     public List<NewsPiece> getNewsList(){
         return _list;
     }
+    public NewsPiece getPiece(final int i){
+        return _list.get(i);
+    }
+    public NewsList(){
+        _list = new ArrayList<NewsPiece>();
+    }
     public NewsList(JSONObject jsonObject, String str){
         if(jsonObject == null){
             return;
         }
         try {
-            if(str.equals("paper")) {
-                JSONObject pagination = (JSONObject) jsonObject.get("pagination");
-                _list = new ArrayList<NewsPiece>();
-                _total = pagination.getInt("total");
-                _page = pagination.getInt("page");
-                _size = pagination.getInt("size");
+            JSONObject pagination = (JSONObject) jsonObject.get("pagination");
+            _list = new ArrayList<NewsPiece>();
+            _total = pagination.getInt("total");
+            _page = pagination.getInt("page");
+            _size = pagination.getInt("size");
 //            System.out.println(_total);
-                JSONArray jsonArray = (JSONArray) jsonObject.get("data");
+            JSONArray jsonArray = (JSONArray) jsonObject.get("data");
 //            System.out.println(jsonArray.toString());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i));
-                    _list.add(tmpPiece);
-                }
+            for (int i = 0; i < jsonArray.length(); i++) {
+                NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i));
+                _list.add(tmpPiece);
             }
         }catch (JSONException e){
             e.printStackTrace();
 
         }
     }
-    public void merge(NewsList n){
-        if(n == null)return;
+    public boolean merge(NewsList n){
+        if(n == null)return false;
         this._list.addAll(n.getNewsList());
+        return true;
     }
-
+    public boolean add(NewsPiece p){
+        if(p == null) return false;
+        this._list.add(p);
+        return true;
+    }
 }

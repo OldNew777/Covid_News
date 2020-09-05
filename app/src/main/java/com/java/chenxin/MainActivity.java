@@ -5,19 +5,15 @@ import android.widget.Button;
 import android.widget.TextView;
 //import com.java.chenxin.background.T;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.java.chenxin.background.JSONProcesser;
 import com.java.chenxin.background.NewsList;
-import com.java.chenxin.background.Test;
 import com.java.chenxin.background.NetWorkServer;
+import com.java.chenxin.background.Search;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     TextView textView;
@@ -38,9 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button1 = (Button) findViewById(R.id.button1);
         Button button2 = (Button) findViewById(R.id.button2);
         Button button3 = (Button) findViewById(R.id.button3);
+        Button button4 = (Button) findViewById(R.id.button4);
+
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
 
         textView = (TextView) findViewById(R.id.textview1);
 
@@ -56,6 +55,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(view.getId() == R.id.button3){
             sendGet2();
         }
+        else if(view.getId() == R.id.button4){
+            System.out.println("search click");
+            search();
+        }
+    }
+    private void search(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NewsList list = Search.search("北京 新发地", "news");
+                System.out.println("size: " + list.getNewsList().size());
+                System.out.println("content: " + list.getNewsList().get(0).getContent());
+                System.out.println(Search.getSearchHistory().toString());
+            }
+        }).start();
     }
     private void sendGet1() {
         new Thread(new Runnable() {
@@ -63,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
 //                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    NewsList list = NetWorkServer.viewNewExcute("paper");
+                    NewsList list = NetWorkServer.viewNewExcuteNew("news");
                     System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                     showResponse(list.getNewsList().get(0).getTitle());
                 }
@@ -80,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
 //                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    NewsList list = NetWorkServer.excute("paper");
-                    showResponse(list.getNewsList().get(0).getTitle());
+                    NewsList list = NetWorkServer.excute("news");
+                    showResponse(list.getNewsList().get(0).getContent());
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -96,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
 //                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
-                    NewsList list = NetWorkServer.viewOldExcute("paper");
+                    NewsList list = NetWorkServer.viewOldExcuteNew("news");
                     System.out.println("上拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                     showResponse(list.getNewsList().get(0).getTitle());
                 }

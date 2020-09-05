@@ -44,6 +44,14 @@
             >
 
         </Button>
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="搜索"
+            >
+
+        </Button>
         <TextView
             android:id="@+id/textview1"
             android:layout_width="match_parent"

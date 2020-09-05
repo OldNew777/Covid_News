@@ -1,31 +1,24 @@
 package com.java.chenxin.background;
 
-import android.app.Activity;
-import android.os.Environment;
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
+import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.OkHttp;
-import okhttp3.OkHttp.*;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetWorkServer {
     private static int _count = 0;
+    private static int _searchPage  = 1;
+    private static int _readPage = 1;
+    private static int _oldTotal = 1;
+    private static int _total = 1;
     private static int _pageNum = 100;
-    private final static int _SIZE = 5;
+    private final static int _SIZE = 20;
+    private static String _lastId = "";
     private static NetWorkServer _netWorkServer = new NetWorkServer();
     public static int getCount(){
         return _count;
@@ -39,23 +32,122 @@ public class NetWorkServer {
     private NetWorkServer(){
 
     }
-    public static NewsList excute(String type){
+    public static NewsList excute(String type){ //这个是用来实验的 最后会删掉
         OkHttpClient okHttpClient = new OkHttpClient();
-        final Request request = new Request.Builder().url("https://covid-dashboard.aminer.cn/api/events/list?type=paper&page=1&size=5").get().build();
+        //这个是用来实验的 最后会删掉
+        final Request request = new Request.Builder().url("https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1").get().build();
         final Call call = okHttpClient.newCall(request);
         String msg = "";
         try {
             Response response = call.execute();
             msg += response.body().string();
+            System.out.println(msg);
             JSONObject jsonObject = new JSONObject(msg);
             return new NewsList(jsonObject,type);
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        JSONSwitcher.saveToSDCard(msg);
-
         return null;
     }
+
+    public static NewsList viewOldExcuteNew(String type){
+        int newTotal = getTotal(type);
+        int newPageNum = (newTotal - _total) / _SIZE;
+        System.out.println("newPagenum" + newPageNum);
+        _readPage += newPageNum + 1;
+
+        if((newTotal - _total) % _SIZE == 0){//新的新闻条数是size的整数，可以直接阅读下一页
+            OkHttpClient okHttpClient = new OkHttpClient();
+            String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _readPage + "&size=" + _SIZE;
+            final Request request = new Request.Builder().url(mUrl).get().build();
+            final Call call = okHttpClient.newCall(request);
+            String msg = "";
+            try {
+                Response response = call.execute();
+                msg += response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            JSONObject jsonObject = null;
+            try{
+                jsonObject =new JSONObject(msg);
+            }
+            catch(JSONException e){
+                e.printStackTrace();
+            }
+            if(jsonObject == null){
+                return null;
+            }
+            NewsList list = new NewsList(jsonObject, type);
+            _total = newTotal;
+            return list;
+        }else {//新的新闻条数不是size的整数，需要在下一页查找到最新消息
+            OkHttpClient okHttpClient = new OkHttpClient();
+            NewsList list = new NewsList();
+            String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _readPage + "&size=" + (_SIZE * 2);
+            final Request request = new Request.Builder().url(mUrl).get().build();
+            final Call call = okHttpClient.newCall(request);
+            String msg = "";
+            try {
+                Response response = call.execute();
+                msg += response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(msg);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            NewsList tmplist = new NewsList(jsonObject, type);
+            List<NewsPiece> pieces = tmplist.getNewsList();
+            int k = 0;
+            while (!pieces.get(k).get_id().equals(_lastId)) {// 掠过  直接找到上一次的末尾
+                k++;
+            }
+            k++;
+            while (list.getNewsList().size() < 20) {
+                list.add(pieces.get(k));
+                k++;
+            }
+            _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
+            return list;
+        }
+    }
+
+    public static NewsList viewNewExcuteNew(String type){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=" + _SIZE;
+        final Request request = new Request.Builder().url(mUrl).get().build();
+        final Call call = okHttpClient.newCall(request);
+        String msg = "";
+        try {
+            Response response = call.execute();
+            msg += response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        JSONObject jsonObject = null;
+        try{
+            jsonObject =new JSONObject(msg);
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        if(jsonObject == null){
+            return null;
+        }
+        NewsList list = new NewsList(jsonObject, type);
+        _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
+        _total = list.getTotal();
+        _readPage = 1;
+        return list;
+    }
+
     public static NewsList viewOldExcute(String type){
         OkHttpClient okHttpClient = new OkHttpClient();
         String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - ++_count) + "&size=" + _SIZE;
@@ -82,28 +174,14 @@ public class NetWorkServer {
         return new NewsList(jsonObject, type);
     }
     public static NewsList viewNewExcute(String type){
-
+        OkHttpClient okHttpClient = new OkHttpClient();
         try {
-            OkHttpClient okHttpClient = new OkHttpClient();
-            String tmpUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1"; //随便找一页 找到总数
-            final Request request = new Request.Builder().url(tmpUrl).get().build();
-            final Call call = okHttpClient.newCall(request);
-            Response response = call.execute();
-            String msg = "";
-            msg = response.body().string();
-            if(msg.equals("")){
-                return null;
-            }
-            JSONObject jsonObject =new JSONObject(msg);
-            if(jsonObject == null){
-                return null;
-            }
-            JSONObject pagination = (JSONObject) jsonObject.get("pagination");
-            int total = pagination.getInt("total");
-
+            int total = getTotal(type);
             _pageNum = 1 + total / _SIZE;//定位到倒数第二页(整除时最后一页）由于从1开始计数 所以+1
             _count = 0;
-
+            String msg = "";
+            Response response = null;
+            JSONObject jsonObject = null;
             if(total % _SIZE == 0){//直接打印最后一页
                 String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _pageNum + "&size=" + _SIZE;
                 final Request rrequest = new Request.Builder().url(mUrl).get().build();
@@ -140,7 +218,72 @@ public class NetWorkServer {
             e.printStackTrace();
             return null;
         }
+    }
 
+    protected static NewsList searchExcute(String[] key, String type){
+        int total = getTotal(type);
+        _searchPage = (total + _SIZE - 1) / _SIZE;
+        NewsList list = new NewsList();
+        OkHttpClient okHttpClient = new OkHttpClient();
+//        int connt = 0;
+//        String reg = "(";
+//        for(int i = 0; i < key.length - 1; i ++){
+//            reg += key[i] + "|";
+//        }
+//        reg += key[key.length - 1];
+//        reg += ")";
+//        System.out.println(reg);
+        while(list.getSize() < 20 || _searchPage < 1){
+            System.out.println("loop");
+            try{
+                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + _SIZE;
+                final Request request1 = new Request.Builder().url(url).get().build();
+                final Call call = okHttpClient.newCall(request1);
+                String msg = "";
+                Response response = call.execute();
+                msg += response.body().string();
+//                System.out.println(msg);
+                JSONObject jsonObject = new JSONObject(msg);
+                NewsList tmplist = new NewsList(jsonObject, type);
+                List<NewsPiece> pieces = tmplist.getNewsList();
+                for(int j = 0; j < pieces.size(); j ++){
+                    for(int i = 0; i < key.length; i ++) {
+                        if (key[i].equals("")) continue;
+                        if (!pieces.get(j).search(key[i])) continue;
+                        list.add(pieces.get(j));
+                        break;
+                    }
+                }
+//                System.out.println(tmplist.getNewsList().get(0).getContent());
 
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+    public static int getTotal(String type){
+        try{
+            OkHttpClient okHttpClient = new OkHttpClient();
+            String tmpUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1"; //随便找一页 找到总数
+            final Request request = new Request.Builder().url(tmpUrl).get().build();
+            final Call call = okHttpClient.newCall(request);
+            Response response = call.execute();
+            String msg = "";
+            msg = response.body().string();
+            if(msg.equals("")){
+                return -1;
+            }
+            JSONObject jsonObject =new JSONObject(msg);
+            if(jsonObject == null){
+                return -1;
+            }
+            JSONObject pagination = (JSONObject) jsonObject.get("pagination");
+            return pagination.getInt("total");}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
