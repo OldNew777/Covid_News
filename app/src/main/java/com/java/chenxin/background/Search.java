@@ -11,11 +11,18 @@ public class Search {
     public static void cleatSearchHistory(){
         _searchHistory = new Vector<String>();
     }
+    public static NewsList searchRefresh(String content, String type){
+        _searchHistory.add(content);
+        String[] searchArray = content.split(" ");
+
+//        System.out.println(searchArray[0]);
+        return NetWorkServer.searchExcuteNew(searchArray, type);
+    }
     public static NewsList search(String content, String type){
         _searchHistory.add(content);
         String[] searchArray = content.split(" ");
 
 //        System.out.println(searchArray[0]);
-        return NetWorkServer.searchExcute(searchArray, type);
+        return NetWorkServer.search(searchArray, type);
     }
 }

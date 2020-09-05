@@ -35,11 +35,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button2 = (Button) findViewById(R.id.button2);
         Button button3 = (Button) findViewById(R.id.button3);
         Button button4 = (Button) findViewById(R.id.button4);
+        Button button5 = (Button) findViewById(R.id.button5);
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
+        button5.setOnClickListener(this);
+
 
         textView = (TextView) findViewById(R.id.textview1);
 
@@ -59,15 +62,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             System.out.println("search click");
             search();
         }
+        else if(view.getId() == R.id.button5){
+            searchRefresh();
+        }
     }
     private void search(){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                NewsList list = Search.search("北京 新发地", "news");
+                NewsList list = Search.search("北京 新发地", "all");
                 System.out.println("size: " + list.getNewsList().size());
                 System.out.println("content: " + list.getNewsList().get(0).getContent());
                 System.out.println(Search.getSearchHistory().toString());
+                String msg = "";
+                for(int i = 0; i < list.getNewsList().size(); i ++){
+                    msg += list.getNewsList().get(i).getTitle() + "\n";
+                }
+                showResponse(msg);
+            }
+        }).start();
+    }
+    private void searchRefresh(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NewsList list = Search.searchRefresh("北京 新发地", "all");
+                System.out.println("size: " + list.getNewsList().size());
+                System.out.println("content: " + list.getNewsList().get(0).getContent());
+                System.out.println(Search.getSearchHistory().toString());
+                String msg = "";
+                for(int i = 0; i < list.getNewsList().size(); i ++){
+                    msg += list.getNewsList().get(i).getTitle() + "\n";
+                }
+                showResponse(msg);
             }
         }).start();
     }
@@ -96,11 +123,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                NetWorkServer netWorkServer = new NetWorkServer();
                 try{
                     NewsList list = NetWorkServer.excute("news");
                     showResponse(list.getNewsList().get(0).getContent());
-
                 }
                 catch (Exception e){
                     e.printStackTrace();

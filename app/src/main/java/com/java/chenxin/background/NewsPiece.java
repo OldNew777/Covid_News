@@ -87,6 +87,7 @@ public class NewsPiece {
         return flag;
     }
     public boolean search(String reg){
+//        System.out.println(_content);
         return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg);
 //        return _title.matches(reg) || _content.matches(reg) || _date.matches(reg) || _source.matches(reg);
     }

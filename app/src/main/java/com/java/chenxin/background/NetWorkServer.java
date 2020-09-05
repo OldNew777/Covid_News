@@ -14,12 +14,12 @@ public class NetWorkServer {
     private static int _count = 0;
     private static int _searchPage  = 1;
     private static int _readPage = 1;
-    private static int _oldTotal = 1;
     private static int _total = 1;
     private static int _pageNum = 100;
     private final static int _SIZE = 20;
     private static String _lastId = "";
     private static NetWorkServer _netWorkServer = new NetWorkServer();
+
     public static int getCount(){
         return _count;
     }
@@ -29,9 +29,7 @@ public class NetWorkServer {
     public static NetWorkServer getInstance(){
         return _netWorkServer;
     }
-    private NetWorkServer(){
-
-    }
+    private NetWorkServer(){}
     public static NewsList excute(String type){ //这个是用来实验的 最后会删掉
         OkHttpClient okHttpClient = new OkHttpClient();
         //这个是用来实验的 最后会删掉
@@ -227,24 +225,18 @@ public class NetWorkServer {
             return null;
         }
     }
-
-    public static NewsList searchExcute(String[] key, String type){
+    public static NewsList search(String[] key, String type){
+        _searchPage = 1;
+        return searchExcuteNew(key, type);
+    }
+    public static NewsList searchExcuteNew(String[] key, String type){
         int total = getTotal(type);
-        _searchPage = (total + _SIZE - 1) / _SIZE;
         NewsList list = new NewsList();
         OkHttpClient okHttpClient = new OkHttpClient();
-//        int connt = 0;
-//        String reg = "(";
-//        for(int i = 0; i < key.length - 1; i ++){
-//            reg += key[i] + "|";
-//        }
-//        reg += key[key.length - 1];
-//        reg += ")";
-//        System.out.println(reg);
-        while(list.getSize() < 20 || _searchPage < 1){
+        while(list.getNewsList().size() < _SIZE && _searchPage < total){
             System.out.println("loop");
             try{
-                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + _SIZE;
+                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage++ + "&size=" + _SIZE * 3;
                 final Request request1 = new Request.Builder().url(url).get().build();
                 final Call call = okHttpClient.newCall(request1);
                 String msg = "";
@@ -257,13 +249,50 @@ public class NetWorkServer {
                 for(int j = 0; j < pieces.size(); j ++){
                     for(int i = 0; i < key.length; i ++) {
                         if (key[i].equals("")) continue;
+//                        System.out.println(pieces.get(j).getContent());
                         if (!pieces.get(j).search(key[i])) continue;
                         list.add(pieces.get(j));
                         break;
                     }
+                    if(list.getSize() == _SIZE){
+                        break;
+                    }
                 }
-//                System.out.println(tmplist.getNewsList().get(0).getContent());
-
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+    public static NewsList searchExcute(String[] key, String type){
+        int total = getTotal(type);
+        _searchPage = (total + _SIZE - 1) / _SIZE;
+        NewsList list = new NewsList();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        while(list.getSize() < _SIZE || _searchPage < 1){
+            System.out.println("loop");
+            try{
+                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + _SIZE * 3;
+                final Request request1 = new Request.Builder().url(url).get().build();
+                final Call call = okHttpClient.newCall(request1);
+                String msg = "";
+                Response response = call.execute();
+                msg += response.body().string();
+                JSONObject jsonObject = new JSONObject(msg);
+                NewsList tmplist = new NewsList(jsonObject, type);
+                List<NewsPiece> pieces = tmplist.getNewsList();
+                for(int j = 0; j < pieces.size(); j ++){
+                    for(int i = 0; i < key.length; i ++) {
+                        if (key[i].equals("")) continue;
+                        if (!pieces.get(j).search(key[i])) continue;
+                        list.add(pieces.get(j));
+                        break;
+                    }
+                    if(list.getSize() == _SIZE){
+                        break;
+                    }
+                }
             }
             catch (Exception e){
                 e.printStackTrace();
