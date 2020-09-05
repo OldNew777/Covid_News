@@ -59,11 +59,15 @@ public class NetWorkServer {
         if((newTotal - _total) % _SIZE == 0){//新的新闻条数是size的整数，可以直接阅读下一页
             OkHttpClient okHttpClient = new OkHttpClient();
             String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _readPage + "&size=" + _SIZE;
-            final Request request = new Request.Builder().url(mUrl).get().build();
-            final Call call = okHttpClient.newCall(request);
+
+            Request request = new Request.Builder().url(mUrl).get().build();
+            Call call = okHttpClient.newCall(request);
             String msg = "";
             try {
                 Response response = call.execute();
+                if(getTotal(type) != newTotal){
+                    return viewOldExcuteNew(type);
+                }
                 msg += response.body().string();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -91,6 +95,9 @@ public class NetWorkServer {
             String msg = "";
             try {
                 Response response = call.execute();
+                if(getTotal(type) != newTotal){
+                    return viewOldExcuteNew(type);
+                }
                 msg += response.body().string();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -114,6 +121,7 @@ public class NetWorkServer {
                 k++;
             }
             _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
+
             return list;
         }
     }
@@ -220,7 +228,7 @@ public class NetWorkServer {
         }
     }
 
-    protected static NewsList searchExcute(String[] key, String type){
+    public static NewsList searchExcute(String[] key, String type){
         int total = getTotal(type);
         _searchPage = (total + _SIZE - 1) / _SIZE;
         NewsList list = new NewsList();

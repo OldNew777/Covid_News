@@ -55,7 +55,7 @@ public class NewsPiece {
         this._content = content;
         this._authors = author;
     }
-    protected boolean searchWithHighLight(String[] key){//查找几个关键词并把他们高亮
+    public boolean searchWithHighLight(String[] key){//查找几个关键词并把他们高亮
         boolean flag = false;
         for(int i = 0; i < key.length; i ++){
             String rep = "";
@@ -86,7 +86,7 @@ public class NewsPiece {
         }
         return flag;
     }
-    protected boolean search(String reg){
+    public boolean search(String reg){
         return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg);
 //        return _title.matches(reg) || _content.matches(reg) || _date.matches(reg) || _source.matches(reg);
     }

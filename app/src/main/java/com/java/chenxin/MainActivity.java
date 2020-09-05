@@ -79,7 +79,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try{
                     NewsList list = NetWorkServer.viewNewExcuteNew("news");
                     System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
-                    showResponse(list.getNewsList().get(0).getTitle());
+                    String msg = "";
+                    for(int i = 0; i < list.getNewsList().size(); i ++){
+                        msg += list.getNewsList().get(i).getTitle() + "\n";
+                    }
+                    showResponse(msg);
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try{
                     NewsList list = NetWorkServer.excute("news");
                     showResponse(list.getNewsList().get(0).getContent());
+
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -112,7 +117,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try{
                     NewsList list = NetWorkServer.viewOldExcuteNew("news");
                     System.out.println("上拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
-                    showResponse(list.getNewsList().get(0).getTitle());
+                    String msg = "";
+                    for(int i = 0; i < list.getNewsList().size(); i ++){
+                        msg += list.getNewsList().get(i).getTitle() + "\n";
+                    }
+                    showResponse(msg);
                 }
                 catch (Exception e){
                     e.printStackTrace();
