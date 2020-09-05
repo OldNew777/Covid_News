@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.java.chenxin.NewsActivity;
 import com.java.chenxin.data_struct.NewsListAdapter;

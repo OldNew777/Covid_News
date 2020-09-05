@@ -1,5 +1,7 @@
 package com.java.chenxin.background;
 
+import com.java.chenxin.data_struct.NewsList;
+
 import java.util.Vector;
 
 public class Search {
