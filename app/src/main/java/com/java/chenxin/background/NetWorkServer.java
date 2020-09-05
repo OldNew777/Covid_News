@@ -88,9 +88,9 @@ public class NetWorkServer {
         }else {//新的新闻条数不是size的整数，需要在下一页查找到最新消息
             OkHttpClient okHttpClient = new OkHttpClient();
             NewsList list = new NewsList();
-            String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _readPage + "&size=" + (_SIZE * 2);
-            final Request request = new Request.Builder().url(mUrl).get().build();
-            final Call call = okHttpClient.newCall(request);
+            String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _readPage + "&size=" + _SIZE;
+            Request request = new Request.Builder().url(mUrl).get().build();
+            Call call = okHttpClient.newCall(request);
             String msg = "";
             try {
                 Response response = call.execute();
@@ -115,9 +115,36 @@ public class NetWorkServer {
                 k++;
             }
             k++;
-            while (list.getNewsList().size() < _SIZE) {
+            while (k < _SIZE) {
                 list.add(pieces.get(k));
                 k++;
+            }
+
+            mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _readPage++ + "&size=" + _SIZE;
+            request = new Request.Builder().url(mUrl).get().build();
+            call = okHttpClient.newCall(request);
+            msg = "";
+            try {
+                Response response = call.execute();
+                if(getTotal(type) != newTotal){
+                    return viewOldExcuteNew(type);
+                }
+                msg += response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            jsonObject = null;
+            try {
+                jsonObject = new JSONObject(msg);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            tmplist = new NewsList(jsonObject, type);
+            k = 0;
+            while(list.getNewsList().size() < _SIZE){
+                list.add(tmplist.getNewsList().get(k));
+                k ++;
             }
             _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
 
