@@ -1,5 +1,6 @@
 package com.java.chenxin;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,8 +16,48 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     TextView textView;
+    String str = "not changed";
+    NewsList list = null;
+    Observer<NewsList> observer1 = new Observer<NewsList>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            System.out.println("开始了");
+            Log.d("----","开始了");
+        }
+
+        @Override
+        public void onNext(NewsList n) {
+//            System.out.println(s);
+            list = n;
+//            Log.d("----", s);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("ob error");
+        }
+
+        @Override
+        public void onComplete() {
+            str = "";
+            for(int i = 0; i < list.getNewsList().size(); i ++){
+                str += list.getNewsList().get(i).getTitle() + "\n";
+            }
+            showResponse(str);
+            Log.d("----", "complete");
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -36,13 +77,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button3 = (Button) findViewById(R.id.button3);
         Button button4 = (Button) findViewById(R.id.button4);
         Button button5 = (Button) findViewById(R.id.button5);
-
+        Button button6 = (Button) findViewById(R.id.button6);
+        Button button7 = (Button) findViewById(R.id.button7);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
-
+        button6.setOnClickListener(this);
+        button7.setOnClickListener(this);
 
         textView = (TextView) findViewById(R.id.textview1);
 
@@ -50,13 +93,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view){
         if(view.getId() == R.id.button1){
             sendGet();
-
         }
         else if(view.getId() == R.id.button2){
-            sendGet1();
+            NetWorkServer.reFresh(observer1);
         }
         else if(view.getId() == R.id.button3){
-            sendGet2();
+            NetWorkServer.showOld(observer1);
         }
         else if(view.getId() == R.id.button4){
             System.out.println("search click");
@@ -64,6 +106,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if(view.getId() == R.id.button5){
             searchRefresh();
+        }
+        else if(view.getId() == R.id.button6){
+
+        }
+        else if(view.getId() == R.id.button7){
+            if(list == null){
+                textView.setText("NULL");
+            }
+            String msg = "";
+            for(int i = 0; i < list.getNewsList().size(); i ++){
+                msg += list.getNewsList().get(i).getTitle() + "\n";
+            }
+            textView.setText(msg);
         }
     }
     private void search(){
@@ -142,11 +197,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try{
                     NewsList list = NetWorkServer.viewOldExcuteNew("news");
                     System.out.println("上拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
-                    String msg = "";
-                    for(int i = 0; i < list.getNewsList().size(); i ++){
-                        msg += list.getNewsList().get(i).getTitle() + "\n";
-                    }
-                    showResponse(msg);
+
+//                    showResponse(msg);
                 }
                 catch (Exception e){
                     e.printStackTrace();
