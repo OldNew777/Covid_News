@@ -70,7 +70,10 @@ public class NewsListFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
-            refreshLayout.finishRefresh();
+            if (refreshMode == RefreshMode.REFRESH)
+                refreshLayout.finishRefresh();
+            if (refreshMode == RefreshMode.LOADMORE)
+                refreshLayout.finishLoadMore();
         }
 
         @Override
