@@ -62,4 +62,12 @@ public class NewsList {
         this._list.add(p);
         return true;
     }
+    public static void checkNewsList(NewsList list){
+        List<NewsPiece> pieceList = list.getNewsList();
+        for(NewsPiece piece : pieceList){
+            if(piece.getIsRead()) continue;
+            List<NewsPiece> tmp = NewsPiece.find(NewsPiece.class, "uid = ?", piece.getUid());
+            piece.setIsRead(!(tmp == null || tmp.size() == 0));
+        }
+    }
 }

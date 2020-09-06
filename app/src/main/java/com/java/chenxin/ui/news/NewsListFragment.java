@@ -33,7 +33,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 enum RefreshMode{
-    REFRESH, LOADMORE, SEARCH
+    REFRESH, LOADMORE
 }
 
 public class NewsListFragment extends Fragment {
@@ -62,7 +62,7 @@ public class NewsListFragment extends Fragment {
 
         @Override
         public void onNext(NewsList newsList) {
-            if (refreshMode == RefreshMode.REFRESH || refreshMode == RefreshMode.SEARCH)
+            if (refreshMode == RefreshMode.REFRESH)
                 newsInfo.clear();
             newsInfo.addAll(newsList.getNewsList());
         }
@@ -70,7 +70,10 @@ public class NewsListFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
-            refreshLayout.finishRefresh();
+            if (refreshMode == RefreshMode.REFRESH)
+                refreshLayout.finishRefresh();
+            if (refreshMode == RefreshMode.LOADMORE)
+                refreshLayout.finishLoadMore();
         }
 
         @Override
@@ -132,32 +135,11 @@ public class NewsListFragment extends Fragment {
         news_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
-                String id = newsInfo.get(position).get_id();
+                String id = newsInfo.get(position).getUid();
                 NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
             }
         });
 
-        // 下拉刷新新闻列表监听
-        news_refreshLayOut.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(RefreshLayout refreshLayout_tmp) {
-                Toast.makeText(getActivity(), "正在刷新", Toast.LENGTH_SHORT).show();
-                refreshMode = RefreshMode.REFRESH;
-                refreshLayout = refreshLayout_tmp;
-                NetWorkServer.reFresh(newsListObserver, type);
-            }
-        });
-
-        // 上拉加载更多历史新闻
-        news_refreshLayOut.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(RefreshLayout refreshLayout_tmp) {
-                Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
-                refreshMode = RefreshMode.LOADMORE;
-                refreshLayout = refreshLayout_tmp;
-                NetWorkServer.loadMore(newsListObserver, type);
-            }
-        });
 
         // 监听搜索框
         mSearchView = (SearchView) root.findViewById(R.id.news_search);
@@ -165,7 +147,7 @@ public class NewsListFragment extends Fragment {
             // 当点击搜索按钮时触发该方法
             @Override
             public boolean onQueryTextSubmit(String query) {
-                refreshMode = RefreshMode.SEARCH;
+                mSearchView.clearFocus();
                 Search.search(newsListObserver, query, type);
                 Toast.makeText(getActivity(), "正在搜索："+query, Toast.LENGTH_SHORT).show();
                 return true;
@@ -176,6 +158,55 @@ public class NewsListFragment extends Fragment {
                 return true;
             }
         });
+
+        // 下拉刷新
+        news_refreshLayOut.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout_tmp) {
+                String searchQuery = String.valueOf(mSearchView.getQuery());
+
+                // 如果搜索框有内容，则重新搜索
+                if (!searchQuery.isEmpty()){
+                    Toast.makeText(getActivity(), "正在搜索："+searchQuery, Toast.LENGTH_SHORT).show();
+                    refreshMode = RefreshMode.REFRESH;
+                    refreshLayout = refreshLayout_tmp;
+                    Search.search(newsListObserver, searchQuery, type);
+                }
+
+                // 如果搜索框没有内容，则刷新新闻列表
+                else{
+                    Toast.makeText(getActivity(), "正在刷新", Toast.LENGTH_SHORT).show();
+                    refreshMode = RefreshMode.REFRESH;
+                    refreshLayout = refreshLayout_tmp;
+                    NetWorkServer.reFresh(newsListObserver, type);
+                }
+            }
+        });
+
+        // 上拉加载
+        news_refreshLayOut.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout_tmp) {
+                String searchQuery = String.valueOf(mSearchView.getQuery());
+
+                // 如果搜索框有内容，则加载更多搜索内容
+                if (!searchQuery.isEmpty()){
+                    Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
+                    refreshMode = RefreshMode.LOADMORE;
+                    refreshLayout = refreshLayout_tmp;
+                    Search.searchRefresh(newsListObserver, searchQuery, type);
+                }
+
+                // 如果搜索框没有内容，则加载更多历史新闻
+                else{
+                    Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
+                    refreshMode = RefreshMode.LOADMORE;
+                    refreshLayout = refreshLayout_tmp;
+                    NetWorkServer.loadMore(newsListObserver, type);
+                }
+            }
+        });
+
 
         return root;
     }
