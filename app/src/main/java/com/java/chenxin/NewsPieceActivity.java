@@ -14,8 +14,6 @@ import androidx.core.view.MenuItemCompat;
 import com.java.chenxin.data_struct.NewsPiece;
 
 public class NewsPieceActivity extends AppCompatActivity {
-    private NewsPiece newsPiece;
-    private ShareActionProvider mShareActionProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -23,7 +21,7 @@ public class NewsPieceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_newspiece);
 
         // 设置新闻内容
-        newsPiece = (NewsPiece) getIntent().getSerializableExtra("NewsPiece");
+        NewsPiece newsPiece = (NewsPiece) getIntent().getSerializableExtra("NewsPiece");
         ((TextView) findViewById(R.id.title)).setText(newsPiece.getTitle());
         ((TextView) findViewById(R.id.source)).setText(newsPiece.getSource());
         ((TextView) findViewById(R.id.date)).setText(newsPiece.getDate());
@@ -42,7 +40,7 @@ public class NewsPieceActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.share_menu, menu);
         MenuItem shareItem = menu.findItem(R.id.action_share);
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
 
         //通过setShareIntent调用getDefaultIntent()获取所有具有分享功能的App
         mShareActionProvider.setShareIntent(getShareIntent());
@@ -60,8 +58,8 @@ public class NewsPieceActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish(); // back button
+            case android.R.id.home:     // return
+                this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

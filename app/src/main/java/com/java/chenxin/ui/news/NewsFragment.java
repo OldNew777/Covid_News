@@ -20,6 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsFragment extends Fragment {
+    private NewsListFragment allListFragment;
+    private NewsListFragment newsListFragment;
+    private NewsListFragment paperListFragment;
+
+    public final NewsListFragment getAllListFragment() { return allListFragment; }
+    public final NewsListFragment getNewsListFragment() { return newsListFragment; }
+    public final NewsListFragment getPaperListFragment() { return paperListFragment; }
 
     @Nullable
     @Override
@@ -27,9 +34,12 @@ public class NewsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new NewsListFragment("all"));
-        fragmentList.add(new NewsListFragment("news"));
-        fragmentList.add(new NewsListFragment("paper"));
+        allListFragment = new NewsListFragment("all");
+        newsListFragment = new NewsListFragment("news");
+        paperListFragment = new NewsListFragment("paper");
+        fragmentList.add(allListFragment);
+        fragmentList.add(newsListFragment);
+        fragmentList.add(paperListFragment);
         List<String> titleList = new ArrayList<>();
         titleList.add(getResources().getString(R.string.all));
         titleList.add(getResources().getString(R.string.news));
