@@ -64,7 +64,7 @@ public class NetWorkServer {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
                 NewsList list = NetWorkServer.viewOldExcuteNew(type);
-//                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                    //System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(list);
                 emitter.onComplete();
             }
