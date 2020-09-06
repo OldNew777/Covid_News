@@ -11,6 +11,7 @@ public class NewsPiece {
     private double _influence = -1.0;
     private NewsType _type;
     private Vector<String> _authors = null, _region = null;
+    private boolean _isRead = false;
 
     public String getTitle(){
         return _title;
@@ -33,6 +34,9 @@ public class NewsPiece {
     public NewsType getType(){
         return _type;
     }
+    public void setIsRead(boolean flag){ _isRead = flag; }
+    public boolean getIsRead(){return _isRead;}
+
     public String getAuthorString(){
         String s = "";
         if(_authors == null || _authors.size() == 0) return "";

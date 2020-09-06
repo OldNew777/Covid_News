@@ -9,6 +9,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.Search;
+import com.java.chenxin.data_struct.NewsPiece;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     NewsList list = null;
     String type = "news";
     String searchContext = "习";
-
-    Observer<NewsList> observer1 = new Observer<NewsList>() {
+    NewsPiece p = null;
+    Observer<NewsList> listObserver = new Observer<NewsList>() {
         @Override
         public void onSubscribe(Disposable d) {
             System.out.println("开始了");
@@ -52,6 +53,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for(int i = 0; i < list.getNewsList().size(); i ++){
                 str += "num: " + (i + 1) + " " + list.getNewsList().get(i).getTitle() + "\n";
             }
+            showResponse(str);
+            Log.d("----", "complete");
+        }
+    };
+
+    Observer<NewsPiece> pieceObserver = new Observer<NewsPiece>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            System.out.println("开始了");
+            Log.d("----","开始了");
+        }
+
+        @Override
+        public void onNext(NewsPiece n) {
+//            System.out.println(s);
+            p = n;
+//            Log.d("----", s);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            System.out.println("ob error");
+        }
+
+        @Override
+        public void onComplete() {
+            str =  p.getContent() + "\n";
             showResponse(str);
             Log.d("----", "complete");
         }
@@ -91,19 +120,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     public void onClick(View view){
         if(view.getId() == R.id.button1){
-            sendGet();
+//            sendGet();
+            NetWorkServer.loadNewsPiece(pieceObserver, "5f05f3f69fced0a24b2f84ee");
         }
         else if(view.getId() == R.id.button2){
-            NetWorkServer.reFresh(observer1, type);
+            NetWorkServer.reFresh(listObserver, type);
         }
         else if(view.getId() == R.id.button3){
-            NetWorkServer.loadMore(observer1, type);
+            NetWorkServer.loadMore(listObserver, type);
         }
         else if(view.getId() == R.id.button4){
-            Search.search(observer1, searchContext,type);
+            Search.search(listObserver, searchContext,type);
         }
         else if(view.getId() == R.id.button5){
-            Search.searchRefresh(observer1, searchContext,type);
+            Search.searchRefresh(listObserver, searchContext,type);
         }
         else if(view.getId() == R.id.button6){
 
@@ -119,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             textView.setText(msg);
         }
     }
+
 //    private void search(){
 //        new Thread(new Runnable() {
 //            @Override
@@ -172,21 +203,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        }).start();
 //    }
-    private void sendGet() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    NewsList list = NetWorkServer.excute("news");
-                    showResponse(list.getNewsList().get(0).getContent());
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-    }
+//    private void sendGet() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try{
+//                    NewsList list = NetWorkServer.excute("news");
+//                    showResponse(list.getNewsList().get(0).getContent());
+//                }
+//                catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }).start();
+//    }
 //    private void sendGet2() {
 //        new Thread(new Runnable() {
 //            @Override

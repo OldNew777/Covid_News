@@ -7,7 +7,6 @@ import com.java.chenxin.data_struct.NewsPiece;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -28,34 +27,37 @@ public class NetWorkServer {
 
     private static int _currentId = 0;//下一条要读入的编号
     private static String _lastId = "";
-    private static NetWorkServer _netWorkServer = new NetWorkServer();
 
-    public static int getCount(){
-        return _count;
-    }
-    public static int getPageNum(){
-        return _pageNum;
-    }
-    public static NetWorkServer getInstance(){
-        return _netWorkServer;
-    }
     private NetWorkServer(){}
-    public static NewsList excute(String type){ //这个是用来实验的 最后会删掉
-        OkHttpClient okHttpClient = new OkHttpClient();
-        //这个是用来实验的 最后会删掉
-        final Request request = new Request.Builder().url("https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1").get().build();
-        final Call call = okHttpClient.newCall(request);
-        String msg = "";
-        try {
-            Response response = call.execute();
-            msg += response.body().string();
-            System.out.println(msg);
-            JSONObject jsonObject = new JSONObject(msg);
-            return new NewsList(jsonObject,type);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+//    public static NewsList excute(String type){ //这个是用来实验的 最后会删掉
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        //这个是用来实验的 最后会删掉
+//        final Request request = new Request.Builder().url("https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1").get().build();
+//        final Call call = okHttpClient.newCall(request);
+//        String msg = "";
+//        try {
+//            Response response = call.execute();
+//            msg += response.body().string();
+//            System.out.println(msg);
+//            JSONObject jsonObject = new JSONObject(msg);
+//            return new NewsList(jsonObject,type);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+    public static void loadNewsPiece(Observer<NewsPiece> ob, final String id){
+        Observable.create(new ObservableOnSubscribe<NewsPiece>() {
+            @Override
+            public void subscribe(ObservableEmitter<NewsPiece> emitter) throws Exception {
+                NewsPiece piece = NetWorkServer.searchById(id);
+//                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                emitter.onNext(piece);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
     }
     public static void loadMore(Observer<NewsList> ob, final String type){
         Observable.create(new ObservableOnSubscribe<NewsList>() {
@@ -75,7 +77,6 @@ public class NetWorkServer {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
                 NewsList list = NetWorkServer.viewNewExcuteNew(type);
-                System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(list);
                 emitter.onComplete();
             }
@@ -275,16 +276,28 @@ public class NetWorkServer {
                 if(list.getNewsList().size() >= Constants.PAGESIZE) break;
             }
         }
-//        String str = "";
-//        for(int i = 0; i < list.getNewsList().size(); i ++){
-//            str += list.getNewsList().get(i).getTitle() + "\n";
-//        }
-//        System.out.println(str);
-//        System.out.println("size:" + list.getNewsList().size());
-//        System.out.println("check: total " + latestId + " count " + count);
         return list;
     }
-    public static int getTotal(String type){
+
+
+    private static NewsPiece searchById(String id){
+        try{
+            OkHttpClient okHttpClient = new OkHttpClient();
+            String url = "https://covid-dashboard.aminer.cn/api/event/" + id + "?id=" + id;
+            final Request request1 = new Request.Builder().url(url).get().build();
+            final Call call = okHttpClient.newCall(request1);
+            String msg = "";
+            Response response = call.execute();
+            msg += response.body().string();
+            JSONObject jsonObject = new JSONObject(msg);
+            return new NewsPiece(jsonObject.getJSONObject("data"));
+        }
+        catch (Exception e){
+
+        }
+        return null;
+    }
+    private static int getTotal(String type){
         try{
             OkHttpClient okHttpClient = new OkHttpClient();
             String tmpUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1"; //随便找一页 找到总数
