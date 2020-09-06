@@ -1,17 +1,19 @@
 package com.java.chenxin.data_struct;
 
+import com.orm.SugarRecord;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.Vector;
 
-public class NewsPiece implements Serializable {
+public class NewsPiece extends SugarRecord {
     private String _id = "", _title = "", _date = "", _content = "", _source = "";
     private double _influence = -1.0;
     private NewsType _type;
     private Vector<String> _authors = null, _region = null;
+    private boolean _isRead = false;
 
     public String getTitle(){
         return _title;
@@ -25,7 +27,7 @@ public class NewsPiece implements Serializable {
     public String getContent(){
         return _content;
     }
-    public String getSource(){
+    public String get_source(){
         return _source;
     }
     public double getInfluence(){
@@ -34,23 +36,26 @@ public class NewsPiece implements Serializable {
     public NewsType getType(){
         return _type;
     }
-    public String getAuthors(){
-        String authors = "";
-        if (_authors == null || _authors.isEmpty())
-            return authors;
-        else
-            authors += _authors.get(0);
-        for (int i = 1; i < _authors.size(); ++i)
-            authors = authors + " " + _authors.get(i);
+    public void setIsRead(boolean flag){ _isRead = flag; }
+    public boolean getIsRead(){return _isRead;}
 
-        System.out.println(authors);
-        return authors;
+    public String getAuthorString(){
+        String s = "";
+        if(_authors == null || _authors.size() == 0) return "";
+        for(int i = 0; i < _authors.size() - 1; i ++){
+            s += _authors.get(i) + ", ";
+        }
+        s += _authors.get(_authors.size() - 1);
+        return s;
     }
-    public Vector<String> getRegion(){
-        return _region;
-    }
-    public String getRegionsByIndex(final int i){
-        return _region.get(i);
+
+    public NewsPiece(final String _id, final String title, final String date,
+                     Vector<String> author, final String content){
+        this._id = _id;
+        this._title = title;
+        this._date = date;
+        this._content = content;
+        this._authors = author;
     }
     public boolean searchWithHighLight(String[] key){//查找几个关键词并把他们高亮
         boolean flag = false;
@@ -85,7 +90,7 @@ public class NewsPiece implements Serializable {
     }
     public boolean search(String reg){
 //        System.out.println(_content);
-        return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg);
+        return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg) ;
 //        return _title.matches(reg) || _content.matches(reg) || _date.matches(reg) || _source.matches(reg);
     }
     public NewsPiece(JSONObject jsonObject){
@@ -134,7 +139,7 @@ public class NewsPiece implements Serializable {
             JSONArray authorArray = jsonObject.getJSONArray("authors");
             _authors = new Vector<String>();
             for(int i = 0; i < authorArray.length(); i++){
-                _authors.add(authorArray.getString(i));
+                _authors.add(authorArray.getJSONObject(i).getString("name"));
             }
         }
         catch(JSONException e){
@@ -144,7 +149,7 @@ public class NewsPiece implements Serializable {
             JSONArray regionArray = jsonObject.getJSONArray("regionIDs");
             _region = new Vector<String>();
             for(int i = 0; i < regionArray.length(); i++){
-                _region.add(regionArray.getString(i));
+                _region.add(regionArray.getJSONObject(i).getString("name"));
             }
         }
         catch(JSONException e){
@@ -171,5 +176,5 @@ public class NewsPiece implements Serializable {
 }
 
 enum NewsType{
-    NEWS, PAPER, ALL
+    NEWS, PAPER,
 }

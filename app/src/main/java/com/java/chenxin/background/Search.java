@@ -1,30 +1,109 @@
 package com.java.chenxin.background;
 
+import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.NewsList;
+import com.java.chenxin.data_struct.SearchHistory;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class Search {
-    private static Vector<String> _searchHistory = new Vector<String>();
+    private static int _SEARCHHISTOYSIZE = 5;
+    private static int _searchHistoryNum = 0;
+    private static boolean isFirstTime = true;
 
-    public static Vector<String>  getSearchHistory(){
-        return _searchHistory;
+    public static void clearSearchHistory(){
+        _searchHistoryNum = 0;
+        //删除表
+       SearchHistory.deleteAll(SearchHistory.class);
     }
-    public static void cleatSearchHistory(){
-        _searchHistory = new Vector<String>();
-    }
-    public static NewsList searchRefresh(String content, String type){
-        _searchHistory.add(content);
-        String[] searchArray = content.split(" ");
 
-//        System.out.println(searchArray[0]);
-        return NetWorkServer.searchExcuteNew(searchArray, type);
+    public static void searchRefresh(Observer<NewsList> ob, String content, final String type){
+        final String[] key = content.split(" ");
+        Observable.create(new ObservableOnSubscribe<NewsList>() {
+            @Override
+            public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
+                NewsList list = NetWorkServer.searchExcuteNew(key, type);
+                emitter.onNext(list);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
     }
-    public static NewsList search(String content, String type){
-        _searchHistory.add(content);
-        String[] searchArray = content.split(" ");
-
-//        System.out.println(searchArray[0]);
-        return NetWorkServer.search(searchArray, type);
+    public static void getSearchHistory(Observer<List<String>> ob){ //返回既定size的搜索记录
+        Observable.create(new ObservableOnSubscribe<List<String>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<String>> emitter) throws Exception {
+                List<String> vec = getHistory();
+//                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                emitter.onNext(vec);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
+    }
+    private static List<String> getHistory(){
+        if(isFirstTime){
+            isFirstTime = false;
+            _searchHistoryNum = SearchHistory.listAll(SearchHistory.class).size();
+        }
+        List<String> vec = new ArrayList<String>();
+        int tmpid = _searchHistoryNum;
+        while(tmpid > 0 && vec.size() < Constants.SEARCHHISTORYSIZE){
+            List<SearchHistory> tmp = SearchHistory.find(SearchHistory.class,"timestamp = ?", String.valueOf(tmpid--));
+            if(tmp == null || tmp.size() == 0) continue;
+            vec.add(tmp.get(0).getSearchhistory());
+        }
+        return vec;
+    }
+    public static void search(Observer<NewsList> ob, String content, final String type){
+        _addHistory(content);
+        final String[] key = content.split(" ");
+        Observable.create(new ObservableOnSubscribe<NewsList>() {
+            @Override
+            public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
+                NewsList list = NetWorkServer.search(key, type);
+//                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                emitter.onNext(list);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
+    }
+    private static void _addHistory(String s){
+        if(isFirstTime){
+            isFirstTime = false;
+            _searchHistoryNum = SearchHistory.listAll(SearchHistory.class).size();
+        }
+        SearchHistory sh = new SearchHistory(s, ++_searchHistoryNum);
+        if(_searchHistoryNum == 1){
+            sh.save();
+            return;
+        }
+        List<SearchHistory> tmp = SearchHistory.find(SearchHistory.class,"searchhistory = ?", s);
+        if(tmp == null || tmp.size() == 0) {
+            System.out.println("not exist");
+            sh.save();
+        }
+        else{//更新id
+            tmp.get(0).set_timestamp(_searchHistoryNum);
+            tmp.get(0).save();
+//            List<SearchHistory> list = SearchHistory.listAll(SearchHistory.class);
+//            String str = "Search History:\n";
+//            for(SearchHistory item : list){
+//                str += item.getSearchhistory() + "\n";
+//            }
+//            System.out.println(str);
+        }
     }
 }

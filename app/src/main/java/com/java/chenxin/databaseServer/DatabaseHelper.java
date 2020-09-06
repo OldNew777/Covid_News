@@ -6,13 +6,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASENAME = "database.db";
-    public static int databaseVersion = 1;
-    private static final String _CREATESEARCHHISTORYTABLE = "CREATE TABLE" + " " + "SearchHistory" +
+    public static final int databaseVersion = 1;
+    public static final String SEARCHHISTORYTABLENAME = "SearchHistory";
+    public static final String NEWSHISTORYTABLENAME = "NewsHistory";
+    private static final String _CREATESEARCHHISTORYTABLE = "CREATE TABLE" + " " + SEARCHHISTORYTABLENAME +
             "(" +
             "id" + " " + "INTEGER" + " " + "PRIMARY KEY" + " " +"AUTOINCREMENT," +
             "searchContent" + " " + "TEXT" + " " + "NOT NULL" +
             ");";
-    private static final String _CREATEVIEWHISTORY = "CREATE TABLE ViewHistory (" +
+    private static final String _CREATEVIEWHISTORY = "CREATE TABLE" + " " + NEWSHISTORYTABLENAME +
+            "(" +
             "id         TEXT    PRIMARY KEY NOT NULL," +
             "title      TEXT    NOT NULL," +
             "content    TEXT    NOT NULL," +
@@ -23,6 +26,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "author     TEXT," +
             "region     TEXT" +
             ");";
+
+    private static int _lastSearchHistoryId = 0;
+    private static int _lastNewsId = 0;
+
+    protected static void increaseLastSearchHistoryId(){_lastSearchHistoryId ++;}
+    protected static void increaseLastNewsId(){_lastNewsId ++;}
+    protected static void decreaseLastSearchHistoryId(){_lastSearchHistoryId --;}
+    protected static void decreaseLastNewsId(){_lastNewsId --;}
+    protected static void resetLastSearchHistoryId(){_lastSearchHistoryId = 0;}
+    protected static void resetLastNewsId(){_lastNewsId = 0;}
+
+
     public DatabaseHelper(Context context){
         super(context, DATABASENAME, null, databaseVersion);
     }
