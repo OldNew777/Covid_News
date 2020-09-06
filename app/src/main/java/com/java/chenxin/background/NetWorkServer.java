@@ -155,6 +155,7 @@ public class NetWorkServer {
         return list;
     }
 
+
     private static NewsList viewNewExcuteNew(String type){
         OkHttpClient okHttpClient = new OkHttpClient();
         String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=" + Constants.PAGESIZE;
