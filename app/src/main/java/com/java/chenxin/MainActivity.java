@@ -7,6 +7,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.java.chenxin.ui.data.DataFragment;
 import com.java.chenxin.ui.news.NewsFragment;
 import com.java.chenxin.ui.scholar.ScholarFragment;
+import com.orm.SugarContext;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
         // 底部导航栏添加监听器
         navView = findViewById(com.java.chenxin.R.id.bottom_navi);
         navView.setOnNavigationItemSelectedListener(bottomNaviSelectedListener);
+
+        // 建立数据库
+        SugarContext.init(this);
     }
 
     private void initFragment(Bundle savedInstanceState){

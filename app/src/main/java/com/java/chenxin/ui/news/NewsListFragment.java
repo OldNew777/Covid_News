@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.java.chenxin.NewsPieceActivity;
 import com.java.chenxin.R;
 import com.java.chenxin.background.NetWorkServer;
+import com.java.chenxin.background.Search;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.NewsListAdapter;
 import com.java.chenxin.data_struct.NewsPiece;
@@ -49,7 +50,10 @@ public class NewsListFragment extends Fragment {
     private NewsListAdapter arrayAdapter;
     // 搜索框
     private SearchView mSearchView;
-    // observer
+
+    // 新闻正文的NewsPiece
+    NewsPiece newsPieceDetails;
+    // 列表的observer
     private Observer<NewsList> newsListObserver = new Observer<NewsList>() {
         @Override
         // 绑定激活函数
@@ -65,7 +69,7 @@ public class NewsListFragment extends Fragment {
 
         @Override
         public void onError(Throwable e) {
-            System.out.println("refresh error");
+            Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
             refreshLayout.finishRefresh();
         }
 
@@ -76,6 +80,30 @@ public class NewsListFragment extends Fragment {
                 refreshLayout.finishRefresh();
             else if (refreshMode == RefreshMode.LOADMORE)
                 refreshLayout.finishLoadMore();
+        }
+    };
+    // 新闻正文的observer
+    private Observer<NewsPiece> newsDetailsObserver = new Observer<NewsPiece>() {
+        @Override
+        // 绑定激活函数
+        public void onSubscribe(Disposable d) {
+        }
+
+        @Override
+        public void onNext(NewsPiece newsPiece) {
+            newsPieceDetails = newsPiece;
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            System.out.println("加载失败");
+        }
+
+        @Override
+        public void onComplete() {
+            Intent intent = new Intent(getContext(), NewsPieceActivity.class);
+            intent.putExtra("NewsPiece", newsPieceDetails);
+            startActivity(intent);
         }
     };
 
@@ -103,11 +131,9 @@ public class NewsListFragment extends Fragment {
         // 点击跳转新闻详情页
         news_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                NewsPiece newsPiece = newsInfo.get(position);
-                Intent intent = new Intent(getContext(), NewsPieceActivity.class);
-                intent.putExtra("NewsPiece", newsPiece);
-                startActivity(intent);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
+                String id = newsInfo.get(position).get_id();
+                NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
             }
         });
 
@@ -140,7 +166,7 @@ public class NewsListFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 refreshMode = RefreshMode.SEARCH;
-                NetWorkServer.search(newsListObserver, query, type);
+                Search.search(newsListObserver, query, type);
                 Toast.makeText(getActivity(), "正在搜索："+query, Toast.LENGTH_SHORT).show();
                 return true;
             }

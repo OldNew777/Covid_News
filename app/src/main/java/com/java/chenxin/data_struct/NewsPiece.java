@@ -6,9 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class NewsPiece extends SugarRecord {
+public class NewsPiece extends SugarRecord implements Serializable {
     private String _id = "", _title = "", _date = "", _content = "", _source = "";
     private double _influence = -1.0;
     private NewsType _type;
@@ -27,7 +28,7 @@ public class NewsPiece extends SugarRecord {
     public String getContent(){
         return _content;
     }
-    public String get_source(){
+    public String getSource(){
         return _source;
     }
     public double getInfluence(){

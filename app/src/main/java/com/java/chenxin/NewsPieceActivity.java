@@ -28,7 +28,7 @@ public class NewsPieceActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.source)).setText(newsPiece.getSource());
         ((TextView) findViewById(R.id.date)).setText(newsPiece.getDate());
         ((TextView) findViewById(R.id.content)).setText(newsPiece.getContent());
-        ((TextView) findViewById(R.id.author)).setText(newsPiece.getAuthors());
+        ((TextView) findViewById(R.id.author)).setText(newsPiece.getAuthorString());
 
         // 返回键
         ActionBar actionBar = getSupportActionBar();
