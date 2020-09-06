@@ -87,7 +87,6 @@ public class NetWorkServer {
         int latestId = getTotal(type);
         int page = (latestId - _currentId) / _SIZE + 1;
         int pt = latestId - _SIZE * page;
-
         OkHttpClient okHttpClient = new OkHttpClient();
         String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + page + "&size=" + _SIZE;
         Request request = new Request.Builder().url(mUrl).get().build();
@@ -194,6 +193,7 @@ public class NetWorkServer {
         int latestId = getTotal(type);
         int page = (latestId - _searchId) / SEARCHSIZE + 1;
         int pt = latestId - SEARCHSIZE * (page - 1);
+        int count = latestId - _searchId;
         NewsList list = new NewsList();
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -233,6 +233,7 @@ public class NetWorkServer {
                 break;
             }
             k ++;
+            count ++;
             _searchId --;
 
         }
@@ -271,16 +272,18 @@ public class NetWorkServer {
                     break;
                 }
                 k ++;
+                count ++;
                 _searchId --;
                 if(list.getNewsList().size() == _SIZE) break;
             }
         }
-        String str = "";
-        for(int i = 0; i < list.getNewsList().size(); i ++){
-            str += list.getNewsList().get(i).getTitle() + "\n";
-        }
-        System.out.println(str);
-        System.out.println("size:" + list.getNewsList().size());
+//        String str = "";
+//        for(int i = 0; i < list.getNewsList().size(); i ++){
+//            str += list.getNewsList().get(i).getTitle() + "\n";
+//        }
+//        System.out.println(str);
+//        System.out.println("size:" + list.getNewsList().size());
+//        System.out.println("check: total " + latestId + " count " + count);
         return list;
     }
     public static int getTotal(String type){

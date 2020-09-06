@@ -33,18 +33,16 @@ public class NewsPiece {
     public NewsType getType(){
         return _type;
     }
-    public Vector<String> getAuthors(){
-        return _authors;
+    public String getAuthorString(){
+        String s = "";
+        if(_authors == null || _authors.size() == 0) return "";
+        for(int i = 0; i < _authors.size() - 1; i ++){
+            s += _authors.get(i) + ", ";
+        }
+        s += _authors.get(_authors.size() - 1);
+        return s;
     }
-    public String getAuthorByIndex(final int i){
-        return _authors.get(i);
-    }
-    public Vector<String> getRegion(){
-        return _region;
-    }
-    public String getRegionsByIndex(final int i){
-        return _region.get(i);
-    }
+
     public NewsPiece(final String _id, final String title, final String date,
                      Vector<String> author, final String content){
         this._id = _id;
@@ -86,7 +84,7 @@ public class NewsPiece {
     }
     public boolean search(String reg){
 //        System.out.println(_content);
-        return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg);
+        return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg) || _authors.contains(reg) ;
 //        return _title.matches(reg) || _content.matches(reg) || _date.matches(reg) || _source.matches(reg);
     }
     public NewsPiece(JSONObject jsonObject){
@@ -135,7 +133,7 @@ public class NewsPiece {
             JSONArray authorArray = jsonObject.getJSONArray("authors");
             _authors = new Vector<String>();
             for(int i = 0; i < authorArray.length(); i++){
-                _authors.add(authorArray.getString(i));
+                _authors.add(authorArray.getJSONObject(i).getString("name"));
             }
         }
         catch(JSONException e){
@@ -145,7 +143,7 @@ public class NewsPiece {
             JSONArray regionArray = jsonObject.getJSONArray("regionIDs");
             _region = new Vector<String>();
             for(int i = 0; i < regionArray.length(); i++){
-                _region.add(regionArray.getString(i));
+                _region.add(regionArray.getJSONObject(i).getString("name"));
             }
         }
         catch(JSONException e){

@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView textView;
     String str = "not changed";
     NewsList list = null;
-    String type = "news";
-    String searchContext = "北京";
+    String type = "paper";
+    String searchContext = "Mike";
 
     Observer<NewsList> observer1 = new Observer<NewsList>() {
         @Override
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onComplete() {
             str = "";
             for(int i = 0; i < list.getNewsList().size(); i ++){
-                str += list.getNewsList().get(i).getTitle() + "\n";
+                str += list.getNewsList().get(i).getAuthorString() + "\n";
             }
             showResponse(str);
             Log.d("----", "complete");
