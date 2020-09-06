@@ -7,15 +7,15 @@
 
     <fragment
         android:id="@+id/navigation_news"
-        android:name="com.java.chenxin.ui.news.NewsFragment"
+        android:name="com.java.chenxin.ui.news.NewsListFragment"
         android:label="@string/title_news"
-        tools:layout="@layout/fragment_news" />
+        tools:layout="@layout/fragment_newslist" />
 
     <fragment
         android:id="@+id/navigation_data"
         android:name="com.java.chenxin.ui.data.DataFragment"
         android:label="@string/title_data"
-        tools:layout="@layout/fragment_data" />
+        tools:layout="@layout/fragment_viewpager" />
 
     <fragment
         android:id="@+id/navigation_scholar"

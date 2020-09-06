@@ -60,7 +60,7 @@
                 android:gravity="end"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:layout_weight="1"
+                android:layout_weight="4"
 
                 android:textSize="15sp"/>
         </LinearLayout>

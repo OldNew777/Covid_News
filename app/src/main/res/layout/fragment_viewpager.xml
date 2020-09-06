@@ -2,12 +2,12 @@
 
 <androidx.viewpager.widget.ViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/data_ViewPager"
+    android:id="@+id/viewPager"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/dataRalevent_tabLayout"
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

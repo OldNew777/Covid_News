@@ -17,11 +17,11 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity {
 
     // 底部导航栏
-    BottomNavigationView navView;
+    private BottomNavigationView navView;
     // fragment管理器
-    FragmentManager fm;
+    private FragmentManager fm;
     // 三个fragment
-    private NewsFragment newsFragment;
+    private NewsFragment newsListFragment;
     private DataFragment dataFragment;
     private ScholarFragment scholarFragment;
     // 正在使用的fragment
@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {     // 分支
                         case com.java.chenxin.R.id.navigation_news:
-                            if (newsFragment == null) {
-                                newsFragment = new NewsFragment();
+                            if (newsListFragment == null) {
+                                newsListFragment = new NewsFragment();
                             }
-                            switchContent(activeFragment, newsFragment);
+                            switchContent(activeFragment, newsListFragment);
                             return true;
                         case com.java.chenxin.R.id.navigation_data:
                             if (dataFragment == null) {
@@ -73,11 +73,11 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            if (newsFragment == null){
-                newsFragment = new NewsFragment();
+            if (newsListFragment == null){
+                newsListFragment = new NewsFragment();
             }
-            activeFragment = newsFragment;
-            ft.replace(com.java.chenxin.R.id.main_container, newsFragment).commit();
+            activeFragment = newsListFragment;
+            ft.replace(com.java.chenxin.R.id.main_container, newsListFragment).commit();
         }
     }
 

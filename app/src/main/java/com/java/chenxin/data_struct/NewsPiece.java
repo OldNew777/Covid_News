@@ -34,26 +34,23 @@ public class NewsPiece implements Serializable {
     public NewsType getType(){
         return _type;
     }
-    public Vector<String> getAuthors(){
-        return _authors;
-    }
-    public String getAuthorByIndex(final int i){
-        return _authors.get(i);
+    public String getAuthors(){
+        String authors = "";
+        if (_authors == null || _authors.isEmpty())
+            return authors;
+        else
+            authors += _authors.get(0);
+        for (int i = 1; i < _authors.size(); ++i)
+            authors = authors + " " + _authors.get(i);
+
+        System.out.println(authors);
+        return authors;
     }
     public Vector<String> getRegion(){
         return _region;
     }
     public String getRegionsByIndex(final int i){
         return _region.get(i);
-    }
-    public NewsPiece(final String _id, final String title, final String date,
-                     Vector<String> author, final String content, final String source){
-        this._id = _id;
-        this._title = title;
-        this._date = date;
-        this._content = content;
-        this._authors = author;
-        this._source = source;
     }
     public boolean searchWithHighLight(String[] key){//查找几个关键词并把他们高亮
         boolean flag = false;

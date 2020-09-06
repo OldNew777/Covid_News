@@ -20,11 +20,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NetWorkServer {
+    private final static int _SIZE = 20;
+
     private static int _count = 0;
     private static int _searchPage  = 1;
     private static int _searchId = 1;
     private static int _pageNum = 100;
-    private final static int _SIZE = 5;
     private static int _currentId = 0;//下一条要读入的编号
     private static String _lastId = "";
     private static NetWorkServer _netWorkServer = new NetWorkServer();
@@ -52,11 +53,11 @@ public class NetWorkServer {
             JSONObject jsonObject = new JSONObject(msg);
             return new NewsList(jsonObject,type);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
-    public static void showOld(Observer<NewsList> ob,final String type){
+    public static void loadMore(Observer<NewsList> ob, final String type){
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
@@ -69,12 +70,12 @@ public class NetWorkServer {
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
                 .subscribe(ob);
     }
-    public static  void reFresh(Observer<NewsList> ob,final String type){
+    public static  void reFresh(Observer<NewsList> ob, final String type){
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
                 NewsList list = NetWorkServer.viewNewExcuteNew(type);
-                System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
+                //System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(list);
                 emitter.onComplete();
             }
@@ -113,7 +114,7 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
         JSONObject jsonObject = null;
@@ -121,7 +122,7 @@ public class NetWorkServer {
             jsonObject =new JSONObject(msg);
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if(jsonObject == null){
             return null;
@@ -147,7 +148,7 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
         jsonObject = null;
@@ -155,7 +156,7 @@ public class NetWorkServer {
             jsonObject =new JSONObject(msg);
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if(jsonObject == null){
             return null;
@@ -179,7 +180,7 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
         JSONObject jsonObject = null;
@@ -187,7 +188,7 @@ public class NetWorkServer {
             jsonObject =new JSONObject(msg);
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if(jsonObject == null){
             return null;
@@ -208,7 +209,7 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
         JSONObject jsonObject = null;
@@ -216,7 +217,7 @@ public class NetWorkServer {
             jsonObject =new JSONObject(msg);
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if(jsonObject == null){
             return null;
@@ -265,15 +266,15 @@ public class NetWorkServer {
                 return list1;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
     }
-    private static NewsList search(String[] key, String type){
+    static NewsList search(String[] key, String type){
         _searchPage = 1;
         return searchExcuteNew(key, type);
     }
-    private static NewsList searchExcuteNew(String[] key, String type){
+    static NewsList searchExcuteNew(String[] key, String type){
         final int SEARCHSIZE = _SIZE * 5;
         int latestId = getTotal(type);
         int page = (latestId - _searchId) / _SIZE + 1;
@@ -289,7 +290,7 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
         JSONObject jsonObject = null;
@@ -297,7 +298,7 @@ public class NetWorkServer {
             jsonObject =new JSONObject(msg);
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if(jsonObject == null){
             return null;
@@ -323,7 +324,7 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
         jsonObject = null;
@@ -331,7 +332,7 @@ public class NetWorkServer {
             jsonObject =new JSONObject(msg);
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if(jsonObject == null){
             return null;
@@ -374,7 +375,7 @@ public class NetWorkServer {
                 }
             }
             catch (Exception e){
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
         return list;
@@ -398,7 +399,7 @@ public class NetWorkServer {
             JSONObject pagination = (JSONObject) jsonObject.get("pagination");
             return pagination.getInt("total");}
         catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return -1;
     }
