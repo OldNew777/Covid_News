@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">防疫聚焦</string>
+    <string name="app_name">Coffee News Focus</string>
 
     <string name="news">新闻</string>
         <string name="all">全部</string>
@@ -14,5 +14,6 @@
     <string name="news_details">新闻正文</string>
 
     <string name="share">分享</string>
+    <string name="search">搜索</string>
     <string name="searchHint">请输入搜索关键词</string>
 </resources>

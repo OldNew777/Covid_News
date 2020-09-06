@@ -1,5 +1,6 @@
 package com.java.chenxin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,6 +11,7 @@ import com.java.chenxin.ui.scholar.ScholarFragment;
 import com.orm.SugarContext;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,41 +30,42 @@ public class MainActivity extends AppCompatActivity {
     // 正在使用的fragment
     private Fragment activeFragment = null;
     // 底部导航栏的listener
-    private BottomNavigationView.OnNavigationItemSelectedListener bottomNaviSelectedListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener(){
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()) {     // 分支
-                        case com.java.chenxin.R.id.navigation_news:
-                            if (newsListFragment == null) {
-                                newsListFragment = new NewsFragment();
-                            }
-                            switchContent(activeFragment, newsListFragment);
-                            return true;
-                        case com.java.chenxin.R.id.navigation_data:
-                            if (dataFragment == null) {
-                                dataFragment = new DataFragment();
-                            }
-                            switchContent(activeFragment, dataFragment);
-                            return true;
-                        case com.java.chenxin.R.id.navigation_scholar:
-                            if (scholarFragment == null) {
-                                scholarFragment = new ScholarFragment();
-                            }
-                            switchContent(activeFragment, scholarFragment);
-                            return true;
-                    }
-                    return false;
-                }
-            };
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomNaviSelectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.java.chenxin.R.layout.activity_main);
 
-        // 初始化Fragment及底部导航栏
+        // 初始化Fragment及底部导航栏监听器
         initFragment(savedInstanceState);
+        bottomNaviSelectedListener =
+                new BottomNavigationView.OnNavigationItemSelectedListener(){
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {     // 分支
+                            case com.java.chenxin.R.id.navigation_news:
+                                if (newsListFragment == null) {
+                                    newsListFragment = new NewsFragment();
+                                }
+                                switchContent(activeFragment, newsListFragment);
+                                return true;
+                            case com.java.chenxin.R.id.navigation_data:
+                                if (dataFragment == null) {
+                                    dataFragment = new DataFragment();
+                                }
+                                switchContent(activeFragment, dataFragment);
+                                return true;
+                            case com.java.chenxin.R.id.navigation_scholar:
+                                if (scholarFragment == null) {
+                                    scholarFragment = new ScholarFragment();
+                                }
+                                switchContent(activeFragment, scholarFragment);
+                                return true;
+                        }
+                        return false;
+                    }
+                };
 
         // 底部导航栏添加监听器
         navView = findViewById(com.java.chenxin.R.id.bottom_navi);
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         SugarContext.init(this);
     }
 
+    // 初始化第一个fragment
     private void initFragment(Bundle savedInstanceState){
         // 判断activity是否重建，如果不是，则不需要重新建立fragment.
         if (savedInstanceState == null) {
@@ -99,6 +103,22 @@ public class MainActivity extends AppCompatActivity {
                 // 隐藏当前的fragment，显示下一个
                 ft.hide(from).show(to).commit();
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case 1:
+                newsListFragment.getAllListFragment().setSearchQuery(data);
+                break;
+            case 2:
+                newsListFragment.getNewsListFragment().setSearchQuery(data);
+                break;
+            case 3:
+                newsListFragment.getPaperListFragment().setSearchQuery(data);
+                break;
         }
     }
 }

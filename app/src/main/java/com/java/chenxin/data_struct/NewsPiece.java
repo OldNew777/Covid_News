@@ -16,9 +16,7 @@ public class NewsPiece extends SugarRecord implements Serializable {
     private Vector<String> _authors = null, _region = null;
     private boolean _isRead = false;
 
-    public String getTitle(){
-        return _title;
-    }
+    public String getTitle(){ return _title; }
     public String get_uid(){
         return _uid;
     }
