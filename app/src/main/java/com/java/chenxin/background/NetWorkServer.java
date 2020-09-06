@@ -234,6 +234,7 @@ public class NetWorkServer {
             }
             k ++;
             _searchId --;
+
         }
         if(list.getNewsList().size() == _SIZE){
             return list;
