@@ -5,36 +5,33 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class DataFragmentAdapter extends FragmentPagerAdapter {
 
-    private List<Fragment> fragments = null;
+    private List<Fragment> fragmentList;
+    private List<String> titleList;
 
-    public DataFragmentAdapter(FragmentManager fm, List<Fragment> fragments){
+    public DataFragmentAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList){
         super(fm);
-        this.fragments = fragments;
+        this.fragmentList = fragmentList;
+        this.titleList = titleList;
     }
 
+    @NotNull
     @Override
     public Fragment getItem(int position) {
-        return fragments.get(position);
+        return fragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return fragmentList.size();
     }
 
     @Nullable
     @Override
-    public CharSequence getPageTitle(int position) {
-//        if (position == 0)
-//            return "疫情数据";
-//        else if (position == 1)
-//            return "疫情图谱";
-//        else if (position == 2)
-//            return "新闻聚类";
-        return super.getPageTitle(position);
-    }
+    public CharSequence getPageTitle(int position) { return titleList.get(position); }
 }

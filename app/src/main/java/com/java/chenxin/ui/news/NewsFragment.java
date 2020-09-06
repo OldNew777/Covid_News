@@ -20,22 +20,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsFragment extends Fragment {
-    private ViewPager viewPager;
-    private List<Fragment> fragmentList;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
 
-        fragmentList = new ArrayList<>();
-        fragmentList.add(new NewsListFragment());
-        fragmentList.add(new PaperListFragment());
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new NewsListFragment("all"));
+        fragmentList.add(new NewsListFragment("news"));
+        fragmentList.add(new NewsListFragment("paper"));
+        List<String> titleList = new ArrayList<>();
+        titleList.add(getResources().getString(R.string.all));
+        titleList.add(getResources().getString(R.string.news));
+        titleList.add(getResources().getString(R.string.paper));
 
-        viewPager = (ViewPager) root.findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(fragmentList.size());
         DataFragmentAdapter adapter = new DataFragmentAdapter(
-                getActivity().getSupportFragmentManager(), fragmentList);
+                getActivity().getSupportFragmentManager(), fragmentList, titleList);
         viewPager.setAdapter(adapter);
 
         return root;

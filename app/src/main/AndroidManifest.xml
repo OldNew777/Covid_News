@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".NewsActivity"
+        <activity android:name=".NewsPieceActivity"
             android:label="@string/news_details"
             android:screenOrientation="portrait">
         </activity>

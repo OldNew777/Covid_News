@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
-import com.java.chenxin.NewsActivity;
+import com.java.chenxin.NewsPieceActivity;
+import com.java.chenxin.R;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.NewsListAdapter;
@@ -29,7 +32,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 enum RefreshMode{
-    REFRESH, LOADMORE
+    REFRESH, LOADMORE, SEARCH
 }
 
 public class NewsListFragment extends Fragment {
@@ -38,9 +41,16 @@ public class NewsListFragment extends Fragment {
     // 记录refresh/loadMore
     private RefreshMode refreshMode;
 
+    // 记录all/news/paper
+    private String type;
+
+    // 列表
     private List<NewsPiece> newsInfo = new Vector<>(100);
     private NewsListAdapter arrayAdapter;
-    private Observer<NewsList> newsRefreshObserver = new Observer<NewsList>() {
+    // 搜索框
+    private SearchView mSearchView;
+    // observer
+    private Observer<NewsList> newsListObserver = new Observer<NewsList>() {
         @Override
         // 绑定激活函数
         public void onSubscribe(Disposable d) {
@@ -48,7 +58,7 @@ public class NewsListFragment extends Fragment {
 
         @Override
         public void onNext(NewsList newsList) {
-            if (refreshMode == RefreshMode.REFRESH)
+            if (refreshMode == RefreshMode.REFRESH || refreshMode == RefreshMode.SEARCH)
                 newsInfo.clear();
             newsInfo.addAll(newsList.getNewsList());
         }
@@ -67,9 +77,14 @@ public class NewsListFragment extends Fragment {
             else if (refreshMode == RefreshMode.LOADMORE)
                 refreshLayout.finishLoadMore();
         }
-
-
     };
+
+
+    public NewsListFragment(final String type){
+        super();
+        this.type = type;
+    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -90,7 +105,7 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 NewsPiece newsPiece = newsInfo.get(position);
-                Intent intent = new Intent(getContext(), NewsActivity.class);
+                Intent intent = new Intent(getContext(), NewsPieceActivity.class);
                 intent.putExtra("NewsPiece", newsPiece);
                 startActivity(intent);
             }
@@ -100,20 +115,39 @@ public class NewsListFragment extends Fragment {
         news_refreshLayOut.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshLayout_tmp) {
+                Toast.makeText(getActivity(), "正在刷新", Toast.LENGTH_SHORT).show();
                 refreshMode = RefreshMode.REFRESH;
                 refreshLayout = refreshLayout_tmp;
-                NetWorkServer.reFresh(newsRefreshObserver, "news");
+                NetWorkServer.reFresh(newsListObserver, type);
             }
-
         });
 
         // 上拉加载更多历史新闻
         news_refreshLayOut.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshLayout_tmp) {
+                Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
                 refreshMode = RefreshMode.LOADMORE;
                 refreshLayout = refreshLayout_tmp;
-                NetWorkServer.loadMore(newsRefreshObserver, "news");
+                NetWorkServer.loadMore(newsListObserver, type);
+            }
+        });
+
+        // 监听搜索框
+        mSearchView = (SearchView) root.findViewById(R.id.news_search);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            // 当点击搜索按钮时触发该方法
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                refreshMode = RefreshMode.SEARCH;
+                NetWorkServer.search(newsListObserver, query, type);
+                Toast.makeText(getActivity(), "正在搜索："+query, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
             }
         });
 

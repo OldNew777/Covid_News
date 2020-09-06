@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/navigation_news"
         android:name="com.java.chenxin.ui.news.NewsListFragment"
-        android:label="@string/title_news"
+        android:label="@string/news"
         tools:layout="@layout/fragment_newslist" />
 
     <fragment
         android:id="@+id/navigation_data"
         android:name="com.java.chenxin.ui.data.DataFragment"
-        android:label="@string/title_data"
+        android:label="@string/data"
         tools:layout="@layout/fragment_viewpager" />
 
     <fragment
         android:id="@+id/navigation_scholar"
         android:name="com.java.chenxin.ui.scholar.ScholarFragment"
-        android:label="@string/title_extra"
+        android:label="@string/scholar"
         tools:layout="@layout/fragment_scholar" />
 </navigation>

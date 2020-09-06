@@ -13,14 +13,14 @@ import androidx.core.view.MenuItemCompat;
 
 import com.java.chenxin.data_struct.NewsPiece;
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsPieceActivity extends AppCompatActivity {
     private NewsPiece newsPiece;
     private ShareActionProvider mShareActionProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news);
+        setContentView(R.layout.activity_newspiece);
 
         // 设置新闻内容
         newsPiece = (NewsPiece) getIntent().getSerializableExtra("NewsPiece");

@@ -15,22 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataFragment extends Fragment {
-    private ViewPager viewPager;
-    private List<Fragment> fragmentList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(com.java.chenxin.R.layout.fragment_viewpager, container, false);
 
-        fragmentList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new EpidemicDataFragment());
         fragmentList.add(new EpidemicMapFragment());
         fragmentList.add(new NewsClusteringFragment());
+        List<String> titleList = new ArrayList<>();
+        titleList.add(getResources().getString(R.string.epidemic_data));
+        titleList.add(getResources().getString(R.string.epidemic_map));
+        titleList.add(getResources().getString(R.string.news_clustering));
 
-        viewPager = (ViewPager) root.findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(fragmentList.size());
         DataFragmentAdapter adapter = new DataFragmentAdapter(
-                getActivity().getSupportFragmentManager(), fragmentList);
+                getActivity().getSupportFragmentManager(), fragmentList, titleList);
         viewPager.setAdapter(adapter);
 
         return root;

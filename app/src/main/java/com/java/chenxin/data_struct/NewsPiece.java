@@ -171,5 +171,5 @@ public class NewsPiece implements Serializable {
 }
 
 enum NewsType{
-    NEWS, PAPER
+    NEWS, PAPER, ALL
 }
