@@ -1,12 +1,14 @@
 package com.java.chenxin.data_struct;
 
+import com.orm.SugarRecord;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Vector;
 
-public class NewsPiece {
+public class NewsPiece extends SugarRecord {
     private String _id = "", _title = "", _date = "", _content = "", _source = "";
     private double _influence = -1.0;
     private NewsType _type;

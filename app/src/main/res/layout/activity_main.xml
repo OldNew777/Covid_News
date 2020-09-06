@@ -81,6 +81,13 @@
             android:text="ps">
 
         </Button>
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="X">
+
+        </Button>
     </LinearLayout>
     <TextView
         android:id="@+id/textview1"

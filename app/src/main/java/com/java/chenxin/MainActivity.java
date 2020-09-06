@@ -7,15 +7,17 @@ import android.widget.TextView;
 //import com.java.chenxin.background.T;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.java.chenxin.data_struct.NewsList;
-import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.Search;
 import com.java.chenxin.data_struct.NewsPiece;
+import com.orm.SugarContext;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String type = "news";
     String searchContext = "习";
     NewsPiece p = null;
+    List<String> v = null;
     Observer<NewsList> listObserver = new Observer<NewsList>() {
         @Override
         public void onSubscribe(Disposable d) {
@@ -54,6 +57,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 str += "num: " + (i + 1) + " " + list.getNewsList().get(i).getTitle() + "\n";
             }
             showResponse(str);
+            Log.d("----", "complete");
+        }
+    };
+
+    Observer<List<String>> searchHistoryObserver = new Observer<List<String>>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            System.out.println("开始了");
+            Log.d("----","开始了");
+        }
+
+        @Override
+        public void onNext(List<String> n) {
+//            System.out.println(s);
+             v = n;
+//            Log.d("----", s);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            System.out.println("ob error");
+        }
+
+        @Override
+        public void onComplete() {
+            if(v == null) return;
+            str = "Search History: \n";
+            for(int i = 0; i < v.size(); i ++){
+                str += v.get(i) + "\n";
+            }
+            str+="\n";
+            textView.setText(str);
             Log.d("----", "complete");
         }
     };
@@ -107,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button5 = (Button) findViewById(R.id.button5);
         Button button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
+        Button button8 = (Button) findViewById(R.id.button8);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
@@ -114,39 +151,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button5.setOnClickListener(this);
         button6.setOnClickListener(this);
         button7.setOnClickListener(this);
+        button8.setOnClickListener(this);
 
         textView = (TextView) findViewById(R.id.textview1);
 
+        //sugarOrm
+        SugarContext.init(this);
     }
     public void onClick(View view){
         if(view.getId() == R.id.button1){
 //            sendGet();
-            NetWorkServer.loadNewsPiece(pieceObserver, "5f05f3f69fced0a24b2f84ee");
+//            NetWorkServer.loadNewsPiece(pieceObserver, "5f05f3f69fced0a24b2f84ee");
+            Search.getSearchHistory(searchHistoryObserver);
         }
         else if(view.getId() == R.id.button2){
-            NetWorkServer.reFresh(listObserver, type);
+            Search.search(listObserver, "北京",type);
+//            NetWorkServer.reFresh(listObserver, type);
         }
         else if(view.getId() == R.id.button3){
-            NetWorkServer.loadMore(listObserver, type);
+            Search.search(listObserver, "上海",type);
+//            NetWorkServer.loadMore(listObserver, type);
         }
         else if(view.getId() == R.id.button4){
-            Search.search(listObserver, searchContext,type);
+
+            Search.search(listObserver,"广州",type);
         }
         else if(view.getId() == R.id.button5){
-            Search.searchRefresh(listObserver, searchContext,type);
+            Search.search(listObserver, "天津",type);
+//            Search.searchRefresh(listObserver, searchContext,type);
         }
         else if(view.getId() == R.id.button6){
-
+            Search.search(listObserver,"河北",type);
         }
         else if(view.getId() == R.id.button7){
-            if(list == null){
-                textView.setText("NULL");
-            }
-            String msg = "";
-            for(int i = 0; i < list.getNewsList().size(); i ++){
-                msg += "num: " + (i + 1) + list.getNewsList().get(i).getTitle() + "\n";
-            }
-            textView.setText(msg);
+            Search.search(listObserver, "习",type);
+//            if(list == null){
+//                textView.setText("NULL");
+//            }
+//            String msg = "";
+//            for(int i = 0; i < list.getNewsList().size(); i ++){
+//                msg += "num: " + (i + 1) + list.getNewsList().get(i).getTitle() + "\n";
+//            }
+//            textView.setText(msg);
+        }
+        else if(view.getId() == R.id.button8){
+            Search.clearSearchHistory();
         }
     }
 
