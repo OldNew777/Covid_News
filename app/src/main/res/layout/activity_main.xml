@@ -22,8 +22,9 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteY="56dp">
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="56dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/button1"
@@ -80,14 +81,15 @@
             android:text="ps">
 
         </Button>
+    </LinearLayout>
     <TextView
         android:id="@+id/textview1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="text">
+        android:text="text"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
     </TextView>
-    </LinearLayout>
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

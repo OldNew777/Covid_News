@@ -56,7 +56,7 @@ public class NetWorkServer {
         }
         return null;
     }
-    public static void showOld(Observer<NewsList> ob,final String type){
+    public static void loadMore(Observer<NewsList> ob, final String type){
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
@@ -183,77 +183,7 @@ public class NetWorkServer {
         return list;
     }
 
-    private static NewsList viewOldExcute(String type){
-        OkHttpClient okHttpClient = new OkHttpClient();
-        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - ++_count) + "&size=" + _SIZE;
-        final Request request = new Request.Builder().url(mUrl).get().build();
-        final Call call = okHttpClient.newCall(request);
-        String msg = "";
-        try {
-            Response response = call.execute();
-            msg += response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        JSONObject jsonObject = null;
-        try{
-            jsonObject =new JSONObject(msg);
-        }
-        catch(JSONException e){
-            e.printStackTrace();
-        }
-        if(jsonObject == null){
-            return null;
-        }
-        return new NewsList(jsonObject, type);
-    }
-    private static NewsList viewNewExcute(String type){
-        OkHttpClient okHttpClient = new OkHttpClient();
-        try {
-            int total = getTotal(type);
-            _pageNum = 1 + total / _SIZE;//定位到倒数第二页(整除时最后一页）由于从1开始计数 所以+1
-            _count = 0;
-            String msg = "";
-            Response response = null;
-            JSONObject jsonObject = null;
-            if(total % _SIZE == 0){//直接打印最后一页
-                String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _pageNum + "&size=" + _SIZE;
-                final Request rrequest = new Request.Builder().url(mUrl).get().build();
-                final Call ccall = okHttpClient.newCall(rrequest);
-                msg = "";
-                response = ccall.execute();
-                msg += response.body().string();
-                jsonObject = new JSONObject(msg);
-                return new NewsList(jsonObject, type);
-            }
-            else{//打印倒数两页
-                _count ++;
-                String url1 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - 1) + "&size=" + _SIZE;
-                final Request request1 = new Request.Builder().url(url1).get().build();
-                final Call call1 = okHttpClient.newCall(request1);
-                msg = "";
-                response = call1.execute();
-                msg += response.body().string();
-                jsonObject = new JSONObject(msg);
-                NewsList list1 = new NewsList(jsonObject, type);
-
-                String url2 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum) + "&size=" + _SIZE;
-                final Request request2 = new Request.Builder().url(url2).get().build();
-                final Call call2 = okHttpClient.newCall(request2);
-                msg = "";
-                response = call2.execute();
-                msg += response.body().string();
-                jsonObject = new JSONObject(msg);
-                NewsList list2 = new NewsList(jsonObject, type);
-                list1.merge(list2);
-                return list1;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//
     protected static NewsList search(String[] key, String type){
         _searchId = getTotal(type);
         return searchExcuteNew(key, type);
@@ -263,7 +193,7 @@ public class NetWorkServer {
 
         int latestId = getTotal(type);
         int page = (latestId - _searchId) / SEARCHSIZE + 1;
-        int pt = latestId - SEARCHSIZE * page;
+        int pt = latestId - SEARCHSIZE * (page - 1);
         NewsList list = new NewsList();
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -293,11 +223,7 @@ public class NetWorkServer {
             return null;
         }
         NewsList tmplist = new NewsList(jsonObject, type);
-        int k = 0;
-        while(pt > _searchId){
-            k ++;
-            pt --;
-        }
+        int k = pt - _searchId;
         //pt == searchid
         while(k < tmplist.getNewsList().size()){
             for(int i = 0; i < key.length; i ++){
@@ -316,6 +242,7 @@ public class NetWorkServer {
             mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + ++page + "&size=" + SEARCHSIZE;
             request = new Request.Builder().url(mUrl).get().build();
             call = okHttpClient.newCall(request);
+            msg = "";
             try {
                 Response response = call.execute();
                 msg += response.body().string();
@@ -344,43 +271,15 @@ public class NetWorkServer {
                 }
                 k ++;
                 _searchId --;
+                if(list.getNewsList().size() == _SIZE) break;
             }
         }
-        return list;
-    }
-    private static NewsList searchExcute(String[] key, String type){
-        int total = getTotal(type);
-        _searchPage = (total + _SIZE - 1) / _SIZE;
-        NewsList list = new NewsList();
-        OkHttpClient okHttpClient = new OkHttpClient();
-        while(list.getSize() < _SIZE || _searchPage < 1){
-            System.out.println("loop");
-            try{
-                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + _SIZE * 3;
-                final Request request1 = new Request.Builder().url(url).get().build();
-                final Call call = okHttpClient.newCall(request1);
-                String msg = "";
-                Response response = call.execute();
-                msg += response.body().string();
-                JSONObject jsonObject = new JSONObject(msg);
-                NewsList tmplist = new NewsList(jsonObject, type);
-                List<NewsPiece> pieces = tmplist.getNewsList();
-                for(int j = 0; j < pieces.size(); j ++){
-                    for(int i = 0; i < key.length; i ++) {
-                        if (key[i].equals("")) continue;
-                        if (!pieces.get(j).search(key[i])) continue;
-                        list.add(pieces.get(j));
-                        break;
-                    }
-                    if(list.getSize() == _SIZE){
-                        break;
-                    }
-                }
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+        String str = "";
+        for(int i = 0; i < list.getNewsList().size(); i ++){
+            str += list.getNewsList().get(i).getTitle() + "\n";
         }
+        System.out.println(str);
+        System.out.println("size:" + list.getNewsList().size());
         return list;
     }
     public static int getTotal(String type){
@@ -406,4 +305,110 @@ public class NetWorkServer {
         }
         return -1;
     }
+//    private static NewsList searchExcute(String[] key, String type){
+//        int total = getTotal(type);
+//        _searchPage = (total + _SIZE - 1) / _SIZE;
+//        NewsList list = new NewsList();
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        while(list.getSize() < _SIZE || _searchPage < 1){
+//            System.out.println("loop");
+//            try{
+//                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + _SIZE * 3;
+//                final Request request1 = new Request.Builder().url(url).get().build();
+//                final Call call = okHttpClient.newCall(request1);
+//                String msg = "";
+//                Response response = call.execute();
+//                msg += response.body().string();
+//                JSONObject jsonObject = new JSONObject(msg);
+//                NewsList tmplist = new NewsList(jsonObject, type);
+//                List<NewsPiece> pieces = tmplist.getNewsList();
+//                for(int j = 0; j < pieces.size(); j ++){
+//                    for(int i = 0; i < key.length; i ++) {
+//                        if (key[i].equals("")) continue;
+//                        if (!pieces.get(j).search(key[i])) continue;
+//                        list.add(pieces.get(j));
+//                        break;
+//                    }
+//                    if(list.getSize() == _SIZE){
+//                        break;
+//                    }
+//                }
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return list;
+//    }
+//    private static NewsList viewOldExcute(String type){
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - ++_count) + "&size=" + _SIZE;
+//        final Request request = new Request.Builder().url(mUrl).get().build();
+//        final Call call = okHttpClient.newCall(request);
+//        String msg = "";
+//        try {
+//            Response response = call.execute();
+//            msg += response.body().string();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//        JSONObject jsonObject = null;
+//        try{
+//            jsonObject =new JSONObject(msg);
+//        }
+//        catch(JSONException e){
+//            e.printStackTrace();
+//        }
+//        if(jsonObject == null){
+//            return null;
+//        }
+//        return new NewsList(jsonObject, type);
+//    }
+//    private static NewsList viewNewExcute(String type){
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        try {
+//            int total = getTotal(type);
+//            _pageNum = 1 + total / _SIZE;//定位到倒数第二页(整除时最后一页）由于从1开始计数 所以+1
+//            _count = 0;
+//            String msg = "";
+//            Response response = null;
+//            JSONObject jsonObject = null;
+//            if(total % _SIZE == 0){//直接打印最后一页
+//                String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _pageNum + "&size=" + _SIZE;
+//                final Request rrequest = new Request.Builder().url(mUrl).get().build();
+//                final Call ccall = okHttpClient.newCall(rrequest);
+//                msg = "";
+//                response = ccall.execute();
+//                msg += response.body().string();
+//                jsonObject = new JSONObject(msg);
+//                return new NewsList(jsonObject, type);
+//            }
+//            else{//打印倒数两页
+//                _count ++;
+//                String url1 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - 1) + "&size=" + _SIZE;
+//                final Request request1 = new Request.Builder().url(url1).get().build();
+//                final Call call1 = okHttpClient.newCall(request1);
+//                msg = "";
+//                response = call1.execute();
+//                msg += response.body().string();
+//                jsonObject = new JSONObject(msg);
+//                NewsList list1 = new NewsList(jsonObject, type);
+//
+//                String url2 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum) + "&size=" + _SIZE;
+//                final Request request2 = new Request.Builder().url(url2).get().build();
+//                final Call call2 = okHttpClient.newCall(request2);
+//                msg = "";
+//                response = call2.execute();
+//                msg += response.body().string();
+//                jsonObject = new JSONObject(msg);
+//                NewsList list2 = new NewsList(jsonObject, type);
+//                list1.merge(list2);
+//                return list1;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }

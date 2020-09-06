@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             NetWorkServer.reFresh(observer1, type);
         }
         else if(view.getId() == R.id.button3){
-            NetWorkServer.showOld(observer1, type);
+            NetWorkServer.loadMore(observer1, type);
         }
         else if(view.getId() == R.id.button4){
             Search.search(observer1, searchContext,type);

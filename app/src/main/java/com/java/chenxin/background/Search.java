@@ -12,6 +12,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class Search {
+    private static int _SEARCHHISTOYSIZE = 5;
+
     private static Vector<String> _searchHistory = new Vector<String>();
 
     public static Vector<String>  getSearchHistory(){
@@ -27,7 +29,6 @@ public class Search {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
                 NewsList list = NetWorkServer.searchExcuteNew(key, type);
-//                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(list);
                 emitter.onComplete();
             }
