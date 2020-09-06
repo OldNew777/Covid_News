@@ -344,7 +344,7 @@ public class NetWorkServer {
 
 
     private static NewsPiece searchById(String id){
-        List<NewsPiece> tmpNewsList = NewsPiece.find(NewsPiece.class, "uid = ?", id);
+        List<NewsPiece> tmpNewsList = NewsPiece.find(NewsPiece.class, "_uid = ?", id);
         if(tmpNewsList == null || tmpNewsList.size() == 0){
             try{
                 OkHttpClient okHttpClient = new OkHttpClient();

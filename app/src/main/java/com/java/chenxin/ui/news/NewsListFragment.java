@@ -156,7 +156,7 @@ public class NewsListFragment extends Fragment {
         news_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
-                String id = newsInfo.get(position).getUid();
+                String id = newsInfo.get(position).get_uid();
                 NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
             }
         });

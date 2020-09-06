@@ -66,7 +66,7 @@ public class NewsList {
         List<NewsPiece> pieceList = list.getNewsList();
         for(NewsPiece piece : pieceList){
             if(piece.getIsRead()) continue;
-            List<NewsPiece> tmp = NewsPiece.find(NewsPiece.class, "uid = ?", piece.getUid());
+            List<NewsPiece> tmp = NewsPiece.find(NewsPiece.class, "_uid = ?", piece.get_uid());
             piece.setIsRead(!(tmp == null || tmp.size() == 0));
         }
     }
