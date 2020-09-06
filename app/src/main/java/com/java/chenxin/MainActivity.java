@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Search.getSearchHistory(searchHistoryObserver);
         }
         else if(view.getId() == R.id.button2){
-            Search.search(listObserver, "北京",type);
+            Search.search(listObserver, "习近平",type);
 //            NetWorkServer.reFresh(listObserver, type);
         }
         else if(view.getId() == R.id.button3){

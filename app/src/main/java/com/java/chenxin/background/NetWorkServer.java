@@ -180,7 +180,7 @@ public class NetWorkServer {
             return null;
         }
         NewsList list = new NewsList(jsonObject, type);
-        _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
+        _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_uid();
         _currentId = list.getTotal() - Constants.PAGESIZE;
         return list;
     }
@@ -291,7 +291,9 @@ public class NetWorkServer {
             Response response = call.execute();
             msg += response.body().string();
             JSONObject jsonObject = new JSONObject(msg);
-            return new NewsPiece(jsonObject.getJSONObject("data"));
+            NewsPiece piece = new NewsPiece(jsonObject.getJSONObject("data"), true);
+            piece.save();
+            return piece;
         }
         catch (Exception e){
 

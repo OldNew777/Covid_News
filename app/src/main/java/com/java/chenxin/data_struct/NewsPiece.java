@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.util.Vector;
 
 public class NewsPiece extends SugarRecord {
-    private String _id = "", _title = "", _date = "", _content = "", _source = "";
+    private String _uid = "", _title = "", _date = "", _content = "", _source = "";
     private double _influence = -1.0;
     private NewsType _type;
     private Vector<String> _authors = null, _region = null;
@@ -18,8 +18,8 @@ public class NewsPiece extends SugarRecord {
     public String getTitle(){
         return _title;
     }
-    public String get_id(){
-        return _id;
+    public String get_uid(){
+        return _uid;
     }
     public String getDate(){
         return _date;
@@ -27,7 +27,7 @@ public class NewsPiece extends SugarRecord {
     public String getContent(){
         return _content;
     }
-    public String get_source(){
+    public String getSource(){
         return _source;
     }
     public double getInfluence(){
@@ -49,9 +49,9 @@ public class NewsPiece extends SugarRecord {
         return s;
     }
 
-    public NewsPiece(final String _id, final String title, final String date,
+    public NewsPiece(final String _uid, final String title, final String date,
                      Vector<String> author, final String content){
-        this._id = _id;
+        this._uid = _uid;
         this._title = title;
         this._date = date;
         this._content = content;
@@ -93,14 +93,15 @@ public class NewsPiece extends SugarRecord {
         return _title.contains(reg) || _content.contains(reg) || _date.contains(reg) || _source.contains(reg) ;
 //        return _title.matches(reg) || _content.matches(reg) || _date.matches(reg) || _source.matches(reg);
     }
-    public NewsPiece(JSONObject jsonObject){
+    public NewsPiece(JSONObject jsonObject, boolean flag){
+        _isRead = flag;
         if(jsonObject == null){
             System.out.println("NULL!");
             return;
         }
 //        System.out.println(jsonObject.toString());
         try {
-            _id = jsonObject.getString("_id");
+            _uid = jsonObject.getString("_id");
         }
         catch(JSONException e){
             e.printStackTrace();

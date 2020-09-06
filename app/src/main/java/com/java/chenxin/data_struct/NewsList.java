@@ -44,7 +44,7 @@ public class NewsList {
             JSONArray jsonArray = (JSONArray) jsonObject.get("data");
 //            System.out.println(jsonArray.toString());
             for (int i = 0; i < jsonArray.length(); i++) {
-                NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i));
+                NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i), false);
                 _list.add(tmpPiece);
             }
         }catch (JSONException e){
