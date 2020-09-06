@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Vector;
 
 public class NewsPiece extends SugarRecord implements Serializable {
-    private String _id = "", _title = "", _date = "", _content = "", _source = "";
+    private String _uid = "", _title = "", _date = "", _content = "", _source = "";
     private double _influence = -1.0;
     private NewsType _type;
     private Vector<String> _authors = null, _region = null;
@@ -19,8 +19,8 @@ public class NewsPiece extends SugarRecord implements Serializable {
     public String getTitle(){
         return _title;
     }
-    public String get_id(){
-        return _id;
+    public String get_uid(){
+        return _uid;
     }
     public String getDate(){
         return _date;
@@ -50,9 +50,9 @@ public class NewsPiece extends SugarRecord implements Serializable {
         return s;
     }
 
-    public NewsPiece(final String _id, final String title, final String date,
+    public NewsPiece(final String _uid, final String title, final String date,
                      Vector<String> author, final String content){
-        this._id = _id;
+        this._uid = _uid;
         this._title = title;
         this._date = date;
         this._content = content;
@@ -101,7 +101,7 @@ public class NewsPiece extends SugarRecord implements Serializable {
         }
 //        System.out.println(jsonObject.toString());
         try {
-            _id = jsonObject.getString("_id");
+            _uid = jsonObject.getString("_id");
         }
         catch(JSONException e){
             e.printStackTrace();

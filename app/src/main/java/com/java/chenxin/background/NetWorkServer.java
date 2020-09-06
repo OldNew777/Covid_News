@@ -180,7 +180,7 @@ public class NetWorkServer {
             return null;
         }
         NewsList list = new NewsList(jsonObject, type);
-        _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
+        _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_uid();
         _currentId = list.getTotal() - Constants.PAGESIZE;
         return list;
     }
