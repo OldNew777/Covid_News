@@ -125,7 +125,7 @@ public class NewsListFragment extends Fragment {
             public void onNext(NewsPiece newsPiece) {
                 newsPieceDetails = newsPiece;
                 for (NewsPiece news : newsInfo) {
-                    if (news.get_uid().equals(news.get_uid())){
+                    if (news.get_uid().equals(newsPiece.get_uid())){
                         news.setIsRead(true);
                         arrayAdapter.notifyDataSetChanged();
                         break;
