@@ -1,5 +1,6 @@
 package com.java.chenxin.background;
 
+import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.NewsPiece;
 
@@ -24,7 +25,7 @@ public class NetWorkServer {
     private static int _searchPage  = 1;
     private static int _searchId = 1;
     private static int _pageNum = 100;
-    private final static int _SIZE = 5;
+
     private static int _currentId = 0;//下一条要读入的编号
     private static String _lastId = "";
     private static NetWorkServer _netWorkServer = new NetWorkServer();
@@ -85,10 +86,10 @@ public class NetWorkServer {
 
     private static NewsList viewOldExcuteNew(String type){
         int latestId = getTotal(type);
-        int page = (latestId - _currentId) / _SIZE + 1;
-        int pt = latestId - _SIZE * page;
+        int page = (latestId - _currentId) / Constants.PAGESIZE + 1;
+        int pt = latestId - Constants.PAGESIZE * page;
         OkHttpClient okHttpClient = new OkHttpClient();
-        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + page + "&size=" + _SIZE;
+        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + page + "&size=" + Constants.PAGESIZE;
         Request request = new Request.Builder().url(mUrl).get().build();
         Call call = okHttpClient.newCall(request);
         NewsList list = new NewsList();
@@ -120,11 +121,11 @@ public class NetWorkServer {
             list.add(tmplist.getNewsList().get(k));
             k ++;
         }
-        if(list.getNewsList().size() == _SIZE){
-            _currentId -= _SIZE;
+        if(list.getNewsList().size() == Constants.PAGESIZE){
+            _currentId -= Constants.PAGESIZE;
             return list;
         }
-        mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + page + "&size=" + _SIZE;
+        mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + page + "&size=" + Constants.PAGESIZE;
         request = new Request.Builder().url(mUrl).get().build();
         call = okHttpClient.newCall(request);
         try {
@@ -146,16 +147,16 @@ public class NetWorkServer {
         }
         tmplist = new NewsList(jsonObject, type);
         k = 0;
-        while(tmplist.getNewsList().size() < _SIZE){
+        while(tmplist.getNewsList().size() < Constants.PAGESIZE){
             list.add(tmplist.getNewsList().get(k++));
         }
-        _currentId -= _SIZE;
+        _currentId -= Constants.PAGESIZE;
         return list;
     }
 
     private static NewsList viewNewExcuteNew(String type){
         OkHttpClient okHttpClient = new OkHttpClient();
-        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=" + _SIZE;
+        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=" + Constants.PAGESIZE;
         final Request request = new Request.Builder().url(mUrl).get().build();
         final Call call = okHttpClient.newCall(request);
         String msg = "";
@@ -178,7 +179,7 @@ public class NetWorkServer {
         }
         NewsList list = new NewsList(jsonObject, type);
         _lastId = list.getNewsList().get(list.getNewsList().size() - 1).get_id();
-        _currentId = list.getTotal() - _SIZE;
+        _currentId = list.getTotal() - Constants.PAGESIZE;
         return list;
     }
 
@@ -188,12 +189,11 @@ public class NetWorkServer {
         return searchExcuteNew(key, type);
     }
     protected static NewsList searchExcuteNew(String[] key, String type){
-        final int SEARCHSIZE = _SIZE * 5;
+        final int SEARCHSIZE = Constants.PAGESIZE * 5;
 
         int latestId = getTotal(type);
         int page = (latestId - _searchId) / SEARCHSIZE + 1;
         int pt = latestId - SEARCHSIZE * (page - 1);
-        int count = latestId - _searchId;
         NewsList list = new NewsList();
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -233,14 +233,13 @@ public class NetWorkServer {
                 break;
             }
             k ++;
-            count ++;
             _searchId --;
-
+            if(list.getNewsList().size() >= Constants.PAGESIZE) break;
         }
-        if(list.getNewsList().size() == _SIZE){
+        if(list.getNewsList().size() == Constants.PAGESIZE){
             return list;
         }
-        while(list.getNewsList().size() < _SIZE && _searchId > 1){
+        while(list.getNewsList().size() < Constants.PAGESIZE && _searchId > 1){
             mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + ++page + "&size=" + SEARCHSIZE;
             request = new Request.Builder().url(mUrl).get().build();
             call = okHttpClient.newCall(request);
@@ -272,9 +271,8 @@ public class NetWorkServer {
                     break;
                 }
                 k ++;
-                count ++;
                 _searchId --;
-                if(list.getNewsList().size() == _SIZE) break;
+                if(list.getNewsList().size() >= Constants.PAGESIZE) break;
             }
         }
 //        String str = "";
@@ -311,13 +309,13 @@ public class NetWorkServer {
     }
 //    private static NewsList searchExcute(String[] key, String type){
 //        int total = getTotal(type);
-//        _searchPage = (total + _SIZE - 1) / _SIZE;
+//        _searchPage = (total + Constants.PAGESIZE - 1) / Constants.PAGESIZE;
 //        NewsList list = new NewsList();
 //        OkHttpClient okHttpClient = new OkHttpClient();
-//        while(list.getSize() < _SIZE || _searchPage < 1){
+//        while(list.getSize() < Constants.PAGESIZE || _searchPage < 1){
 //            System.out.println("loop");
 //            try{
-//                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + _SIZE * 3;
+//                String url = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _searchPage-- + "&size=" + Constants.PAGESIZE * 3;
 //                final Request request1 = new Request.Builder().url(url).get().build();
 //                final Call call = okHttpClient.newCall(request1);
 //                String msg = "";
@@ -333,7 +331,7 @@ public class NetWorkServer {
 //                        list.add(pieces.get(j));
 //                        break;
 //                    }
-//                    if(list.getSize() == _SIZE){
+//                    if(list.getSize() == Constants.PAGESIZE){
 //                        break;
 //                    }
 //                }
@@ -346,7 +344,7 @@ public class NetWorkServer {
 //    }
 //    private static NewsList viewOldExcute(String type){
 //        OkHttpClient okHttpClient = new OkHttpClient();
-//        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - ++_count) + "&size=" + _SIZE;
+//        String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - ++_count) + "&size=" + Constants.PAGESIZE;
 //        final Request request = new Request.Builder().url(mUrl).get().build();
 //        final Call call = okHttpClient.newCall(request);
 //        String msg = "";
@@ -373,13 +371,13 @@ public class NetWorkServer {
 //        OkHttpClient okHttpClient = new OkHttpClient();
 //        try {
 //            int total = getTotal(type);
-//            _pageNum = 1 + total / _SIZE;//定位到倒数第二页(整除时最后一页）由于从1开始计数 所以+1
+//            _pageNum = 1 + total / Constants.PAGESIZE;//定位到倒数第二页(整除时最后一页）由于从1开始计数 所以+1
 //            _count = 0;
 //            String msg = "";
 //            Response response = null;
 //            JSONObject jsonObject = null;
-//            if(total % _SIZE == 0){//直接打印最后一页
-//                String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _pageNum + "&size=" + _SIZE;
+//            if(total % Constants.PAGESIZE == 0){//直接打印最后一页
+//                String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + _pageNum + "&size=" + Constants.PAGESIZE;
 //                final Request rrequest = new Request.Builder().url(mUrl).get().build();
 //                final Call ccall = okHttpClient.newCall(rrequest);
 //                msg = "";
@@ -390,7 +388,7 @@ public class NetWorkServer {
 //            }
 //            else{//打印倒数两页
 //                _count ++;
-//                String url1 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - 1) + "&size=" + _SIZE;
+//                String url1 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum - 1) + "&size=" + Constants.PAGESIZE;
 //                final Request request1 = new Request.Builder().url(url1).get().build();
 //                final Call call1 = okHttpClient.newCall(request1);
 //                msg = "";
@@ -399,7 +397,7 @@ public class NetWorkServer {
 //                jsonObject = new JSONObject(msg);
 //                NewsList list1 = new NewsList(jsonObject, type);
 //
-//                String url2 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum) + "&size=" + _SIZE;
+//                String url2 = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + (_pageNum) + "&size=" + Constants.PAGESIZE;
 //                final Request request2 = new Request.Builder().url(url2).get().build();
 //                final Call call2 = okHttpClient.newCall(request2);
 //                msg = "";
