@@ -14,34 +14,21 @@
         app:iconifiedByDefault="false"
         android:layout_alignParentTop="true"/>
 
-    <FrameLayout
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/news_refreshLayOut"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search_view"
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_view"
         android:layout_alignParentBottom="true">
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/news_refreshLayOut"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/news_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
-            <ListView
-                android:id="@+id/news_list"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout >
-
-<!--        <ListView-->
-<!--            android:id="@+id/search_suggestion_list_view"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:paddingLeft="10dp"-->
-<!--            android:paddingRight="10dp"-->
-<!--            android:background="@color/cardview_light_background"/>-->
-
-    </FrameLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </RelativeLayout>

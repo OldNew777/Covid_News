@@ -1,16 +1,23 @@
 package com.java.chenxin.ui.news;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Transition;
+import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
@@ -39,9 +46,8 @@ enum RefreshMode{
 public class NewsListFragment extends Fragment {
     // 记录刷新/结束刷新的layout
     private RefreshLayout refreshLayout;
-    // 搜索框与其文本框
+    // 搜索框与子组件
     private SearchView searchView;
-    private TextView textView;
 
     // 记录refresh/loadMore
     private RefreshMode refreshMode;
@@ -51,8 +57,6 @@ public class NewsListFragment extends Fragment {
     // 新闻列表
     private List<NewsPiece> newsInfo = new ArrayList<>(100);
     private NewsListAdapter arrayAdapter;
-    // 新闻正文的NewsPiece
-    private NewsPiece newsPieceDetails;
 
 
     // 列表的observer
@@ -69,21 +73,41 @@ public class NewsListFragment extends Fragment {
     public void setSearchQuery(Intent intent){
         searchView.clearFocus();
         String searchQuery = (String) intent.getSerializableExtra("SearchQuery");
+
         Search.search(newsListObserver, searchQuery, type);
-//        textView.setText(searchQuery);
         Toast.makeText(getActivity(), "正在搜索："+ searchQuery, Toast.LENGTH_SHORT).show();
+
+//        textView.setText(searchQuery);
+//        searchButton = searchView.findViewById(R.id.search_button);
+    }
+
+    private void hideSoftInput(){
+        ((InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE)).
+                hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("\nrequestCode = " + requestCode + "\tresultCode = " + resultCode + "\n");
+
+        if (data != null){
+            if (    (requestCode == 1 && type.equals("all")) ||
+                    (requestCode == 2 && type.equals("news")) ||
+                    (requestCode == 3 && type.equals("paper"))     ){
+                searchView.setQuery((String) data.getSerializableExtra("SearchQuery"), true);
+            }
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        // 初始化、获取控件
+        // 获取控件
         View root = inflater.inflate(com.java.chenxin.R.layout.fragment_newslist, container, false);
         ListView news_listView = root.findViewById(com.java.chenxin.R.id.news_list);
         SmartRefreshLayout news_refreshLayOut = root.findViewById(com.java.chenxin.R.id.news_refreshLayOut);
         searchView = (SearchView) root.findViewById(R.id.search_view);
-        textView = (TextView) searchView.findViewById(androidx.appcompat.R.id.text);
 
         // 各observer
         newsListObserver = new Observer<NewsList>() {
@@ -123,7 +147,6 @@ public class NewsListFragment extends Fragment {
 
             @Override
             public void onNext(NewsPiece newsPiece) {
-                newsPieceDetails = newsPiece;
                 for (NewsPiece news : newsInfo) {
                     if (news.get_uid().equals(newsPiece.get_uid())){
                         news.setIsRead(true);
@@ -131,6 +154,9 @@ public class NewsListFragment extends Fragment {
                         break;
                     }
                 }
+                Intent intent = new Intent(getContext(), NewsPieceActivity.class);
+                intent.putExtra("NewsPiece", newsPiece);
+                startActivity(intent);
             }
 
             @Override
@@ -140,9 +166,6 @@ public class NewsListFragment extends Fragment {
 
             @Override
             public void onComplete() {
-                Intent intent = new Intent(getContext(), NewsPieceActivity.class);
-                intent.putExtra("NewsPiece", newsPieceDetails);
-                startActivity(intent);
             }
         };
 
@@ -156,34 +179,37 @@ public class NewsListFragment extends Fragment {
         news_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
+                searchView.clearFocus();
+                hideSoftInput();
                 String id = newsInfo.get(position).get_uid();
                 NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
             }
         });
 
         // 搜索框
-        searchView.setSubmitButtonEnabled(true);
         // 监听搜索框
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             // 点击搜索按钮
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
+                hideSoftInput();
                 Search.search(newsListObserver, query, type);
                 Toast.makeText(getActivity(), "正在搜索："+ query, Toast.LENGTH_SHORT).show();
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) { return true; }
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
         });
-        // 监听点击
+        // 监听搜索图标的点击
         searchView.setOnClickListener(new SearchView.OnClickListener(){
             @Override
             public void onClick(View view) {
-                System.out.println("onClick");
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-
+                searchView.clearFocus();
+                hideSoftInput();
                 int requestCode = 1;
                 if (type.equals("all"))
                     requestCode = 1;
@@ -193,7 +219,8 @@ public class NewsListFragment extends Fragment {
                 else if (type.equals("paper")){
                     requestCode = 3;
                 }
-                startActivityForResult(intent, requestCode);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                getActivity().startActivityForResult(intent, requestCode);
             }
         });
 
@@ -201,14 +228,13 @@ public class NewsListFragment extends Fragment {
         news_refreshLayOut.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshLayout_tmp) {
+                searchView.clearFocus();
+                hideSoftInput();
                 String searchQuery = String.valueOf(searchView.getQuery());
-
                 // 如果搜索框有内容，则重新搜索
                 if (!searchQuery.isEmpty()){
-                    Toast.makeText(getActivity(), "正在搜索："+ searchQuery, Toast.LENGTH_SHORT).show();
-                    refreshMode = RefreshMode.REFRESH;
                     refreshLayout = refreshLayout_tmp;
-                    Search.search(newsListObserver, searchQuery, type);
+                    searchView.setQuery(searchView.getQuery(), true);
                 }
 
                 // 如果搜索框没有内容，则刷新新闻列表
@@ -225,6 +251,8 @@ public class NewsListFragment extends Fragment {
         news_refreshLayOut.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshLayout_tmp) {
+                searchView.clearFocus();
+                hideSoftInput();
                 String searchQuery = String.valueOf(searchView.getQuery());
 
                 // 如果搜索框有内容，则加载更多搜索内容
@@ -248,4 +276,5 @@ public class NewsListFragment extends Fragment {
 
         return root;
     }
+
 }
