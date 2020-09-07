@@ -44,7 +44,7 @@ public class NewsList {
             JSONArray jsonArray = (JSONArray) jsonObject.get("data");
 //            System.out.println(jsonArray.toString());
             for (int i = 0; i < jsonArray.length(); i++) {
-                NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i));
+                NewsPiece tmpPiece = new NewsPiece(jsonArray.getJSONObject(i), false);
                 _list.add(tmpPiece);
             }
         }catch (JSONException e){
@@ -61,5 +61,13 @@ public class NewsList {
         if(p == null) return false;
         this._list.add(p);
         return true;
+    }
+    public static void checkNewsList(NewsList list){
+        List<NewsPiece> pieceList = list.getNewsList();
+        for(NewsPiece piece : pieceList){
+            if(piece.getIsRead()) continue;
+            List<NewsPiece> tmp = NewsPiece.find(NewsPiece.class, "_uid = ?", piece.get_uid());
+            piece.setIsRead(!(tmp == null || tmp.size() == 0));
+        }
     }
 }
