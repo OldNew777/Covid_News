@@ -7,10 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,6 +18,7 @@ import androidx.appcompat.widget.SearchView;
 import com.java.chenxin.R;
 import com.java.chenxin.background.Search;
 import com.java.chenxin.ui.news.NewsListFragment;
+import com.java.chenxin.universal.StringListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,7 @@ public class SearchActivity extends AppCompatActivity {
     private SearchView searchView;
     private ListView suggestionList;
     private List<String> searchSuggestionList = new ArrayList<>(30);
-    private SuggestionListAdapter arrayAdapter;
+    private StringListAdapter arrayAdapter;
 
     // 搜索建议（搜索历史）的observer
     private Observer<List<String>> searchSuggestionObserver;
@@ -43,9 +41,19 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        System.out.println("requestCode = " + requestCode);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // 设置标题
+        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " : " + getIntent().getSerializableExtra("type"));
 
         // 找组件
         searchView = (SearchView) findViewById(R.id.search_view);
@@ -79,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
         };
 
         // 获取搜索历史
-        arrayAdapter = new SuggestionListAdapter(
+        arrayAdapter = new StringListAdapter(
                 this, R.layout.item_suggestionlist, searchSuggestionList
         );
         ListView suggestion_listView = findViewById(R.id.suggestion_list);

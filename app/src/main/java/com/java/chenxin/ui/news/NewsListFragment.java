@@ -3,15 +3,11 @@ package com.java.chenxin.ui.news;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.Transition;
-import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,7 +85,6 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("\nrequestCode = " + requestCode + "\tresultCode = " + resultCode + "\n");
 
         if (data != null){
             if (    (requestCode == 1 && type.equals("all")) ||
@@ -103,6 +98,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         // 获取控件
         View root = inflater.inflate(com.java.chenxin.R.layout.fragment_newslist, container, false);
         ListView news_listView = root.findViewById(com.java.chenxin.R.id.news_list);
@@ -117,14 +113,17 @@ public class NewsListFragment extends Fragment {
 
             @Override
             public void onNext(NewsList newsList) {
-                if (refreshMode == RefreshMode.REFRESH)
+                if (refreshMode == RefreshMode.REFRESH) {
                     newsInfo.clear();
+                    if (newsList.getNewsList().isEmpty())
+                        Toast.makeText(getContext(), "无搜索结果", Toast.LENGTH_SHORT).show();
+                }
                 newsInfo.addAll(newsList.getNewsList());
             }
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
                 if (refreshMode == RefreshMode.REFRESH)
                     refreshLayout.finishRefresh();
                 if (refreshMode == RefreshMode.LOADMORE)
@@ -161,7 +160,7 @@ public class NewsListFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(getActivity(), "无网络连接", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "无网络连接", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -187,15 +186,33 @@ public class NewsListFragment extends Fragment {
         });
 
         // 搜索框
+        searchView.findViewById(R.id.search_edit_frame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.callOnClick();
+            }
+        });
+        searchView.findViewById(R.id.search_src_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.callOnClick();
+            }
+        });
+        searchView.findViewById(R.id.search_plate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.callOnClick();
+            }
+        });
         // 监听搜索框
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            // 点击搜索按钮
+            // 提交搜索结果
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
                 hideSoftInput();
                 Search.search(newsListObserver, query, type);
-                Toast.makeText(getActivity(), "正在搜索："+ query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "正在搜索："+ query, Toast.LENGTH_SHORT).show();
                 return true;
             }
 
@@ -220,6 +237,7 @@ public class NewsListFragment extends Fragment {
                     requestCode = 3;
                 }
                 Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra("type", type.toUpperCase());
                 getActivity().startActivityForResult(intent, requestCode);
             }
         });
@@ -239,7 +257,7 @@ public class NewsListFragment extends Fragment {
 
                 // 如果搜索框没有内容，则刷新新闻列表
                 else{
-                    Toast.makeText(getActivity(), "正在刷新", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "正在刷新", Toast.LENGTH_SHORT).show();
                     refreshMode = RefreshMode.REFRESH;
                     refreshLayout = refreshLayout_tmp;
                     NetWorkServer.reFresh(newsListObserver, type);
@@ -257,7 +275,7 @@ public class NewsListFragment extends Fragment {
 
                 // 如果搜索框有内容，则加载更多搜索内容
                 if (!searchQuery.isEmpty()){
-                    Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "正在加载", Toast.LENGTH_SHORT).show();
                     refreshMode = RefreshMode.LOADMORE;
                     refreshLayout = refreshLayout_tmp;
                     Search.searchRefresh(newsListObserver, searchQuery, type);
@@ -265,7 +283,7 @@ public class NewsListFragment extends Fragment {
 
                 // 如果搜索框没有内容，则加载更多历史新闻
                 else{
-                    Toast.makeText(getActivity(), "正在加载", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "正在加载", Toast.LENGTH_SHORT).show();
                     refreshMode = RefreshMode.LOADMORE;
                     refreshLayout = refreshLayout_tmp;
                     NetWorkServer.loadMore(newsListObserver, type);

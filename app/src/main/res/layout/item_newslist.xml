@@ -38,7 +38,7 @@
             android:textSize="12sp"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:gravity="end">
