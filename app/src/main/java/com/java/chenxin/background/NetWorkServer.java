@@ -1,13 +1,21 @@
 package com.java.chenxin.background;
 
 import com.java.chenxin.data_struct.Constants;
+import com.java.chenxin.data_struct.DataPerDay;
+import com.java.chenxin.data_struct.EpidemicData;
+import com.java.chenxin.data_struct.EpidemicDataMap;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.NewsPiece;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -34,7 +42,7 @@ public class NetWorkServer {
     private static int _currentId = 0;//下一条要读入的编号
     private static String _lastId = "";
 
-    private static void setCurrentId(String type){
+    private static void _setCurrentId(String type){
         if(type.equals("news")){
             _currentId = _newsId;
         }
@@ -47,7 +55,7 @@ public class NetWorkServer {
         }
     }
 
-    private static void setTypeId(String type){
+    private static void _setTypeId(String type){
         if(type.equals("news")){
             _newsId = _currentId;
         }
@@ -58,7 +66,7 @@ public class NetWorkServer {
             _allId = _currentId;
         }
     }
-    private static void setSearchId(String type){
+    private static void _setSearchId(String type){
         if(type.equals("news")){
             _searchId = _newsIds;
         }
@@ -71,7 +79,7 @@ public class NetWorkServer {
         }
     }
 
-    private static void setSearchTypeId(String type){
+    private static void _setSearchTypeId(String type){
         if(type.equals("news")){
             _newsIds = _searchId;
         }
@@ -88,7 +96,7 @@ public class NetWorkServer {
         Observable.create(new ObservableOnSubscribe<NewsPiece>() {
             @Override
             public void subscribe(ObservableEmitter<NewsPiece> emitter) throws Exception {
-                NewsPiece piece = NetWorkServer.searchById(id);
+                NewsPiece piece = NetWorkServer._searchById(id);
 //                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(piece);
                 emitter.onComplete();
@@ -101,7 +109,7 @@ public class NetWorkServer {
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
-                NewsList list = NetWorkServer.viewOldExcuteNew(type);
+                NewsList list = NetWorkServer._viewOldExcuteNew(type);
                     //System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(list);
                 emitter.onComplete();
@@ -114,7 +122,21 @@ public class NetWorkServer {
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
-                NewsList list = NetWorkServer.viewNewExcuteNew(type);
+                NewsList list = NetWorkServer._viewNewExcuteNew(type);
+
+                //搭便车
+//                EpidemicDataMap map = _getEpidemicData();
+//                map.showName();
+//                map.writeJSON();
+                Map<String, Map<String, List<String>>> map = EpidemicDataServer.readLocalJSON();
+                System.out.println(map.get("China").get("Beijing").toString());
+//                List<DataPerDay> pd = map.getData("China", 5);
+//                for(DataPerDay d : pd){
+//                    d.show();
+//                }
+//                map.getEpidemicData("China").show();
+                //搭便车
+
                 emitter.onNext(list);
                 emitter.onComplete();
             }
@@ -122,10 +144,42 @@ public class NetWorkServer {
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
                 .subscribe(ob);
     }
+    public static void loadEpidemicData(){};
 
-    private static NewsList viewOldExcuteNew(String type){
-        setCurrentId(type);
-        int latestId = getTotal(type);
+    private static EpidemicDataMap _getEpidemicData(){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String mUrl = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
+        Request request = new Request.Builder().url(mUrl).get().build();
+        Call call = okHttpClient.newCall(request);
+        InputStream is = null;
+        String msg = "";
+        try {
+            Response response = call.execute();
+            msg = response.body().string();
+//            System.out.println(response.body().string());
+//            msg += response.body().string();
+//            is = response.body().byteStream();
+//            BufferedReader raader = new BufferedReader()
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+//        System.out.println(msg);
+        JSONObject jsonObject = null;
+        try{
+            jsonObject =new JSONObject(msg);
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return new EpidemicDataMap(jsonObject);
+    }
+
+
+    private static NewsList _viewOldExcuteNew(String type){
+        _setCurrentId(type);
+        int latestId = _getTotal(type);
         int page = (latestId - _currentId) / Constants.PAGESIZE + 1;
         int pt = latestId - Constants.PAGESIZE * page;
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -139,7 +193,7 @@ public class NetWorkServer {
             msg += response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
-            setTypeId(type);
+            _setTypeId(type);
             return null;
         }
         JSONObject jsonObject = null;
@@ -150,7 +204,7 @@ public class NetWorkServer {
             e.printStackTrace();
         }
         if(jsonObject == null){
-            setTypeId(type);
+            _setTypeId(type);
             return null;
         }
         NewsList tmplist = new NewsList(jsonObject, type);
@@ -165,7 +219,7 @@ public class NetWorkServer {
         }
         if(list.getNewsList().size() == Constants.PAGESIZE){
             _currentId -= Constants.PAGESIZE;
-            setTypeId(type);
+            _setTypeId(type);
             NewsList.checkNewsList(list);
             return list;
         }
@@ -177,7 +231,7 @@ public class NetWorkServer {
             msg += response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
-            setTypeId(type);
+            _setTypeId(type);
             return null;
         }
         jsonObject = null;
@@ -188,7 +242,7 @@ public class NetWorkServer {
             e.printStackTrace();
         }
         if(jsonObject == null){
-            setTypeId(type);
+            _setTypeId(type);
             return null;
         }
         tmplist = new NewsList(jsonObject, type);
@@ -197,14 +251,14 @@ public class NetWorkServer {
             list.add(tmplist.getNewsList().get(k++));
         }
         _currentId -= Constants.PAGESIZE;
-        setTypeId(type);
+        _setTypeId(type);
         NewsList.checkNewsList(list);
         return list;
     }
 
 
-    private static NewsList viewNewExcuteNew(String type){
-        setCurrentId(type);
+    private static NewsList _viewNewExcuteNew(String type){
+        _setCurrentId(type);
         OkHttpClient okHttpClient = new OkHttpClient();
         String mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=" + Constants.PAGESIZE;
         final Request request = new Request.Builder().url(mUrl).get().build();
@@ -215,7 +269,7 @@ public class NetWorkServer {
             msg += response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
-            setTypeId(type);
+            _setTypeId(type);
             return null;
         }
         JSONObject jsonObject = null;
@@ -226,28 +280,28 @@ public class NetWorkServer {
             e.printStackTrace();
         }
         if(jsonObject == null){
-            setTypeId(type);
+            _setTypeId(type);
             return null;
         }
         NewsList list = new NewsList(jsonObject, type);
         _currentId = list.getTotal() - Constants.PAGESIZE;
-        setTypeId(type);
+        _setTypeId(type);
         NewsList.checkNewsList(list);
         return list;
     }
 
 //
-    protected static NewsList search(String[] key, String type){
-        setSearchId(type);
-        _searchId = getTotal(type);
-        setSearchTypeId(type);
-        return searchExcuteNew(key, type);
+    protected static NewsList search_(String[] key, String type){
+        _setSearchId(type);
+        _searchId = _getTotal(type);
+        _setSearchTypeId(type);
+        return searchExcuteNew_(key, type);
     }
-    protected static NewsList searchExcuteNew(String[] key, String type){
-        setSearchId(type);
+    protected static NewsList searchExcuteNew_(String[] key, String type){
+        _setSearchId(type);
         final int SEARCHSIZE = Constants.PAGESIZE * 5;
 
-        int latestId = getTotal(type);
+        int latestId = _getTotal(type);
         int page = (latestId - _searchId) / SEARCHSIZE + 1;
         int pt = latestId - SEARCHSIZE * (page - 1);
         NewsList list = new NewsList();
@@ -260,13 +314,13 @@ public class NetWorkServer {
         String msg = "";
         try {
             Response response = call.execute();
-            if(getTotal(type) != latestId){
-                return searchExcuteNew(key, type);
+            if(_getTotal(type) != latestId){
+                return searchExcuteNew_(key, type);
             }
             msg += response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
-            setSearchTypeId(type);
+            _setSearchTypeId(type);
             return null;
         }
         JSONObject jsonObject = null;
@@ -277,7 +331,7 @@ public class NetWorkServer {
             e.printStackTrace();
         }
         if(jsonObject == null){
-            setSearchTypeId(type);
+            _setSearchTypeId(type);
             return null;
         }
         NewsList tmplist = new NewsList(jsonObject, type);
@@ -295,7 +349,7 @@ public class NetWorkServer {
             if(list.getNewsList().size() >= Constants.PAGESIZE) break;
         }
         if(list.getNewsList().size() == Constants.PAGESIZE){
-            setSearchTypeId(type);
+            _setSearchTypeId(type);
             NewsList.checkNewsList(list);
             return list;
         }
@@ -309,7 +363,7 @@ public class NetWorkServer {
                 msg += response.body().string();
             } catch (IOException e) {
                 e.printStackTrace();
-                setSearchTypeId(type);
+                _setSearchTypeId(type);
                 return null;
             }
             jsonObject = null;
@@ -320,7 +374,7 @@ public class NetWorkServer {
                 e.printStackTrace();
             }
             if(jsonObject == null){
-                setSearchTypeId(type);
+                _setSearchTypeId(type);
                 return null;
             }
             tmplist = new NewsList(jsonObject, type);
@@ -337,13 +391,13 @@ public class NetWorkServer {
                 if(list.getNewsList().size() >= Constants.PAGESIZE) break;
             }
         }
-        setSearchTypeId(type);
+        _setSearchTypeId(type);
         NewsList.checkNewsList(list);
         return list;
     }
 
 
-    private static NewsPiece searchById(String id){
+    private static NewsPiece _searchById(String id){
         List<NewsPiece> tmpNewsList = NewsPiece.find(NewsPiece.class, "_uid = ?", id);
         if(tmpNewsList == null || tmpNewsList.size() == 0){
             try{
@@ -369,7 +423,7 @@ public class NetWorkServer {
             return tmpNewsList.get(0);
         }
     }
-    private static int getTotal(String type){
+    private static int _getTotal(String type){
         try{
             OkHttpClient okHttpClient = new OkHttpClient();
             String tmpUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=1&size=1"; //随便找一页 找到总数
