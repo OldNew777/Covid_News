@@ -76,6 +76,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 Toast.makeText(SearchActivity.this, "无网络连接", Toast.LENGTH_SHORT).show();
             }
 

@@ -12,8 +12,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
 
@@ -100,6 +104,7 @@ public class NetWorkServer {
 //                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(piece);
                 emitter.onComplete();
+
             }
         }).subscribeOn(Schedulers.io()) //在io执行上述操作
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
@@ -123,22 +128,11 @@ public class NetWorkServer {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
                 NewsList list = NetWorkServer._viewNewExcuteNew(type);
-
-                //搭便车
-//                EpidemicDataMap map = _getEpidemicData();
-//                map.showName();
-//                map.writeJSON();
-                Map<String, Map<String, List<String>>> map = EpidemicDataServer.readLocalJSON();
-                System.out.println(map.get("China").get("Beijing").toString());
-//                List<DataPerDay> pd = map.getData("China", 5);
-//                for(DataPerDay d : pd){
-//                    d.show();
-//                }
-//                map.getEpidemicData("China").show();
-                //搭便车
-
                 emitter.onNext(list);
                 emitter.onComplete();
+                //搭便车
+                downloadEpidemicDataMap();
+
             }
         }).subscribeOn(Schedulers.io()) //在io执行上述操作
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
@@ -146,7 +140,42 @@ public class NetWorkServer {
     }
     public static void loadEpidemicData(){};
 
-    private static EpidemicDataMap _getEpidemicData(){
+    public static void downloadEpidemicDataMap(){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String mUrl = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
+        Request request = new Request.Builder().url(mUrl).get().build();
+        Call call = okHttpClient.newCall(request);
+        InputStream is = null;
+        String msg = "";
+        try {
+            Response response = call.execute();
+            msg = response.body().string();
+//            System.out.println(response.body().string());
+//            msg += response.body().string();
+//            is = response.body().byteStream();
+//            BufferedReader raader = new BufferedReader()
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        File file = new File(Constants.EPIDEMICDATAPATH);
+        if(!file.getParentFile().exists()){
+            boolean flag  = file.getParentFile().mkdirs();
+            System.out.println("making file path:" + file.toString() + " " + flag);
+        }
+        System.out.println(msg);
+        PrintStream ps = null;
+        try {
+            ps = new PrintStream(new FileOutputStream(file));
+            ps.print(msg);
+            ps.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("download done");
+    }
+
+    public static EpidemicDataMap getEpidemicData(){
         OkHttpClient okHttpClient = new OkHttpClient();
         String mUrl = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
         Request request = new Request.Builder().url(mUrl).get().build();
@@ -304,6 +333,7 @@ public class NetWorkServer {
         int latestId = _getTotal(type);
         int page = (latestId - _searchId) / SEARCHSIZE + 1;
         int pt = latestId - SEARCHSIZE * (page - 1);
+        int count = 0;
         NewsList list = new NewsList();
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -337,7 +367,7 @@ public class NetWorkServer {
         NewsList tmplist = new NewsList(jsonObject, type);
         int k = pt - _searchId;
         //pt == searchid
-        while(k < tmplist.getNewsList().size()){
+        while(k < tmplist.getNewsList().size() && count < Constants.SEARCHMAX){
             for(int i = 0; i < key.length; i ++){
                 if(key[i].equals("")) continue;
                 if(!tmplist.getNewsList().get(k).search(key[i])) continue;
@@ -345,6 +375,7 @@ public class NetWorkServer {
                 break;
             }
             k ++;
+            count ++;
             _searchId --;
             if(list.getNewsList().size() >= Constants.PAGESIZE) break;
         }
@@ -353,7 +384,7 @@ public class NetWorkServer {
             NewsList.checkNewsList(list);
             return list;
         }
-        while(list.getNewsList().size() < Constants.PAGESIZE && _searchId > 1){
+        while(list.getNewsList().size() < Constants.PAGESIZE && _searchId > 1 && count < Constants.SEARCHMAX){
             mUrl = "https://covid-dashboard.aminer.cn/api/events/list?type=" + type + "&page=" + ++page + "&size=" + SEARCHSIZE;
             request = new Request.Builder().url(mUrl).get().build();
             call = okHttpClient.newCall(request);
@@ -387,6 +418,7 @@ public class NetWorkServer {
                     break;
                 }
                 k ++;
+                count ++;
                 _searchId --;
                 if(list.getNewsList().size() >= Constants.PAGESIZE) break;
             }
