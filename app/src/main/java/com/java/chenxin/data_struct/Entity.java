@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Entity {
     private double _hot;
@@ -22,6 +23,39 @@ public class Entity {
     private Map<String, String> _properties = new HashMap<String, String>();
     private List<Relation> _relations = new ArrayList<Relation>();
     private String _imgUrl;
+
+    public Double getHot(){
+        return _hot;
+    }
+    public String getLabel(){
+        return _lable;
+    }
+    public String getUrl(){return _url;}
+    public String getBaidu(){return _baidu;}
+    public String getEnwiki(){return _enwiki;}
+    public String getZhwiki(){return _zhwiki;}
+    public Map<String, String> getPropertyMap(){return _properties;}
+    public List<Relation> getRelationList(){return _relations;}
+    public String getImgUrl(){return _imgUrl;}
+
+    public void show(){
+        System.out.println("hot:" + _hot);
+        System.out.println("label: " + _lable);
+        System.out.println("url: " + _url);
+        System.out.println("abstract info:");
+        System.out.println(_enwiki);
+        System.out.println(_baidu);
+        System.out.println(_zhwiki);
+        Set<String> keys = _properties.keySet();
+        System.out.println("properties: ");
+        for(String key : keys){
+            System.out.println(key + " " + _properties.get(key));
+        }
+//        for(int i = 0; i < _relations.size(); i ++){
+//            _relations.get(i).show();
+//        }
+        System.out.println(_imgUrl);
+    }
 
     public Entity(JSONObject jsonObject){
         try {
@@ -41,7 +75,7 @@ public class Entity {
         }
         JSONObject abstractInfo = null;
         try {
-            abstractInfo = jsonObject.getJSONObject("abstractinfo");
+            abstractInfo = jsonObject.getJSONObject("abstractInfo");
             try {
                 _enwiki = abstractInfo.getString("enwiki");
             } catch (JSONException e) {
@@ -95,7 +129,9 @@ public class Entity {
                 e.printStackTrace();
             }
             try{
-                _imgUrl = jsonObject.getString("img");
+                String url = jsonObject.getString("img");
+                //先返回url
+                _imgUrl = url;
             }catch (JSONException e){
                 e.printStackTrace();
             }
@@ -121,5 +157,8 @@ class Relation{
         this.label = label;
     }
 
+    public void show(){
+        System.out.println(isFather + " " + url + " " + label + " " + forward);
+    }
 
 }

@@ -2,6 +2,7 @@ package com.java.chenxin.background;
 
 import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.DataPerDay;
+import com.java.chenxin.data_struct.Entity;
 import com.java.chenxin.data_struct.EpidemicData;
 import com.java.chenxin.data_struct.EpidemicDataMap;
 import com.java.chenxin.data_struct.NewsList;
@@ -18,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -427,8 +429,34 @@ public class NetWorkServer {
         NewsList.checkNewsList(list);
         return list;
     }
-
-
+    protected static List<Entity> searchEntity(String name){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String tmpUrl = "https://innovaapi.aminer.cn/covid/api/v1/pneumonia/entityquery?entity=" + name; //随便找一页 找到总数
+        final Request request = new Request.Builder().url(tmpUrl).get().build();
+        final Call call = okHttpClient.newCall(request);
+        Response response = null;
+        String msg = "";
+        List<Entity> list = new ArrayList<Entity>();
+        try {
+            response = call.execute();
+            msg = response.body().string();
+            if(msg.equals("")){
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONObject jsonObject =new JSONObject(msg);
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
+            for(int i = 0; i < jsonArray.length(); i ++){
+                list.add(new Entity(jsonArray.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     private static NewsPiece _searchById(String id){
         List<NewsPiece> tmpNewsList = NewsPiece.find(NewsPiece.class, "_uid = ?", id);
         if(tmpNewsList == null || tmpNewsList.size() == 0){

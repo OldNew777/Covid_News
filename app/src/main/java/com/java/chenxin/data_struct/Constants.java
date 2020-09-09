@@ -12,4 +12,6 @@ public final class Constants {
             File.separator + "com.java.chenxin" + File.separator + "cache" + File.separator + "json" + File.separator + "namelist.txt";
     public final static String EPIDEMICDATAPATH = Environment.getDataDirectory().toString() +  File.separator+ "data" +
             File.separator + "com.java.chenxin" + File.separator + "cache" + File.separator + "json" + File.separator + "epidemic.txt";
+    public final static String ENTITYIMAGEPATH = Environment.getDataDirectory().toString() +  File.separator+ "data" +
+            File.separator + "com.java.chenxin" + File.separator + "cache" + File.separator + "image";
 }

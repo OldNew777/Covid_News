@@ -11,8 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.java.chenxin.R;
-import com.java.chenxin.background.EpidemicDataServer;
+import com.java.chenxin.background.DataServer;
 import com.java.chenxin.data_struct.DataPerDay;
+import com.java.chenxin.data_struct.Entity;
 //import com.java.chenxin.ui.news.RefreshMode;
 
 import java.util.List;
@@ -22,7 +23,9 @@ import io.reactivex.disposables.Disposable;
 
 public class ScholarFragment extends Fragment implements View.OnClickListener {
     public Observer<List<DataPerDay>> observerDataMap;
+    public Observer<List<Entity>> entityDataMap;
     List<DataPerDay> list;
+    List<Entity> entityList;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -35,7 +38,6 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
-
         observerDataMap = new Observer<List<DataPerDay>>() {
             @Override
             // 绑定激活函数
@@ -61,6 +63,29 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
 //                System.out.println("success!" + map.getData("China", 1).toString());
             }
         };
+        entityDataMap = new Observer<List<Entity>>() {
+            @Override
+            // 绑定激活函数
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(List<Entity> l) {
+                entityList = l;
+                for(int i = 0; i < l.size(); i ++){
+                    entityList.get(i).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+//                System.out.println("success!" + map.getData("China", 1).toString());
+            }
+        };
 
         return root;
     }
@@ -69,11 +94,12 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
             System.out.println("button1");
-            EpidemicDataServer.getDataPerDay(observerDataMap, "India", 5);
+            DataServer.getEntityData(entityDataMap,"疫苗");
+//            DataServer.getDataPerDay(observerDataMap, "India", 5);
         }
         if(view.getId() == R.id.button2){
             System.out.println("button2");
-            EpidemicDataServer.getDataPerDay(observerDataMap, "United States of America", 5);
+            DataServer.getEntityData(entityDataMap,"黄热病病毒");
         }
     }
 }
