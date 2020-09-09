@@ -52,9 +52,15 @@ public class Search {
                 .subscribe(ob);
     }
     private static List<String> getHistory(){
+//        System.out.println(_searchHistoryNum + " " + isFirstTime);
         if(isFirstTime){
             isFirstTime = false;
-            _searchHistoryNum = SearchHistory.listAll(SearchHistory.class).size();
+            List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
+            _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
+        }
+        List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
+        for(int i = 0; i < list.size(); i ++){
+            System.out.println(list.get(i).getSearchhistory());
         }
         List<String> vec = new ArrayList<String>();
         int tmpid = _searchHistoryNum;
@@ -63,6 +69,7 @@ public class Search {
             if(tmp == null || tmp.size() == 0) continue;
             vec.add(tmp.get(0).getSearchhistory());
         }
+//        System.out.println("searchnum:" + _searchHistoryNum);
         return vec;
     }
     public static void search(Observer<NewsList> ob, String content, final String type){
@@ -81,13 +88,16 @@ public class Search {
                 .subscribe(ob);
     }
     private static void _addHistory(String s){
+//        System.out.println(_searchHistoryNum + " " + isFirstTime);
         if(isFirstTime){
-            isFirstTime = false;
-            _searchHistoryNum = SearchHistory.listAll(SearchHistory.class).size();
+            List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
+            _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
         }
         SearchHistory sh = new SearchHistory(s, ++_searchHistoryNum);
         if(_searchHistoryNum == 1){
             sh.save();
+//            System.out.println("searchnum:" + _searchHistoryNum);
+
             return;
         }
         List<SearchHistory> tmp = SearchHistory.find(SearchHistory.class,"searchhistory = ?", s);
@@ -97,12 +107,7 @@ public class Search {
         else{//更新id
             tmp.get(0).set_timestamp(_searchHistoryNum);
             tmp.get(0).save();
-//            List<SearchHistory> list = SearchHistory.listAll(SearchHistory.class);
-//            String str = "Search History:\n";
-//            for(SearchHistory item : list){
-//                str += item.getSearchhistory() + "\n";
-//            }
-//            System.out.println(str);
         }
+//        System.out.println("searchnum:" + _searchHistoryNum);
     }
 }
