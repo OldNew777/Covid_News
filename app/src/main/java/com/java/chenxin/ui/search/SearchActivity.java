@@ -1,12 +1,13 @@
 package com.java.chenxin.ui.search;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -14,9 +15,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
-import com.java.chenxin.MainActivity;
 import com.java.chenxin.R;
 import com.java.chenxin.background.Search;
+import com.java.chenxin.ui.news.NewsListFragment;
+import com.java.chenxin.universal.StringListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,27 +27,24 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class SearchActivity extends AppCompatActivity {
-    private TextView textView;
     private SearchView searchView;
     private ListView suggestionList;
     private List<String> searchSuggestionList = new ArrayList<>(30);
-    private SuggestionListAdapter arrayAdapter;
-    private int requestCode;
+    private StringListAdapter arrayAdapter;
 
     // 搜索建议（搜索历史）的observer
     private Observer<List<String>> searchSuggestionObserver;
 
-    /**
-     * Dispatch incoming result to the correct fragment.
-     *
-     * @param requestCode   请求码
-     * @param resultCode    回调码
-     * @param data          Intent数据
-     */
+    private void hideSoftInput(){
+        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).
+                hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        this.requestCode = requestCode;
+
+        System.out.println("requestCode = " + requestCode);
     }
 
     @Override
@@ -53,11 +52,13 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        // 设置标题
+        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " : " + getIntent().getSerializableExtra("type"));
+
         // 找组件
         searchView = (SearchView) findViewById(R.id.search_view);
         suggestionList = (ListView) findViewById(R.id.suggestion_list);
         suggestionList.setTextFilterEnabled(true);
-        textView = (TextView) searchView.findViewById(androidx.appcompat.R.id.text);
 
         searchView.setSubmitButtonEnabled(true);
 
@@ -87,8 +88,7 @@ public class SearchActivity extends AppCompatActivity {
         };
 
         // 获取搜索历史
-        arrayAdapter = new SuggestionListAdapter(
-                // TODO 多条只能显示一条
+        arrayAdapter = new StringListAdapter(
                 this, R.layout.item_suggestionlist, searchSuggestionList
         );
         ListView suggestion_listView = findViewById(R.id.suggestion_list);
@@ -100,8 +100,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
                 String content = searchSuggestionList.get(position);
-                textView.setText(content);
-                searchView.clearFocus();
+                searchView.setQuery(content, true);
             }
         });
 
@@ -109,12 +108,14 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             // 点击搜索按钮
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
                 searchView.clearFocus();
-                Intent intent = new Intent(getParent(), MainActivity.class);
+
+                Intent intent = new Intent(SearchActivity.this, NewsListFragment.class);
                 intent.putExtra("SearchQuery", query);
-                setResult(requestCode, intent);
-                getParent().finish();
+                setResult(0, intent);
+
+                SearchActivity.this.finish();
                 return false;
             }
 

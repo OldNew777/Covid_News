@@ -1,4 +1,4 @@
-package com.java.chenxin.ui.search;
+package com.java.chenxin.universal;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,10 +13,10 @@ import com.java.chenxin.R;
 
 import java.util.List;
 
-public class SuggestionListAdapter extends ArrayAdapter<String> {
+public class StringListAdapter extends ArrayAdapter<String> {
     private int resourceId;
 
-    public SuggestionListAdapter(@NonNull Context context, int resource, @NonNull List<String> objects) {
+    public StringListAdapter(@NonNull Context context, int resource, @NonNull List<String> objects) {
         super(context, resource, objects);
         resourceId = resource;
     }
@@ -27,8 +27,8 @@ public class SuggestionListAdapter extends ArrayAdapter<String> {
         String suggestion = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
 
-        TextView suggestionView = (TextView)view.findViewById(R.id.suggestion_view);
-        suggestionView.setText(suggestion);
+        TextView textView = (TextView)view.findViewById(R.id.suggestion_view);
+        textView.setText(suggestion);
 
         return view;
     }

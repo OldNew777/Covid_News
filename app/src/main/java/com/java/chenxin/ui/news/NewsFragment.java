@@ -1,5 +1,6 @@
 package com.java.chenxin.ui.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,14 @@ public class NewsFragment extends Fragment {
     private NewsListFragment newsListFragment;
     private NewsListFragment paperListFragment;
 
-    public final NewsListFragment getAllListFragment() { return allListFragment; }
-    public final NewsListFragment getNewsListFragment() { return newsListFragment; }
-    public final NewsListFragment getPaperListFragment() { return paperListFragment; }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        allListFragment.onActivityResult(requestCode, resultCode, data);
+        newsListFragment.onActivityResult(requestCode, resultCode, data);
+        paperListFragment.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Nullable
     @Override

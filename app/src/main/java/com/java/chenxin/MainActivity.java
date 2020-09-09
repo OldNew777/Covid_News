@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     // fragment管理器
     private FragmentManager fm;
     // 三个fragment
-    private NewsFragment newsListFragment;
+    private NewsFragment newsFragment;
     private DataFragment dataFragment;
     private ScholarFragment scholarFragment;
     // 正在使用的fragment
@@ -39,16 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         // 初始化Fragment及底部导航栏监听器
         initFragment(savedInstanceState);
-        bottomNaviSelectedListener =
-                new BottomNavigationView.OnNavigationItemSelectedListener(){
+        bottomNaviSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener(){
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {     // 分支
                             case com.java.chenxin.R.id.navigation_news:
-                                if (newsListFragment == null) {
-                                    newsListFragment = new NewsFragment();
+                                if (newsFragment == null) {
+                                    newsFragment = new NewsFragment();
                                 }
-                                switchContent(activeFragment, newsListFragment);
+                                switchContent(activeFragment, newsFragment);
                                 return true;
                             case com.java.chenxin.R.id.navigation_data:
                                 if (dataFragment == null) {
@@ -81,11 +80,11 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            if (newsListFragment == null){
-                newsListFragment = new NewsFragment();
+            if (newsFragment == null){
+                newsFragment = new NewsFragment();
             }
-            activeFragment = newsListFragment;
-            ft.replace(com.java.chenxin.R.id.main_container, newsListFragment).commit();
+            activeFragment = newsFragment;
+            ft.replace(com.java.chenxin.R.id.main_container, newsFragment).commit();
         }
     }
 
@@ -109,16 +108,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
-            case 1:
-                newsListFragment.getAllListFragment().setSearchQuery(data);
-                break;
-            case 2:
-                newsListFragment.getNewsListFragment().setSearchQuery(data);
-                break;
-            case 3:
-                newsListFragment.getPaperListFragment().setSearchQuery(data);
-                break;
-        }
+
+        newsFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
