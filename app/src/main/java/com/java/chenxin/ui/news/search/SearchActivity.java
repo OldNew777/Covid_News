@@ -1,4 +1,4 @@
-package com.java.chenxin.ui.search;
+package com.java.chenxin.ui.news.search;
 
 import android.app.Activity;
 import android.content.Intent;

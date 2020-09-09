@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // 建立数据库
         SugarContext.init(this);
-
+        DataServer.initializeEpidemicData();
 
         super.onCreate(savedInstanceState);
         setContentView(com.java.chenxin.R.layout.activity_main);

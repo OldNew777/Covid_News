@@ -1,10 +1,8 @@
-package com.java.chenxin.ui.newspiece;
+package com.java.chenxin.ui.news.newspiece;
 
-import android.app.Notification;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +16,14 @@ import androidx.core.view.MenuItemCompat;
 import com.java.chenxin.R;
 import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.NewsPiece;
-import com.java.chenxin.ui.share.ShareActivity;
-import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewsPieceActivity extends AppCompatActivity {
     private NewsPiece newsPiece;
@@ -43,8 +42,6 @@ public class NewsPieceActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState){
-        // 微信注册
-        regToWx();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newspiece);
@@ -71,39 +68,54 @@ public class NewsPieceActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.share_menu, menu);
 
         // 方法1：intent调用
-//        MenuItem shareItem = menu.findItem(R.id.action_share);
-//        ShareActionProvider mShareActionProvider =
-//                (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-//        //通过setShareIntent调用getDefaultIntent()获取所有具有分享功能的App
-//        mShareActionProvider.setShareIntent(getShareIntent());
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        mShareActionProvider.setShareIntent(getShareIntentChooser());
 
-
-        // 方法2：微信SDK
-        menu.findItem(R.id.action_share).
-                setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        System.out.println("onPrepareOptionsMenu.onMenuItemClick");
-                        shareByWeChat();
-                        return true;
-                    }
-                });
+//        // 方法2：微信SDK
+//        menu.findItem(R.id.action_share).
+//                setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        System.out.println("onPrepareOptionsMenu.onMenuItemClick");
+//                        shareByWeChat();
+//                        return true;
+//                    }
+//                });
 
         return super.onCreateOptionsMenu(menu);
     }
 
-    private Intent getShareIntent(){
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, newsPiece.getTitle() + "\n" +
-                newsPiece.getAuthorString() + "\n" + newsPiece.getSource() + "\n" +
-                newsPiece.getDate() + "\n" + newsPiece.getContent());
-        intent.setType("text/plain");
-        Intent.createChooser(intent, getResources().getString(R.string.share));
+    private Intent getShareIntentChooser(){
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, newsPiece.getTitle() + "\n\n" +
+                (newsPiece.getAuthorString().equals("") ? "" : newsPiece.getAuthorString() + "\n") +
+                newsPiece.getSource() + "\n" + newsPiece.getDate() + "\n\n" +
+                newsPiece.getContent());
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        shareIntent.setType("text/plain");
+
+        // 筛选能发送该类信息的应用
+        List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(shareIntent, 0);
+
+        List<Intent> targetIntents = new ArrayList<Intent>();
+        for (ResolveInfo info : resInfo) {
+            ActivityInfo activityInfo = info.activityInfo;
+            Intent intent = new Intent(shareIntent);
+            intent.setPackage(activityInfo.packageName);
+            intent.setClassName(activityInfo.packageName, activityInfo.name);
+            targetIntents.add(intent);
+        }
+
+
+        Intent intent = Intent.createChooser(shareIntent, getResources().getString(R.string.share));
         return intent;
     }
 
     private void shareByWeChat(){
-        System.out.println("share by wechat");
+        // 微信注册
+        regToWx();
 
         // 初始化一个 WXTextObject 对象，填写分享的文本内容
         WXTextObject textObject = new WXTextObject();

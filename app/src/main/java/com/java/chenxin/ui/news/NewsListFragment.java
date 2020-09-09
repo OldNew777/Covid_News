@@ -16,13 +16,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
-import com.java.chenxin.ui.newspiece.NewsPieceActivity;
+import com.java.chenxin.ui.news.newspiece.NewsPieceActivity;
 import com.java.chenxin.R;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.Search;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.NewsPiece;
-import com.java.chenxin.ui.search.SearchActivity;
+import com.java.chenxin.ui.news.search.SearchActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;

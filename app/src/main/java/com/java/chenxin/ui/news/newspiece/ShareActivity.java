@@ -1,4 +1,4 @@
-package com.java.chenxin.ui.share;
+package com.java.chenxin.ui.news.newspiece;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;

@@ -33,10 +33,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class DataServer {
 
@@ -128,7 +124,7 @@ public class DataServer {
         });
     }
 
-    public static void getDataPerDay(Observer<List<DataPerDay>> ob, final String name, final int time){
+    public static void getDataPerDay(Observer<List<DataPerDay>> ob, final String districtName, final int daySum){
         Observable.create(new ObservableOnSubscribe<List<DataPerDay>>() {
             @Override
             public void subscribe(ObservableEmitter<List<DataPerDay>> emitter) throws Exception {
@@ -156,9 +152,9 @@ public class DataServer {
                 }
                 JSONObject jsonObject = new JSONObject(sb.toString());
 
-                EpidemicData tmp = new EpidemicData(jsonObject.getJSONObject(name));
-                System.out.println(tmp.getData(time));
-                emitter.onNext(tmp.getData(time));
+                EpidemicData tmp = new EpidemicData(jsonObject.getJSONObject(districtName));
+                System.out.println(tmp.getData(daySum));
+                emitter.onNext(tmp.getData(daySum));
                 emitter.onComplete();
             }
         }).subscribeOn(Schedulers.io()) //在io执行上述操作
