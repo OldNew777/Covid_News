@@ -23,7 +23,7 @@
         </activity>
 
         <activity
-            android:name=".NewsPieceActivity"
+            android:name=".ui.newspiece.NewsPieceActivity"
             android:label="@string/news_details"
             android:screenOrientation="portrait">
         </activity>

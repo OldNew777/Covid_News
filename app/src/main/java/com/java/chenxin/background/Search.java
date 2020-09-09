@@ -30,7 +30,7 @@ public class Search {
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
-                NewsList list = NetWorkServer.searchExcuteNew(key, type);
+                NewsList list = NetWorkServer.searchExcuteNew_(key, type);
                 emitter.onNext(list);
                 emitter.onComplete();
             }
@@ -71,7 +71,7 @@ public class Search {
         Observable.create(new ObservableOnSubscribe<NewsList>() {
             @Override
             public void subscribe(ObservableEmitter<NewsList> emitter) throws Exception {
-                NewsList list = NetWorkServer.search(key, type);
+                NewsList list = NetWorkServer.search_(key, type);
 //                    System.out.println("下拉: " + NetWorkServer.getPageNum() + " " + NetWorkServer.getCount());
                 emitter.onNext(list);
                 emitter.onComplete();

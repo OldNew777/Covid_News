@@ -84,6 +84,7 @@ public class DataServer {
 
         return null;
     }
+
     public static void getEntityData(Observer<List<Entity>> ob, final String name){
         Observable.create(new ObservableOnSubscribe<List<Entity>>() {
             @Override
@@ -96,9 +97,11 @@ public class DataServer {
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
                 .subscribe(ob);
     }
+
     public static void getViewedNews(Observer<List<NewsPiece>> ob){
 
     }
+
     public static void refreshEpidemicData(){
         new Thread(new Runnable() {
             @Override
@@ -107,6 +110,7 @@ public class DataServer {
             }
         });
     }
+
     public static void writeNameListJSON(){
         new Thread(new Runnable() {
             @Override
@@ -115,6 +119,7 @@ public class DataServer {
             }
         });
     }
+
     public static void getDataPerDay(Observer<List<DataPerDay>> ob, final String name, final int time){
         Observable.create(new ObservableOnSubscribe<List<DataPerDay>>() {
             @Override
@@ -152,6 +157,7 @@ public class DataServer {
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
                 .subscribe(ob);
     }
+
 //    public static void refreshEpidemicData(){
 //        EpidemicDataMap epidemicDataMap = NetWorkServer.getEpidemicData();
 //        JSONObject jsonObject = new JSONObject();

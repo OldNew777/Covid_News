@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
-import com.java.chenxin.NewsPieceActivity;
+import com.java.chenxin.ui.newspiece.NewsPieceActivity;
 import com.java.chenxin.R;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.Search;
@@ -95,6 +94,7 @@ public class NewsListFragment extends Fragment {
         searchView = (SearchView) root.findViewById(R.id.search_view);
 
         // 各observer
+        // 列表的observer
         newsListObserver = new Observer<NewsList>() {
             @Override
             // 绑定激活函数
@@ -128,6 +128,7 @@ public class NewsListFragment extends Fragment {
                     refreshLayout.finishLoadMore();
             }
         };
+        // 详情的observer
         newsDetailsObserver = new Observer<NewsPiece>() {
             @Override
             // 绑定激活函数

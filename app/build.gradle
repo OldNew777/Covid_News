@@ -60,6 +60,6 @@ dependencies {
     // 下拉栏
     implementation 'com.github.arcadefire:nice-spinner:1.4.5'
 
-    // recycler view
-    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
+    // 微信SDK
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 }

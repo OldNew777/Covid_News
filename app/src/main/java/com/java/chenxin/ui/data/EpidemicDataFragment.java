@@ -10,14 +10,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.java.chenxin.R;
+import com.java.chenxin.background.DataServer;
 import com.java.chenxin.universal.StringListAdapter;
 
 import org.angmarch.views.NiceSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EpidemicDataFragment extends Fragment  {
+    // 地区三级分级
+    Map<String, Map<String, List<String>>> districtMap;
+
     private NiceSpinner spinnerCountry;
     private NiceSpinner spinnerProvince;
     private NiceSpinner spinnerCity;
@@ -31,7 +36,9 @@ public class EpidemicDataFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_epidemic_data, container, false);
 
-        System.out.println("China");
+        // 获取地区分级信息
+        districtMap = DataServer.readNameListJSON();
+
         // 找组件
         spinnerCountry = (NiceSpinner) root.findViewById(R.id.spinner_country);
         spinnerProvince = (NiceSpinner) root.findViewById(R.id.spinner_province);
@@ -41,8 +48,6 @@ public class EpidemicDataFragment extends Fragment  {
         spinnerCountryList = new ArrayList<>();
         spinnerProvinceList = new ArrayList<>();
         spinnerCityList = new ArrayList<>();
-        // DEBUG
-        spinnerCountryList.add("UK");
 
         // 设置adapter
 
@@ -55,7 +60,6 @@ public class EpidemicDataFragment extends Fragment  {
         spinnerProvince.setHint("请选择省份");
         spinnerCity.setHint("请选择城市");
 
-        spinnerCountryList.add("USA");
 
         return root;
     }

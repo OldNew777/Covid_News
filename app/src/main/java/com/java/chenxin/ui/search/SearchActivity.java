@@ -116,7 +116,7 @@ public class SearchActivity extends AppCompatActivity {
                 setResult(0, intent);
 
                 SearchActivity.this.finish();
-                return false;
+                return true;
             }
 
             @Override
