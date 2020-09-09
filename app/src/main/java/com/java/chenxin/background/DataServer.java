@@ -92,18 +92,7 @@ public class DataServer {
 
         return null;
     }
-    public static void getEntityData(Observer<List<Entity>> ob, final String name){
-        Observable.create(new ObservableOnSubscribe<List<Entity>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Entity>> emitter) throws Exception {
-                List<Entity> list = NetWorkServer.searchEntity(name);
-                emitter.onNext(list);
-                emitter.onComplete();
-            }
-        }).subscribeOn(Schedulers.io()) //在io执行上述操作
-                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
-                .subscribe(ob);
-    }
+
 
     public static void initializeEpidemicData(){//这个讲道理只在第一次使用软件的时候调用就可以了
         new Thread(new Runnable() {
