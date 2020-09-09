@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.java.chenxin.R;
 import com.java.chenxin.background.DataServer;
+import com.java.chenxin.background.ScholarServer;
 import com.java.chenxin.data_struct.DataPerDay;
 import com.java.chenxin.data_struct.Entity;
+import com.java.chenxin.data_struct.Scholar;
 //import com.java.chenxin.ui.news.RefreshMode;
 
 import java.util.List;
@@ -25,6 +27,7 @@ import io.reactivex.disposables.Disposable;
 public class ScholarFragment extends Fragment implements View.OnClickListener {
     public Observer<List<DataPerDay>> observerDataMap;
     public Observer<List<Entity>> entityDataMap;
+    public Observer<List<Scholar>> scholarOb;
     List<DataPerDay> list;
     List<Entity> entityList;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -87,6 +90,26 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
 //                System.out.println("success!" + map.getData("China", 1).toString());
             }
         };
+        scholarOb = new Observer<List<Scholar>>() {
+            @Override
+            // 绑定激活函数
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(List<Scholar> l) {
+                l.get(0).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+//                System.out.println("success!" + map.getData("China", 1).toString());
+            }
+        };
 
         return root;
     }
@@ -95,7 +118,7 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
             System.out.println("button1");
-            DataServer.initializeEpidemicData();
+            ScholarServer.getScholarList(scholarOb);
 //            System.out.println("done");
 //            DataServer.getDataPerDay(observerDataMap, "India", 5);
         }

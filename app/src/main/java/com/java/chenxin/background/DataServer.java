@@ -104,35 +104,7 @@ public class DataServer {
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
                 .subscribe(ob);
     }
-//    public static void getViewedNews(Observer<List<NewsPiece>> ob){
-//        count = 0;
-//        int tail = (count + 20 > )
-//        Observable.create(new ObservableOnSubscribe<List<NewsPiece>>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<List<NewsPiece>> emitter) throws Exception {
-//                List<NewsPiece> list = NewsPiece.listAll(NewsPiece.class, "id").subList(count, Constants.PAGESIZE);
-//
-//                emitter.onNext(list);
-//                emitter.onComplete();
-//            }
-//        }).subscribeOn(Schedulers.io()) //在io执行上述操作
-//                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
-//                .subscribe(ob);
-//    }
-//    public static void refreshViewedNews(Observer<List<NewsPiece>> ob){
-//        count += Constants.PAGESIZE;
-//        Observable.create(new ObservableOnSubscribe<List<NewsPiece>>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<List<NewsPiece>> emitter) throws Exception {
-//                List<NewsPiece> list = NewsPiece.listAll(NewsPiece.class, "id").subList(count, Constants.PAGESIZE);
-//
-//                emitter.onNext(list);
-//                emitter.onComplete();
-//            }
-//        }).subscribeOn(Schedulers.io()) //在io执行上述操作
-//                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
-//                .subscribe(ob);
-//    }
+
     public static void initializeEpidemicData(){//这个讲道理只在第一次使用软件的时候调用就可以了
         new Thread(new Runnable() {
             @Override
