@@ -68,7 +68,7 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
-            EpidemicDataServer.getDataPerDay(observerDataMap, "China", 5);
+            EpidemicDataServer.getDataPerDay(observerDataMap, "China|Beijing", 5);
         }
     }
 }
