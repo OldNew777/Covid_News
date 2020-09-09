@@ -92,7 +92,6 @@ public class Search {
         }
         List<SearchHistory> tmp = SearchHistory.find(SearchHistory.class,"searchhistory = ?", s);
         if(tmp == null || tmp.size() == 0) {
-            System.out.println("not exist");
             sh.save();
         }
         else{//更新id
