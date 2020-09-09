@@ -59,7 +59,8 @@ public class EpidemicDataMap {
             System.out.println(s);
         }
     }
-    public static void writeNameListJSON(){
+    public void writeNameListJSON(){
+
         File file = new File(Constants.NAMELISTDATAPATH);
         if(!file.getParentFile().exists()){
             boolean flag  = file.getParentFile().mkdirs();
