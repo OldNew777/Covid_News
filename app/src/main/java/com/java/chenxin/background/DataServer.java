@@ -2,9 +2,11 @@ package com.java.chenxin.background;
 
 import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.DataPerDay;
+import com.java.chenxin.data_struct.Entity;
 import com.java.chenxin.data_struct.EpidemicData;
 import com.java.chenxin.data_struct.EpidemicDataMap;
 import com.java.chenxin.data_struct.NewsList;
+import com.java.chenxin.data_struct.NewsPiece;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +31,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class EpidemicDataServer {
+public class DataServer {
 
     public static Map<String, Map<String, List<String>>> readNameListJSON(){
         File file = new File(Constants.NAMELISTDATAPATH);
@@ -82,7 +84,21 @@ public class EpidemicDataServer {
 
         return null;
     }
+    public static void getEntityData(Observer<List<Entity>> ob, final String name){
+        Observable.create(new ObservableOnSubscribe<List<Entity>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Entity>> emitter) throws Exception {
+                List<Entity> list = NetWorkServer.searchEntity(name);
+                emitter.onNext(list);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
+    }
+    public static void getViewedNews(Observer<List<NewsPiece>> ob){
 
+    }
     public static void refreshEpidemicData(){
         new Thread(new Runnable() {
             @Override

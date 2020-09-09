@@ -106,37 +106,37 @@ public class NewsPiece extends SugarRecord implements Serializable {
             _uid = jsonObject.getString("_id");
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             _title = jsonObject.getString("title");
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             _content = jsonObject.getString("content");
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             _date = jsonObject.getString("date");
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             _source = jsonObject.getString("source");
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             _influence = jsonObject.getDouble("influence");
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             JSONArray authorArray = jsonObject.getJSONArray("authors");
@@ -146,7 +146,7 @@ public class NewsPiece extends SugarRecord implements Serializable {
             }
         }
         catch(JSONException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         try {
             JSONArray regionArray = jsonObject.getJSONArray("regionIDs");
@@ -156,7 +156,7 @@ public class NewsPiece extends SugarRecord implements Serializable {
             }
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         try{
             String tmps = jsonObject.getString("type");
@@ -168,7 +168,7 @@ public class NewsPiece extends SugarRecord implements Serializable {
             }
         }
         catch(JSONException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 //        System.out.println(_id + " " + _title);
