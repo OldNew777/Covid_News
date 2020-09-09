@@ -14,6 +14,7 @@ public class SearchHistory extends SugarRecord {
     public String getSearchhistory(){
         return searchhistory;
     }
+    public int getTimestamp(){return timestamp;}
     public void set_timestamp(int i){
         timestamp = i;}
 }
