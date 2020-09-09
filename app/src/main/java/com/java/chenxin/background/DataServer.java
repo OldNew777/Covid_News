@@ -1,5 +1,7 @@
 package com.java.chenxin.background;
 
+import android.provider.ContactsContract;
+
 import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.DataPerDay;
 import com.java.chenxin.data_struct.Entity;
@@ -17,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +33,10 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class DataServer {
 
@@ -103,18 +110,13 @@ public class DataServer {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 NetWorkServer.downloadEpidemicDataMap();
+
             }
         });
     }
-    public static void writeNameListJSON(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                EpidemicDataMap.writeNameListJSON();
-            }
-        });
-    }
+
     public static void getDataPerDay(Observer<List<DataPerDay>> ob, final String name, final int time){
         Observable.create(new ObservableOnSubscribe<List<DataPerDay>>() {
             @Override
@@ -151,6 +153,73 @@ public class DataServer {
         }).subscribeOn(Schedulers.io()) //在io执行上述操作
                 .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
                 .subscribe(ob);
+    }
+
+    public static void writeNameListJSON(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient okHttpClient = new OkHttpClient();
+                String mUrl = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
+                Request request = new Request.Builder().url(mUrl).get().build();
+                Call call = okHttpClient.newCall(request);
+                InputStream is = null;
+                String msg = "";
+                try {
+                    Response response = call.execute();
+                    msg = response.body().string();
+//            System.out.println(response.body().string());
+//            msg += response.body().string();
+//            is = response.body().byteStream();
+//            BufferedReader raader = new BufferedReader()
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                EpidemicDataMap mp = new EpidemicDataMap(jsonObject);
+                List<String> nameList = mp.getNameList();
+
+                File file = new File(Constants.NAMELISTDATAPATH);
+                if(!file.getParentFile().exists()){
+                    boolean flag  = file.getParentFile().mkdirs();
+                    System.out.println("making file path:" + file.toString() + " " + flag);
+
+                }
+                Map<String, Map<String, List<String>>> map = new HashMap<String,Map<String, List<String>>>();
+                for(String name : nameList){
+                    String[] s = name.split("\\|");
+//            System.out.println(s[0]);
+                    if(!map.containsKey(s[0])){
+                        map.put(s[0], new HashMap<String, List<String>>());
+                    }
+                    if(s.length < 2) continue;//如果没有省份
+                    if(!map.get(s[0]).containsKey(s[1])){
+                        map.get(s[0]).put(s[1], new ArrayList<String>());
+                    }
+                    if(s.length < 3) continue;//如果没有区
+                    map.get(s[0]).get(s[1]).add(s[2]);
+                }
+                try {
+                    jsonObject = new JSONObject(map);
+//            JSONObject jsonObject = new JSONObject();
+                    PrintStream ps = new PrintStream(new FileOutputStream(file));
+//            System.out.println(jsonObject.getJSONObject("China").getJSONArray("Beijing").getString(0));
+                    ps.print(jsonObject.toString());
+                    ps.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        });
     }
 //    public static void refreshEpidemicData(){
 //        EpidemicDataMap epidemicDataMap = NetWorkServer.getEpidemicData();

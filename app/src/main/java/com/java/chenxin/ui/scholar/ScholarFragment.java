@@ -17,6 +17,7 @@ import com.java.chenxin.data_struct.Entity;
 //import com.java.chenxin.ui.news.RefreshMode;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -94,12 +95,14 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
             System.out.println("button1");
-            DataServer.getEntityData(entityDataMap,"疫苗");
+            DataServer.writeNameListJSON();
+//            System.out.println("done");
 //            DataServer.getDataPerDay(observerDataMap, "India", 5);
         }
         if(view.getId() == R.id.button2){
             System.out.println("button2");
-            DataServer.getEntityData(entityDataMap,"黄热病病毒");
+            Map<String, Map<String, List<String>>>  map = DataServer.readNameListJSON();
+            System.out.println(map.get("China").get("Beijing").toString());
         }
     }
 }
