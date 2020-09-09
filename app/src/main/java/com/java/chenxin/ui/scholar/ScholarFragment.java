@@ -95,7 +95,7 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
             System.out.println("button1");
-            DataServer.writeNameListJSON();
+            DataServer.initializeEpidemicData();
 //            System.out.println("done");
 //            DataServer.getDataPerDay(observerDataMap, "India", 5);
         }

@@ -106,7 +106,18 @@ public class DataServer {
     public static void getViewedNews(Observer<List<NewsPiece>> ob){
 
     }
-    public static void refreshEpidemicData(){
+    public static void initializeEpidemicData(){//这个讲道理只在第一次使用软件的时候调用就可以了
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                NetWorkServer.downloadEpidemicDataMap();
+                System.out.println("next");
+                writeNameListJSON();
+            }
+        }).start();
+    }
+    public static void refreshEpidemicData(){//这个更新数据的 不会重写namelist.java
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -156,37 +167,47 @@ public class DataServer {
     }
 
     public static void writeNameListJSON(){
+        System.out.println("in function");
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                String mUrl = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
-                Request request = new Request.Builder().url(mUrl).get().build();
-                Call call = okHttpClient.newCall(request);
-                InputStream is = null;
-                String msg = "";
+                File file = new File(Constants.EPIDEMICDATAPATH);
+                if(!file.exists()){
+                    System.out.println("菜狗写错了: " + Constants.EPIDEMICDATAPATH);
+                }
+                StringBuilder sb = new StringBuilder();
                 try {
-                    Response response = call.execute();
-                    msg = response.body().string();
-//            System.out.println(response.body().string());
-//            msg += response.body().string();
-//            is = response.body().byteStream();
-//            BufferedReader raader = new BufferedReader()
+                    FileInputStream fis = new FileInputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int len = fis.read(buffer);
+                    //读取文件内容
+                    while(len > 0){
+                        sb.append(new String(buffer,0,len));
+                        //继续将数据放到buffer中
+                        len = fis.read(buffer);
+                    }
+                    //关闭输入流
+                    fis.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return;
                 }
                 JSONObject jsonObject = null;
                 try {
-                    jsonObject = new JSONObject(msg);
+                    jsonObject = new JSONObject(sb.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+//                EpidemicDataMap mp = new EpidemicDataMap(jsonObject);
+                List<String> nameList = new ArrayList<String>();
+                Iterator<String> it = jsonObject.keys();
+                while(it.hasNext()){
+                    nameList.add(it.next());
+                }
 
-                EpidemicDataMap mp = new EpidemicDataMap(jsonObject);
-                List<String> nameList = mp.getNameList();
-
-                File file = new File(Constants.NAMELISTDATAPATH);
+                file = new File(Constants.NAMELISTDATAPATH);
                 if(!file.getParentFile().exists()){
                     boolean flag  = file.getParentFile().mkdirs();
                     System.out.println("making file path:" + file.toString() + " " + flag);
@@ -216,10 +237,10 @@ public class DataServer {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
+                System.out.println("done!");
             }
 
-        });
+        }).start();
     }
 //    public static void refreshEpidemicData(){
 //        EpidemicDataMap epidemicDataMap = NetWorkServer.getEpidemicData();
