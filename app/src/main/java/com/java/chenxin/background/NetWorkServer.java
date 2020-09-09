@@ -131,7 +131,7 @@ public class NetWorkServer {
                 emitter.onNext(list);
                 emitter.onComplete();
                 //搭便车
-                downloadEpidemicDataMap();
+//                downloadEpidemicDataMap();
 
             }
         }).subscribeOn(Schedulers.io()) //在io执行上述操作
