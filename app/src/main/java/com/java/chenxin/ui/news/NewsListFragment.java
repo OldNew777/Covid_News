@@ -66,17 +66,6 @@ public class NewsListFragment extends Fragment {
         this.type = type;
     }
 
-    public void setSearchQuery(Intent intent){
-        searchView.clearFocus();
-        String searchQuery = (String) intent.getSerializableExtra("SearchQuery");
-
-        Search.search(newsListObserver, searchQuery, type);
-        Toast.makeText(getActivity(), "正在搜索："+ searchQuery, Toast.LENGTH_SHORT).show();
-
-//        textView.setText(searchQuery);
-//        searchButton = searchView.findViewById(R.id.search_button);
-    }
-
     private void hideSoftInput(){
         ((InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

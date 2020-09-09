@@ -16,4 +16,5 @@
     <string name="share">分享</string>
     <string name="search">搜索</string>
     <string name="searchHint">请输入搜索关键词</string>
+    <string name="check">查询</string>
 </resources>

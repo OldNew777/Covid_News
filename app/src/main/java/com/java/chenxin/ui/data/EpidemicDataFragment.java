@@ -19,10 +19,12 @@ import java.util.List;
 
 public class EpidemicDataFragment extends Fragment  {
     private NiceSpinner spinnerCountry;
+    private NiceSpinner spinnerProvince;
+    private NiceSpinner spinnerCity;
 
-    private List<String> spinnerCountryList = new ArrayList<>(100);
-
-    private StringListAdapter spinnerCountryAdapter;
+    private List<String> spinnerCountryList;
+    private List<String> spinnerProvinceList;
+    private List<String> spinnerCityList;
 
     @Nullable
     @Override
@@ -32,15 +34,28 @@ public class EpidemicDataFragment extends Fragment  {
         System.out.println("China");
         // 找组件
         spinnerCountry = (NiceSpinner) root.findViewById(R.id.spinner_country);
+        spinnerProvince = (NiceSpinner) root.findViewById(R.id.spinner_province);
+        spinnerCity = (NiceSpinner) root.findViewById(R.id.spinner_city);
 
+        // 设置下拉栏数据
+        spinnerCountryList = new ArrayList<>();
+        spinnerProvinceList = new ArrayList<>();
+        spinnerCityList = new ArrayList<>();
         // DEBUG
-        spinnerCountryList.add("China");
-        spinnerCountryList.add("America");
+        spinnerCountryList.add("UK");
+
+        // 设置adapter
 
         // 构建下拉选择栏的适配器
-//        spinnerCountryAdapter = new StringListAdapter(getContext(), R.layout.item_spinnerlist, spinnerCountryList);
-//        spinnerCountryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountry.attachDataSource(spinnerCountryList);
+        spinnerProvince.attachDataSource(spinnerProvinceList);
+        spinnerCity.attachDataSource(spinnerCityList);
+
+        spinnerCountry.setHint("请选择国家");
+        spinnerProvince.setHint("请选择省份");
+        spinnerCity.setHint("请选择城市");
+
+        spinnerCountryList.add("USA");
 
         return root;
     }

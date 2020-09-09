@@ -17,7 +17,7 @@
         android:gravity="start">
     </TextView>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:orientation="horizontal">
@@ -25,24 +25,25 @@
         <TextView
             android:id="@+id/news_list_source"
             android:textSize="12sp"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:gravity="start">
+            android:gravity="start"
+            android:layout_alignParentLeft="true">
         </TextView>
 
         <TextView
             android:id="@+id/news_list_date"
             android:textSize="12sp"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:gravity="end">
+            android:gravity="end"
+            android:layout_toRightOf="@+id/news_list_source"
+            android:layout_alignParentRight="true">
         </TextView>
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
