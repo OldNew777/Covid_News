@@ -1,6 +1,10 @@
 package com.java.chenxin.background;
 
 import com.java.chenxin.data_struct.Constants;
+import com.java.chenxin.data_struct.DataPerDay;
+import com.java.chenxin.data_struct.EpidemicData;
+import com.java.chenxin.data_struct.EpidemicDataMap;
+import com.java.chenxin.data_struct.NewsList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,16 +13,25 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class EpidemicDataServer {
 
-    public static Map<String, Map<String, List<String>>> readLocalJSON(){
+    public static Map<String, Map<String, List<String>>> readNameListJSON(){
         File file = new File(Constants.NAMELISTDATAPATH);
         if(!file.exists()){
             System.out.println("菜狗写错了");
@@ -69,4 +82,88 @@ public class EpidemicDataServer {
 
         return null;
     }
+
+    public static void refreshEpidemicData(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NetWorkServer.downloadEpidemicDataMap();
+            }
+        });
+    }
+    public static void writeNameListJSON(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                EpidemicDataMap.writeNameListJSON();
+            }
+        });
+    }
+    public static void getDataPerDay(Observer<List<DataPerDay>> ob, final String name, final int time){
+        Observable.create(new ObservableOnSubscribe<List<DataPerDay>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<DataPerDay>> emitter) throws Exception {
+                File file = new File(Constants.EPIDEMICDATAPATH);
+                if(!file.exists()){
+                    System.out.println("菜狗写错了: " + Constants.EPIDEMICDATAPATH);
+                }
+                StringBuilder sb = new StringBuilder();
+                try {
+                    FileInputStream fis = new FileInputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int len = fis.read(buffer);
+                    //读取文件内容
+                    while(len > 0){
+                        sb.append(new String(buffer,0,len));
+                        //继续将数据放到buffer中
+                        len = fis.read(buffer);
+                    }
+                    //关闭输入流
+                    fis.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                JSONObject jsonObject = new JSONObject(sb.toString());
+
+                EpidemicData tmp = new EpidemicData(jsonObject.getJSONObject(name));
+                System.out.println(tmp.getData(time));
+                emitter.onNext(tmp.getData(time));
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
+    }
+//    public static void refreshEpidemicData(){
+//        EpidemicDataMap epidemicDataMap = NetWorkServer.getEpidemicData();
+//        JSONObject jsonObject = new JSONObject();
+//        Map<String, EpidemicData> map = epidemicDataMap.getMap();
+//        for(String name: map.keySet()){
+//            EpidemicData tmp = map.get(name);
+//            JSONObject tmpObj = new JSONObject();
+//            try {
+//                jsonObject.put(name, map.get(name).toJSONObject());
+////                System.out.println(jsonObject.getJSONObject(name).toString());
+//            } catch (JSONException e) {
+//                System.out.println("别偷懒");
+//                e.printStackTrace();
+//            }
+//        }
+//        File file = new File(Constants.EPIDEMICDATAPATH);
+//        if(!file.getParentFile().exists()){
+//            boolean flag  = file.getParentFile().mkdirs();
+//            System.out.println("making file path:" + file.toString() + " " + flag);
+//        }
+//        PrintStream ps = null;
+//        try {
+//            ps = new PrintStream(new FileOutputStream(file));
+//            ps.print(jsonObject.toString());
+//            ps.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 }

@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class EpidemicDataMap {
     private Map<String, EpidemicData> _map = new LinkedHashMap<String, EpidemicData>();
-    private List<String> _nameList = new ArrayList<String>();
+    private static List<String> _nameList = new ArrayList<String>();
     public EpidemicDataMap(){
     }
     public EpidemicDataMap(JSONObject jsonObject){//由json构造epidemicDataMap
@@ -59,7 +59,7 @@ public class EpidemicDataMap {
             System.out.println(s);
         }
     }
-    public void writeJSON(){
+    public static void writeNameListJSON(){
         File file = new File(Constants.NAMELISTDATAPATH);
         if(!file.getParentFile().exists()){
             boolean flag  = file.getParentFile().mkdirs();
