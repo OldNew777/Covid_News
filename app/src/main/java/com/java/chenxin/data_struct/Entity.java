@@ -38,6 +38,7 @@ public class Entity {
     public List<Relation> getRelationList(){return _relations;}
     public String getImgUrl(){return _imgUrl;}
 
+
     public void show(){
         System.out.println("hot:" + _hot);
         System.out.println("label: " + _lable);
@@ -144,21 +145,3 @@ public class Entity {
 }
 
 
-class Relation{
-    public boolean isFather = false;
-    public String url;
-    public String label;
-    public boolean forward;
-
-    public Relation(boolean isFather, String url, String label, boolean forward){
-        this.isFather = isFather;
-        this.forward = forward;
-        this.url = url;
-        this.label = label;
-    }
-
-    public void show(){
-        System.out.println(isFather + " " + url + " " + label + " " + forward);
-    }
-
-}
