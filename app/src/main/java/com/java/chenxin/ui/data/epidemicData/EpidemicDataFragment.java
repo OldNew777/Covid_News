@@ -73,6 +73,7 @@ public class EpidemicDataFragment extends Fragment  {
                 if (parent.getSelectedIndex() == 0)
                     return;
                 spinnerProvinceList = new ArrayList<>(districtMap.get(parent.getSelectedItem()).keySet());
+                Collections.sort(spinnerProvinceList);
                 spinnerProvinceList.add(0, getResources().getString(R.string.input_province));
                 spinnerProvince.attachDataSource(spinnerProvinceList);
                 spinnerCity.attachDataSource(emptyList);
@@ -87,6 +88,7 @@ public class EpidemicDataFragment extends Fragment  {
                 System.out.println("spinnerCountry.getSelectedItem() = " + spinnerCountry.getSelectedItem());
                 spinnerCityList = new ArrayList<>(
                         districtMap.get(spinnerCountry.getSelectedItem()).get(parent.getSelectedItem()));
+                Collections.sort(spinnerCityList);
                 spinnerCityList.add(0, getResources().getString(R.string.input_city));
                 spinnerCity.attachDataSource(spinnerCityList);
             }
