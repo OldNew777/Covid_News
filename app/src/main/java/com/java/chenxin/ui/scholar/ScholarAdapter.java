@@ -1,8 +1,6 @@
 package com.java.chenxin.ui.scholar;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.java.chenxin.R;
-import com.java.chenxin.data_struct.NewsPiece;
 import com.java.chenxin.data_struct.Scholar;
 
 import java.util.List;
@@ -33,15 +30,25 @@ public class ScholarAdapter extends ArrayAdapter<Scholar> {
         Scholar scholar = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
 
-        TextView name = (TextView)view.findViewById(R.id.scholar_list_name);
-        TextView nameZh = (TextView)view.findViewById(R.id.scholar_list_name_zh);
+        // 找组件
+        TextView name_zh_textView = (TextView)view.findViewById(R.id.scholar_list_name_zh);
+        TextView name_en_textView = (TextView)view.findViewById(R.id.scholar_list_name_en);
         TextView scholarPostion = (TextView)view.findViewById(R.id.scholar_list_position);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_viewer);
-        Glide.with(view).load(scholar.getImgUrl()).into(imageView);
-        name.setText(scholar.getNameZh());
-        nameZh.setText(scholar.getName());
-        scholarPostion.setText(scholar.getPosition());
 
+        // 名字处理
+        String name_zh = scholar.getNameZh();
+        String name_en = scholar.getName();
+        if (name_zh.equals("")){
+            String tmp = name_en;
+            name_en = name_zh;
+            name_zh = tmp;
+        }
+
+        Glide.with(view).load(scholar.getImgUrl()).into(imageView);
+        name_zh_textView.setText(name_zh);
+        name_en_textView.setText(name_en);
+        scholarPostion.setText(scholar.getPosition());
 
         return view;
     }
