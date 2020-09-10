@@ -19,14 +19,18 @@ def delStopWords(words,stop_words_set):
             new_words.append(r)
     return new_words
 
-def get_all_vector(file_path,stop_words_set):
+def get_all_vector(file_path,path):
     mFile = open("matrix.txt", mode='w', encoding='utf-8')
+    file = open("id.txt", mode='w', encoding='utf-8')
+    stopWordSet = stopWord(path)
     names = [ os.path.join(file_path,f) for f in os.listdir(file_path) ]
+    for name in names:
+        file.write(name + '\n')
     posts = [ open(name, mode='r' ,encoding="utf-8").read() for name in names ]
     docs = []
     word_set = set()
     for post in posts:
-        doc = delStopWords(post, stop_words_set)
+        doc = delStopWords(post, stopWordSet)
         docs.append(doc)
         word_set |= set(doc)
         #print len(doc),len(word_set)
@@ -60,7 +64,7 @@ def get_all_vector(file_path,stop_words_set):
             doc_v = doc_v / (doc_v.sum())
     tfidf = np.dot(docs_matrix,idf)
     # print(tfidf)
-    return names,tfidf
+    return names,tfidf,word_set
 
 
 def gen_sim(A,B):
@@ -112,18 +116,43 @@ K = 3
 file0 = open("0.txt", mode='w', encoding="utf-8")
 file1 = open("1.txt", mode='w', encoding="utf-8")
 file2 = open("2.txt", mode='w', encoding="utf-8")
-names, tfdif = get_all_vector("./txt", "stopword.txt")
+names, tfdif, wordSet = get_all_vector("./txt", "stopword.txt")
 centroids, clusterAssment = kMeans(tfdif, K)
 # print(clusterAssment[:,0])
-for tup in zip(clusterAssment[:,0], names):
-    # print(tup)
-    for i in tup[0]:
-        if(i == [[0.]]):
-            file0.write(tup[1].split('.')[1].split('\\')[1] + "\n")
-        if(i == [[1.]]):
-            file1.write(tup[1].split('.')[1].split('\\')[1] + "\n")
-        if(i == [[2.]]):
-            file2.write(tup[1].split('.')[1].split('\\')[1] + "\n")
+wordCount0 = np.zeros(np.size(tfdif, 1))
+wordCount1 = np.zeros(np.size(tfdif, 1))
+wordCount2 = np.zeros(np.size(tfdif, 1))
+
+rownum = np.size(clusterAssment, 0)
+for i in range(0, rownum):
+    if clusterAssment[i,0] == 0. :
+        wordCount0 += tfdif[i,:]
+    if clusterAssment[i,0] == 1. :
+        wordCount1 += tfdif[i,:]
+    if clusterAssment[i,0] == 2. :
+        wordCount2 += tfdif[i,:]
+
+wordFile = open("word1.txt", mode='w', encoding='utf-8')
+
+wordFile.write("class 0:\n")
+for i in range(0, 15):
+    re = np.where(wordCount0 == np.max(wordCount0))
+    wordFile.write(wordSet[re[0][0]] + " " + str(wordCount0[re[0][0]]) + '\n')
+    wordCount0[re[0][0]] = 0.0
+
+wordFile.write("class 1:\n")
+for i in range(0, 15):
+    re = np.where(wordCount1 == np.max(wordCount1))
+    wordFile.write(wordSet[re[0][0]] + " " + str(wordCount1[re[0][0]]) + '\n')
+    wordCount1[re[0][0]] = 0.0
+
+wordFile.write("class 2:\n")
+for i in range(0, 15):
+    re = np.where(wordCount2 == np.max(wordCount2))
+    wordFile.write(wordSet[re[0][0]] + " " + str(wordCount2[re[0][0]]) + '\n')
+    wordCount2[re[0][0]] = 0.0
+
 file0.close()
 file1.close()
 file2.close()
+wordFile.close()

@@ -10,7 +10,7 @@ def stopWord(path):
 def delStopWords(words,stop_words_set):
 #   words是已经切词但是没有去除停用词的文档。
 #   返回的会是去除停用词后的文档
-    result = jieba.cut(words)
+    result = words
     new_words = []
     for r in result:
         if r not in stop_words_set:

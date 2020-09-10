@@ -457,7 +457,7 @@ public class NetWorkServer {
         }
         return list;
     }
-    private static NewsPiece _searchById(String id){
+    protected static NewsPiece _searchById(String id){
         List<NewsPiece> tmpNewsList = NewsPiece.find(NewsPiece.class, "_uid = ?", id);
         if(tmpNewsList == null || tmpNewsList.size() == 0){
             try{
