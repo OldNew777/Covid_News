@@ -16,7 +16,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="20dp"
-            android:background="@color/red"/>
+            android:background="@color/red_pure"/>
 
         <View
             android:id="@+id/colorsquare_cured"
@@ -24,7 +24,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="10dp"
-            android:background="@color/green"
+            android:background="@color/green_pure"
             android:layout_below="@id/colorsquare_confirmed"/>
 
         <View

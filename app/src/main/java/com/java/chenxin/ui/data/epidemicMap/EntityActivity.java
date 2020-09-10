@@ -1,31 +1,40 @@
 package com.java.chenxin.ui.data.epidemicMap;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.java.chenxin.R;
+import com.java.chenxin.background.EntityServer;
 import com.java.chenxin.data_struct.Entity;
 import com.java.chenxin.data_struct.Relation;
-import com.java.chenxin.ui.news.search.SearchActivity;
 
 import java.util.List;
-import java.util.zip.Inflater;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class EntityActivity extends AppCompatActivity {
     private Entity entity;
     private List<Relation> relationList;
+
+    private Observer<Entity> entityObserver;
+
+    // 组件
+    TextView title_textView;
+    TextView description_textView;
+    ImageView image_view;
+    ListView relationListView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,14 +42,40 @@ public class EntityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_entity);
 
         // 找控件
-        TextView title_textView = (TextView) findViewById(R.id.title);
-        TextView description_textView = (TextView) findViewById(R.id.description);
-        ImageView image_view = (ImageView) findViewById(R.id.image);
-        ListView relationListView = (ListView) findViewById(R.id.relations_listview);
+        title_textView = (TextView) findViewById(R.id.title);
+        description_textView = (TextView) findViewById(R.id.description);
+        image_view = (ImageView) findViewById(R.id.image);
+        relationListView = (ListView) findViewById(R.id.relations_listview);
 
         // 获取数据
-        entity = (Entity) getIntent().getSerializableExtra("Entity");
+        String entityLabel = (String) getIntent().getSerializableExtra("EntityLabel");
 
+        // 设置observer
+        entityObserver = new Observer<Entity>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(Entity entity_in) {
+                if (entity_in == null)
+                    EntityActivity.this.finish();
+                entity = entity_in;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(EntityActivity.this, "加载失败", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onComplete() {
+                setUpPage();
+            }
+        };
+        EntityServer.getEntity(entityObserver, entityLabel);
+    }
+
+    private void setUpPage(){
         // 设置页面
         setTitle(getTitle() + " : " + entity.getLabel());
         title_textView.setText(entity.getLabel());
