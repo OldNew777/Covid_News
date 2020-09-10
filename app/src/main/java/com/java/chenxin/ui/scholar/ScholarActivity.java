@@ -26,6 +26,9 @@ public class ScholarActivity extends AppCompatActivity {
         scholar = (Scholar) getIntent().getSerializableExtra("Scholar");
         ((TextView) findViewById(R.id.scholar_name)).setText(scholar.getName());
         ((TextView) findViewById(R.id.scholar_name_zh)).setText(scholar.getNameZh());
+        if(scholar.getIsPassaway()){
+            ((TextView) findViewById(R.id.passaway)).setText(R.string.passaway);
+        }
         if(scholar.getBio() != null){
             ((TextView) findViewById(R.id.bio)).setText(scholar.getBio());
             ((TextView) findViewById(R.id.bio_title)).setText(res.getString(R.string.scholar_bio));
