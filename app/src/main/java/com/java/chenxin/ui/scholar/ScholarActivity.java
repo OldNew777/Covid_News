@@ -1,5 +1,6 @@
 package com.java.chenxin.ui.scholar;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -21,13 +22,31 @@ public class ScholarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scholar);
 
         // 设置新闻内容
-
+        Resources res = getResources();
         scholar = (Scholar) getIntent().getSerializableExtra("Scholar");
         ((TextView) findViewById(R.id.scholar_name)).setText(scholar.getName());
         ((TextView) findViewById(R.id.scholar_name_zh)).setText(scholar.getNameZh());
-        ((TextView) findViewById(R.id.bio)).setText(scholar.getBio());
-        ((TextView) findViewById(R.id.edu)).setText(scholar.getEdu());
-        ((TextView) findViewById(R.id.work)).setText(scholar.getWork());
+        if(scholar.getBio() != null){
+            ((TextView) findViewById(R.id.bio)).setText(scholar.getBio());
+            ((TextView) findViewById(R.id.bio_title)).setText(res.getString(R.string.scholar_bio));
+        }
+        if(scholar.getEdu() != null){
+            ((TextView) findViewById(R.id.edu)).setText(scholar.getEdu());
+            ((TextView) findViewById(R.id.edu_title)).setText(res.getString(R.string.scholar_edu));
+        }
+        if(scholar.getWork() != null){
+            ((TextView) findViewById(R.id.work)).setText(scholar.getWork());
+            ((TextView) findViewById(R.id.work_title)).setText(res.getString(R.string.scholar_work));
+        }
+        if(scholar.getAffiliation() != null){
+            ((TextView) findViewById(R.id.affiliation)).setText(scholar.getAffiliation());
+            ((TextView) findViewById(R.id.affiliation_title)).setText(res.getString(R.string.scholar_affiliation));
+        }
+        if(scholar.getHomepage() != null){
+            ((TextView) findViewById(R.id.homepage)).setText(scholar.getHomepage());
+            ((TextView) findViewById(R.id.homepage_title)).setText(res.getString(R.string.scholar_homepage));
+        }
+
         ImageView imageView = (ImageView) findViewById(R.id.image_viewer_sa);
         Glide.with(this).load(scholar.getImgUrl()).into(imageView);
         // actionbar

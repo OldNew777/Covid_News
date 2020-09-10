@@ -7,6 +7,11 @@
 
     <string name="data">数据</string>
     <string name="scholar">知疫学者</string>
+    <string name="scholar_bio">生平经历</string>
+    <string name="scholar_edu">教育背景</string>
+    <string name="scholar_work">工作经历</string>
+    <string name="scholar_homepage">个人主页</string>
+    <string name="scholar_affiliation">所属单位</string>
 
     <string name="epidemic_data">疫情数据</string>
         <string name="input_country">请选择国家</string>

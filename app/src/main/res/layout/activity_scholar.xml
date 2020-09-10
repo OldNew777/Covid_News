@@ -53,6 +53,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/image_viewer_sa"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bio_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="40sp"
+                />
+
             <TextView
                 android:id="@+id/bio"
                 android:layout_width="match_parent"
@@ -62,44 +71,78 @@
                 android:paddingRight="20dp"
                 android:layout_weight="1"
 
-                android:textSize="15sp"/>
+                android:textSize="20sp"/>
 
+            <TextView
+                android:id="@+id/edu_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="40sp"
+                />
             <TextView
                 android:id="@+id/edu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
+                android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:layout_weight="4"
 
-                android:textSize="15sp"/>
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/work_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="40sp"
+                />
             <TextView
                 android:id="@+id/work"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
+                android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:layout_weight="4"
 
-                android:textSize="15sp"/>
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/affiliation_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="40sp"
+                />
+            <TextView
+                android:id="@+id/affiliation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_weight="4"
+
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/homepage_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="40sp"
+                />
+            <TextView
+                android:id="@+id/homepage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_weight="4"
+
+                android:textSize="20sp"/>
+
         </LinearLayout>
-
-<!--        <TextView-->
-<!--            android:id="@+id/content"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:gravity="start"-->
-<!--            android:paddingTop="20dp"-->
-<!--            android:paddingBottom="20dp"-->
-<!--            android:paddingLeft="20dp"-->
-<!--            android:paddingRight="20dp"-->
-<!--            android:layout_below="@id/source_date_layout"-->
-<!--            android:layout_alignParentBottom="true"-->
-
-<!--            android:textColor="#000000"-->
-<!--            android:textSize="20sp"/>-->
 
     </RelativeLayout>
 </ScrollView>
