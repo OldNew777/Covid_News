@@ -18,17 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsClusteringFragment extends Fragment {
-    private EventListFragment medicineFragment;
-    private EventListFragment virusFragment;
-    private EventListFragment scientificFragment;
+    private EventListFragment spreadFragment;
+    private EventListFragment theoryFragment;
+    private EventListFragment treatFragment;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        medicineFragment.onActivityResult(requestCode, resultCode, data);
-        virusFragment.onActivityResult(requestCode, resultCode, data);
-        scientificFragment.onActivityResult(requestCode, resultCode, data);
+        spreadFragment.onActivityResult(requestCode, resultCode, data);
+        theoryFragment.onActivityResult(requestCode, resultCode, data);
+        treatFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @Nullable
@@ -37,16 +37,16 @@ public class NewsClusteringFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        medicineFragment = new EventListFragment("spread");
-        virusFragment = new EventListFragment("theory");
-        scientificFragment = new EventListFragment("scientific");
-        fragmentList.add(medicineFragment);
-        fragmentList.add(virusFragment);
-        fragmentList.add(scientificFragment);
+        spreadFragment = new EventListFragment("spread");
+        theoryFragment = new EventListFragment("theory");
+        treatFragment = new EventListFragment("treat");
+        fragmentList.add(spreadFragment);
+        fragmentList.add(theoryFragment);
+        fragmentList.add(treatFragment);
         List<String> titleList = new ArrayList<>();
-        titleList.add(getResources().getString(R.string.medicine));
-        titleList.add(getResources().getString(R.string.virus));
-        titleList.add(getResources().getString(R.string.scientific));
+        titleList.add(getResources().getString(R.string.spread));
+        titleList.add(getResources().getString(R.string.theory));
+        titleList.add(getResources().getString(R.string.treat));
 
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(fragmentList.size());

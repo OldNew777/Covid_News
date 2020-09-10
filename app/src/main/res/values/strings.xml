@@ -7,6 +7,9 @@
     <string name="medicine">药物</string>
     <string name="scientific">科学发现</string>
     <string name="virus">防控与病毒</string>
+    <string name="treat">治疗与药物</string>
+    <string name="theory">病理与机理</string>
+    <string name="spread">防控与传播</string>
     <string name="data">数据</string>
     <string name="scholar">知疫学者</string>
     <string name="scholar_bio">生平经历</string>
