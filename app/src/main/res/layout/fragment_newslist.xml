@@ -10,9 +10,12 @@
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:queryHint="@string/searchHint"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         app:iconifiedByDefault="false"
-        android:layout_alignParentTop="true"/>
+        app:queryHint="@string/searchHint" />
+
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout

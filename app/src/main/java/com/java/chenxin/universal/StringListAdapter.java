@@ -24,11 +24,11 @@ public class StringListAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @NonNull View convertView, @NonNull ViewGroup parent){
-        String suggestion = getItem(position);
+        String text = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
 
-        TextView textView = (TextView)view.findViewById(R.id.suggestion_view);
-        textView.setText(suggestion);
+        TextView textView = (TextView)view.findViewById(R.id.text_view);
+        textView.setText(text);
 
         return view;
     }

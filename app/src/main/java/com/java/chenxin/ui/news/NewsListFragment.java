@@ -211,6 +211,7 @@ public class NewsListFragment extends Fragment {
                 return true;
             }
         });
+
         // 监听搜索图标的点击
         searchView.setOnClickListener(new SearchView.OnClickListener(){
             @Override

@@ -40,6 +40,9 @@ public class EpidemicDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_epidemic_data_chart);
 
+        String districtName = (String) getIntent().getSerializableExtra("District");
+        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " : " + districtName);
+
         // 找组件
         previewLineChartView = findViewById(R.id.preview_line_chartview);
 
@@ -66,8 +69,7 @@ public class EpidemicDataActivity extends AppCompatActivity {
                 setChartData();
             }
         };
-        DataServer.getDataPerDay(dataObserver,
-                (String) getIntent().getSerializableExtra("District"), 14);
+        DataServer.getDataPerDay(dataObserver, districtName, 14);
     }
 
     private void setChartData(){
