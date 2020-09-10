@@ -71,6 +71,7 @@ public class Entity implements Serializable {
         for (String key : keys) {
             System.out.println(key + " " + _properties.get(key));
         }
+        System.out.println(_relations.size());
 //        for(int i = 0; i < _relations.size(); i ++){
 //            _relations.get(i).show();
 //        }
