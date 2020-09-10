@@ -111,7 +111,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        newsFragment.onActivityResult(requestCode, resultCode, data);
+        if (requestCode >= 1 && requestCode <= 3)
+            newsFragment.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100)
+            dataFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
