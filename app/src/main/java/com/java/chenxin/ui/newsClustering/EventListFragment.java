@@ -108,6 +108,7 @@ public class EventListFragment extends Fragment {
             public void onNext(NewsPiece newsPiece) {
                 Intent intent = new Intent(getContext(), NewsPieceActivity.class);
                 intent.putExtra("NewsPiece", newsPiece);
+                System.out.println(newsPiece.get_uid());
                 startActivity(intent);
             }
 

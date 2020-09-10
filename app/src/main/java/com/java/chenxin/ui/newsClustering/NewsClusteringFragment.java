@@ -37,8 +37,8 @@ public class NewsClusteringFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        medicineFragment = new EventListFragment("medicine");
-        virusFragment = new EventListFragment("virus");
+        medicineFragment = new EventListFragment("spread");
+        virusFragment = new EventListFragment("theory");
         scientificFragment = new EventListFragment("scientific");
         fragmentList.add(medicineFragment);
         fragmentList.add(virusFragment);
