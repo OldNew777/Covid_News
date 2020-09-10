@@ -1,14 +1,18 @@
 package com.java.chenxin.ui.scholar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.java.chenxin.R;
 import com.java.chenxin.background.ClusterServer;
@@ -19,112 +23,41 @@ import com.java.chenxin.data_struct.DataPerDay;
 import com.java.chenxin.data_struct.Entity;
 import com.java.chenxin.data_struct.NewsPiece;
 import com.java.chenxin.data_struct.Scholar;
+import com.java.chenxin.ui.news.newspiece.NewsPieceActivity;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 //import com.java.chenxin.ui.news.RefreshMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class ScholarFragment extends Fragment implements View.OnClickListener {
-    public Observer<List<DataPerDay>> observerDataMap;
-    public Observer<List<Entity>> entityDataMap;
-    public Observer<List<Scholar>> scholarOb;
-    public Observer<NewsPiece> newsPieceOb;
-    public Observer<List<NewsPiece>> listObserver;
-    List<DataPerDay> list;
-    List<Entity> entityList;
+public class ScholarFragment extends Fragment{
+    List<Scholar> scholarList = new ArrayList<Scholar>();
+    Observer<List<Scholar>> observer = null;
+
+    private ScholarAdapter scholarAdapter;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_scholar, container, false);
+        ListView scholarListView = root.findViewById(R.id.scholar_list);
 
-        View root = inflater.inflate(com.java.chenxin.R.layout.fragment_scholar,
-                container, false);
-
-        Button button1 = root.findViewById(R.id.button1);
-        Button button2 = root.findViewById(R.id.button2);
-        final TextView textView = root.findViewById(R.id.textview);
-
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
-        observerDataMap = new Observer<List<DataPerDay>>() {
-            @Override
-            // 绑定激活函数
-            public void onSubscribe(Disposable d) {}
-
-            @Override
-            public void onNext(List<DataPerDay> l) {
-                list = l;
-                String msg = "";
-                for(int i = 0; i < list.size(); i ++){
-                    msg += list.get(i).date + " " + list.get(i).dead + "\n";
-                }
-//                textView.setText(msg);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-//                System.out.println("success!" + map.getData("China", 1).toString());
-            }
-        };
-        entityDataMap = new Observer<List<Entity>>() {
-            @Override
-            // 绑定激活函数
-            public void onSubscribe(Disposable d) {}
-
-            @Override
-            public void onNext(List<Entity> l) {
-                entityList = l;
-                for(int i = 0; i < l.size(); i ++){
-                    entityList.get(i).show();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-//                System.out.println("success!" + map.getData("China", 1).toString());
-            }
-        };
-        scholarOb = new Observer<List<Scholar>>() {
-            @Override
-            // 绑定激活函数
-            public void onSubscribe(Disposable d) {}
-
-            @Override
-            public void onNext(List<Scholar> l) {
-                l.get(0).show();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-//                System.out.println("success!" + map.getData("China", 1).toString());
-            }
-        };
-        newsPieceOb = new Observer<NewsPiece>() {
+        observer = new Observer<List<Scholar>>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(NewsPiece newsPiece) {
-                textView.setText(newsPiece.getTitle());
-                System.out.println("done");
+            public void onNext(List<Scholar> scholars) {
+                scholarList.clear();
+                scholarList.addAll(scholars);
+                System.out.println("done!");
+                System.out.println(scholars.get(0).getNameZh());
             }
 
             @Override
@@ -134,50 +67,26 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onComplete() {
-
+                scholarAdapter.notifyDataSetChanged();
             }
         };
-        listObserver = new Observer<List<NewsPiece>>() {
+
+        scholarAdapter = new ScholarAdapter(getContext(), R.layout.item_scholar, scholarList);
+        scholarListView.setAdapter(scholarAdapter);
+
+        scholarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onSubscribe(Disposable d) {
-
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Scholar scholar = scholarList.get(position);
+                Intent intent = new Intent(getContext(), ScholarActivity.class);
+                intent.putExtra("Scholar", scholar);
+                startActivity(intent);
             }
+        });
 
-            @Override
-            public void onNext(List<NewsPiece> newsPieces) {
-                String msg = "";
-                for(int i = 0; i < newsPieces.size(); i ++){
-                    msg += newsPieces.get(i).getTitle() + "\n";
-                }
-                textView.setText(msg);
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
+        ScholarServer.getScholarList(observer);
         return root;
     }
 
-    @Override
-    public void onClick(View view) {
-        if(view.getId() == R.id.button1){
-//            NetWorkServer.loadNewsPiece(newsPieceOb, "5e8d92fa7ac1f2cf57f7a8cb");
-//            System.out.println("done");
-            ClusterServer.getCluster(listObserver, "c", this.getContext());
-//            DataServer.getDataPerDay(observerDataMap, "India", 5);
-        }
-        if(view.getId() == R.id.button2){
-            System.out.println("button2");
-            ClusterServer.refreshCluster(listObserver, "c", this.getContext());
 
-        }
-    }
 }
