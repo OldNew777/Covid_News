@@ -28,6 +28,24 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ScholarServer {
+    public static void getPassawayScholarList(Observer<List<Scholar>> ob){//你唯一需要调用的接口 会返给你所有学者的一个list  也需要建一个observer
+        Observable.create(new ObservableOnSubscribe<List<Scholar>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Scholar>> emitter) throws Exception {
+                List<Scholar> list = ScholarServer.getScholarList();
+                List<Scholar> passawayList  = new ArrayList<Scholar>();
+                for(Scholar s : list){
+                    if(s.getIsPassaway()){
+                        passawayList.add(s);
+                    }
+                }
+                emitter.onNext(passawayList);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
+    }
     public static void getScholarList(Observer<List<Scholar>> ob){//你唯一需要调用的接口 会返给你所有学者的一个list  也需要建一个observer
         Observable.create(new ObservableOnSubscribe<List<Scholar>>() {
             @Override
