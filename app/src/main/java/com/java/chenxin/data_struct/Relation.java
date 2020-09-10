@@ -1,6 +1,8 @@
 package com.java.chenxin.data_struct;
 
-class Relation{
+import java.io.Serializable;
+
+public class Relation implements Serializable {
     private boolean _isFather = false;
     private String _url;
     private String _label;
