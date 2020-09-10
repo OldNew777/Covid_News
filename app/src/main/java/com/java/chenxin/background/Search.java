@@ -56,7 +56,12 @@ public class Search {
         if(isFirstTime){
             isFirstTime = false;
             List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
-            _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
+            if(list.size() == 0){
+                _searchHistoryNum = 0;
+            }
+            else{
+                _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
+            }
         }
         List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
         for(int i = 0; i < list.size(); i ++){
@@ -90,8 +95,14 @@ public class Search {
     private static void _addHistory(String s){
 //        System.out.println(_searchHistoryNum + " " + isFirstTime);
         if(isFirstTime){
+            isFirstTime = false;
             List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
-            _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
+            if(list.size() == 0){
+                _searchHistoryNum = 0;
+            }
+            else{
+                _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
+            }
         }
         SearchHistory sh = new SearchHistory(s, ++_searchHistoryNum);
         if(_searchHistoryNum == 1){

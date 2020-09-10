@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment;
 
 import com.java.chenxin.R;
 import com.java.chenxin.background.DataServer;
+import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.ScholarServer;
 import com.java.chenxin.data_struct.DataPerDay;
 import com.java.chenxin.data_struct.Entity;
+import com.java.chenxin.data_struct.NewsPiece;
 import com.java.chenxin.data_struct.Scholar;
 //import com.java.chenxin.ui.news.RefreshMode;
 
@@ -28,6 +30,7 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     public Observer<List<DataPerDay>> observerDataMap;
     public Observer<List<Entity>> entityDataMap;
     public Observer<List<Scholar>> scholarOb;
+    public Observer<NewsPiece> newsPieceOb;
     List<DataPerDay> list;
     List<Entity> entityList;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,7 +57,7 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
                 for(int i = 0; i < list.size(); i ++){
                     msg += list.get(i).date + " " + list.get(i).dead + "\n";
                 }
-                textView.setText(msg);
+//                textView.setText(msg);
             }
 
             @Override
@@ -110,6 +113,28 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
 //                System.out.println("success!" + map.getData("China", 1).toString());
             }
         };
+        newsPieceOb = new Observer<NewsPiece>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(NewsPiece newsPiece) {
+                textView.setText(newsPiece.getTitle());
+                System.out.println("done");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
 
         return root;
     }
@@ -117,15 +142,14 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
-            System.out.println("button1");
-            ScholarServer.getScholarList(scholarOb);
+            NetWorkServer.loadNewsPiece(newsPieceOb, "5e8d92fa7ac1f2cf57f7a8cb");
 //            System.out.println("done");
 //            DataServer.getDataPerDay(observerDataMap, "India", 5);
         }
         if(view.getId() == R.id.button2){
             System.out.println("button2");
-            Map<String, Map<String, List<String>>>  map = DataServer.readNameListJSON();
-            System.out.println(map.get("China").get("Beijing").toString());
+            NetWorkServer.loadNewsPiece(newsPieceOb, "5e8d92fa7ac1f2cf57f7a8cc");
+
         }
     }
 }
