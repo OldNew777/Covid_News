@@ -4,7 +4,9 @@
     <string name="news">新闻</string>
         <string name="all">全部</string>
         <string name="paper">论文</string>
-
+    <string name="medicine">药物</string>
+    <string name="scientific">科学发现</string>
+    <string name="virus">防控与病毒</string>
     <string name="data">数据</string>
     <string name="scholar">知疫学者</string>
     <string name="scholar_bio">生平经历</string>
