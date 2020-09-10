@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.java.chenxin.R;
+import com.java.chenxin.background.ClusterServer;
 import com.java.chenxin.background.DataServer;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.ScholarServer;
@@ -31,6 +32,7 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
     public Observer<List<Entity>> entityDataMap;
     public Observer<List<Scholar>> scholarOb;
     public Observer<NewsPiece> newsPieceOb;
+    public Observer<List<NewsPiece>> listObserver;
     List<DataPerDay> list;
     List<Entity> entityList;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -135,20 +137,46 @@ public class ScholarFragment extends Fragment implements View.OnClickListener {
 
             }
         };
+        listObserver = new Observer<List<NewsPiece>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
+            }
+
+            @Override
+            public void onNext(List<NewsPiece> newsPieces) {
+                String msg = "";
+                for(int i = 0; i < newsPieces.size(); i ++){
+                    msg += newsPieces.get(i).getTitle() + "\n";
+                }
+                textView.setText(msg);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
         return root;
     }
 
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.button1){
-            NetWorkServer.loadNewsPiece(newsPieceOb, "5e8d92fa7ac1f2cf57f7a8cb");
+//            NetWorkServer.loadNewsPiece(newsPieceOb, "5e8d92fa7ac1f2cf57f7a8cb");
 //            System.out.println("done");
+            ClusterServer.getCluster(listObserver, "c", this.getContext());
 //            DataServer.getDataPerDay(observerDataMap, "India", 5);
         }
         if(view.getId() == R.id.button2){
             System.out.println("button2");
-            NetWorkServer.loadNewsPiece(newsPieceOb, "5e8d92fa7ac1f2cf57f7a8cc");
+            ClusterServer.refreshCluster(listObserver, "c", this.getContext());
 
         }
     }
