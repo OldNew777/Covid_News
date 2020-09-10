@@ -36,4 +36,14 @@
         android:layout_marginStart="100dp"
         android:text="@string/check" />
 
+    <TextView
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/epidemic_checkHit"
+        android:layout_below="@+id/button_check"
+        android:layout_marginLeft="110dp"
+        android:layout_marginRight="110dp"
+        android:layout_marginTop="20dp"/>
+
 </RelativeLayout>

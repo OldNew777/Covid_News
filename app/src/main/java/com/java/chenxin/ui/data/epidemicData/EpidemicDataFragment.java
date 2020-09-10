@@ -30,7 +30,7 @@ public class EpidemicDataFragment extends Fragment  {
     private List<String> spinnerCountryList;
     private List<String> spinnerProvinceList;
     private List<String> spinnerCityList;
-    private List<String> emptyList;
+    private List<String> emptyListCity;
 
     // 下拉栏
     private NiceSpinner spinnerCountry;
@@ -55,15 +55,16 @@ public class EpidemicDataFragment extends Fragment  {
         // 设置下拉栏数据
         spinnerCountryList = new ArrayList<>(districtMap.keySet());
         Collections.sort(spinnerCountryList);
-        spinnerCountryList.add(0, "请选择国家");
-        emptyList = new ArrayList<>();
+        spinnerCountryList.add(0, getResources().getString(R.string.input_country));
+        emptyListCity = new ArrayList<>();
+        emptyListCity.add(getResources().getString(R.string.input_city));
 
 
         // 构建下拉选择栏的适配器
         spinnerCountry.attachDataSource(spinnerCountryList);
         spinnerCountry.setSelectedIndex(0);
-        spinnerProvince.attachDataSource(emptyList);
-        spinnerCity.attachDataSource(emptyList);
+        spinnerProvince.attachDataSource(emptyListCity);
+        spinnerCity.attachDataSource(emptyListCity);
 
         // 监听
         spinnerCountry.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
@@ -76,7 +77,7 @@ public class EpidemicDataFragment extends Fragment  {
                 Collections.sort(spinnerProvinceList);
                 spinnerProvinceList.add(0, getResources().getString(R.string.input_province));
                 spinnerProvince.attachDataSource(spinnerProvinceList);
-                spinnerCity.attachDataSource(emptyList);
+                spinnerCity.attachDataSource(emptyListCity);
                 spinnerProvince.setSelectedIndex(0);
             }
         });
