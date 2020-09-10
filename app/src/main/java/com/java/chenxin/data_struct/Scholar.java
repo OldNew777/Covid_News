@@ -146,6 +146,9 @@ public class Scholar implements Serializable {
                 _work = profile.getString("work");
             }catch(JSONException e){}
         }catch(JSONException e){}
+//        _work.replace("<br>","");
+//        _edu.replace("<br>","");
+//        _bio.replace("<br>","");
     }
 }
 
