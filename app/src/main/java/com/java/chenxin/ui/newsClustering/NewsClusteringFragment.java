@@ -1,4 +1,4 @@
-package com.java.chenxin.ui.data.newsClustering;
+package com.java.chenxin.ui.newsClustering;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

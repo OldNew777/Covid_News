@@ -8,6 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.java.chenxin.background.DataServer;
 import com.java.chenxin.ui.data.DataFragment;
 import com.java.chenxin.ui.news.NewsFragment;
+import com.java.chenxin.ui.newsClustering.NewsClusteringFragment;
 import com.java.chenxin.ui.scholar.ScholarFragment;
 import com.orm.SugarContext;
 
@@ -24,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navView;
     // fragment管理器
     private FragmentManager fm;
-    // 三个fragment
+    // 4个fragment
     private NewsFragment newsFragment;
     private DataFragment dataFragment;
     private ScholarFragment scholarFragment;
+    private NewsClusteringFragment newsClusteringFragment;
     // 正在使用的fragment
     private Fragment activeFragment = null;
     // 底部导航栏的listener
@@ -65,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
                                     scholarFragment = new ScholarFragment();
                                 }
                                 switchContent(activeFragment, scholarFragment);
+                                return true;
+                            case R.id.navigation_newsclustering:
+                                if (newsClusteringFragment == null) {
+                                    newsClusteringFragment = new NewsClusteringFragment();
+                                }
+                                switchContent(activeFragment, newsClusteringFragment);
                                 return true;
                         }
                         return false;
