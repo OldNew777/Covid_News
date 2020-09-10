@@ -17,13 +17,16 @@ public class EntityServer {
             @Override
             public void subscribe(ObservableEmitter<Entity> emitter) throws Exception {
                 List<Entity> list = NetWorkServer.searchEntity(name);
-                Entity tmp = list.get(0);
-                for(Entity en : list){
-                    if(en.getLabel().equals(name)){
-                        tmp = en;
-                        break;
+                Entity tmp = null;
+                if(!list.isEmpty()){
+                    for(Entity en : list){
+                        if(en.getLabel().equals(name)){
+                            tmp = en;
+                            break;
+                        }
                     }
                 }
+
                 emitter.onNext(tmp);
                 emitter.onComplete();
             }
