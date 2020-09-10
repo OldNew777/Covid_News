@@ -98,9 +98,7 @@ public class EpidemicMapFragment extends Fragment {
                 hideSoftInput();
 
                 Intent detailIntent = new Intent(getContext(), EntityActivity.class);
-
-                detailIntent.putExtra("Entity", entityList.get(position));
-                entityList.get(position).show();
+                detailIntent.putExtra("EntityLabel", entityList.get(position).getLabel());
                 startActivityForResult(detailIntent, 100);
             }
         });
