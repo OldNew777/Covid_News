@@ -1,6 +1,7 @@
 package com.java.chenxin.ui.scholar;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,5 +37,15 @@ public class ScholarActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:     // return
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

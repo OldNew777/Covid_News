@@ -96,8 +96,11 @@ public class EpidemicMapFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
                 searchView.clearFocus();
                 hideSoftInput();
+
                 Intent detailIntent = new Intent(getContext(), EntityActivity.class);
+
                 detailIntent.putExtra("Entity", entityList.get(position));
+                entityList.get(position).show();
                 startActivityForResult(detailIntent, 100);
             }
         });
