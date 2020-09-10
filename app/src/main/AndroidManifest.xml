@@ -46,7 +46,11 @@
             android:label="@string/scholar"
             android:screenOrientation="portrait">
         </activity>
-
+        <activity
+            android:name=".ui.data.epidemicMap.EntityActivity"
+            android:label="@string/epidemic_map"
+            android:screenOrientation="portrait">
+        </activity>
         <meta-data android:name="DATABASE" android:value="sugar_example.db" />
         <meta-data android:name="VERSION" android:value="1.5" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

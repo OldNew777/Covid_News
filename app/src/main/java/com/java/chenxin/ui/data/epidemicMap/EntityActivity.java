@@ -23,21 +23,23 @@ public class EntityActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        System.out.println("in create");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entity);
 
         // 找控件
         TextView title_textView = (TextView) findViewById(R.id.title);
         TextView description_textView = (TextView) findViewById(R.id.description);
-        ImageView image_view = (ImageView) findViewById(R.id.image);
+//        ImageView image_view = (ImageView) findViewById(R.id.image);
         ListView relationListView = (ListView) findViewById(R.id.relations_listview);
-
+        System.out.println("1");
         entity = (Entity) getIntent().getSerializableExtra("Entity");
+        System.out.println("2");
 
         setTitle(getTitle() + " : " + entity.getLabel());
         title_textView.setText(entity.getLabel());
         description_textView.setText(entity.getDiscription());
-        Glide.with(this).load(entity.getImgUrl()).into(image_view);
+//        Glide.with(this).load(entity.getImgUrl()).into(image_view);
 
         RelationAdapter relationAdapter = new RelationAdapter(this, R.layout.item_relation,
                 entity.getRelationList());
