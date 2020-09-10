@@ -1,4 +1,4 @@
-package com.java.chenxin.ui.data;
+package com.java.chenxin.universal;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class DataFragmentAdapter extends FragmentPagerAdapter {
+public class FragmentAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragmentList;
     private List<String> titleList;
 
-    public DataFragmentAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList){
+    public FragmentAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList){
         super(fm);
         this.fragmentList = fragmentList;
         this.titleList = titleList;

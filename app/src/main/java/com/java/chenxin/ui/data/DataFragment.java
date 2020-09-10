@@ -10,6 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.java.chenxin.R;
+import com.java.chenxin.ui.data.epidemicData.EpidemicDataFragment;
+import com.java.chenxin.ui.data.epidemicMap.EpidemicMapFragment;
+import com.java.chenxin.ui.data.newsClustering.NewsClusteringFragment;
+import com.java.chenxin.universal.FragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +35,8 @@ public class DataFragment extends Fragment {
 
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         viewPager.setOffscreenPageLimit(fragmentList.size());
-        DataFragmentAdapter adapter = new DataFragmentAdapter(
-                getActivity().getSupportFragmentManager(), fragmentList, titleList);
+        FragmentAdapter adapter = new FragmentAdapter(
+                getChildFragmentManager(), fragmentList, titleList);
         viewPager.setAdapter(adapter);
 
         return root;

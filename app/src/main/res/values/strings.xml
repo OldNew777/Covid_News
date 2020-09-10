@@ -4,10 +4,19 @@
     <string name="news">新闻</string>
         <string name="all">全部</string>
         <string name="paper">论文</string>
+
     <string name="data">数据</string>
     <string name="scholar">知疫学者</string>
 
     <string name="epidemic_data">疫情数据</string>
+        <string name="input_country">请选择国家</string>
+        <string name="input_province">请选择省份</string>
+        <string name="input_city">请选择城市</string>
+        <string name="confirmed_sum">确诊人数</string>
+        <string name="cured_sum">治愈人数</string>
+        <string name="dead_sum">死亡人数</string>
+
+
     <string name="epidemic_map">疫情图谱</string>
     <string name="news_clustering">新闻聚类</string>
 
@@ -16,4 +25,6 @@
     <string name="share">分享</string>
     <string name="search">搜索</string>
     <string name="searchHint">请输入搜索关键词</string>
+    <string name="check">查询</string>
+
 </resources>

@@ -14,4 +14,8 @@ public final class Constants {
             File.separator + "com.java.chenxin" + File.separator + "cache" + File.separator + "json" + File.separator + "epidemic.txt";
     public final static String ENTITYIMAGEPATH = Environment.getDataDirectory().toString() +  File.separator+ "data" +
             File.separator + "com.java.chenxin" + File.separator + "cache" + File.separator + "image";
+
+
+    // APP_ID 替换为你的应用从官方网站申请到的合法appID
+    public static final String APP_ID = "wx88888888";
 }

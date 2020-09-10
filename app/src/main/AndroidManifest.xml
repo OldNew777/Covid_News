@@ -23,15 +23,21 @@
         </activity>
 
         <activity
-            android:name=".NewsPieceActivity"
+            android:name=".ui.news.newspiece.NewsPieceActivity"
             android:label="@string/news_details"
             android:screenOrientation="portrait">
         </activity>
 
 
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".ui.news.search.SearchActivity"
             android:label="@string/search"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".ui.data.epidemicData.EpidemicDataActivity"
+            android:label="@string/epidemic_data"
             android:screenOrientation="portrait">
         </activity>
 

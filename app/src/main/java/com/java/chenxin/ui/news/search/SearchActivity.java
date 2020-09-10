@@ -1,4 +1,4 @@
-package com.java.chenxin.ui.search;
+package com.java.chenxin.ui.news.search;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -116,7 +116,7 @@ public class SearchActivity extends AppCompatActivity {
                 setResult(0, intent);
 
                 SearchActivity.this.finish();
-                return false;
+                return true;
             }
 
             @Override

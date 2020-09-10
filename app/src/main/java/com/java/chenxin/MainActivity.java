@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.java.chenxin.background.DataServer;
 import com.java.chenxin.ui.data.DataFragment;
 import com.java.chenxin.ui.news.NewsFragment;
 import com.java.chenxin.ui.scholar.ScholarFragment;
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 建立数据库
+        SugarContext.init(this);
+        DataServer.initializeEpidemicData();
+
         super.onCreate(savedInstanceState);
         setContentView(com.java.chenxin.R.layout.activity_main);
 
@@ -70,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         navView = findViewById(com.java.chenxin.R.id.bottom_navi);
         navView.setOnNavigationItemSelectedListener(bottomNaviSelectedListener);
 
-        // 建立数据库
-        SugarContext.init(this);
     }
 
     // 初始化第一个fragment

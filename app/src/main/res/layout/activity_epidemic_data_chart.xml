@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="150dp">
+<!--        android:background="@color/red"-->
+
+        <View
+            android:id="@+id/colorsquare_confirmed"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/red"/>
+
+        <View
+            android:id="@+id/colorsquare_cured"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/green"
+            android:layout_below="@id/colorsquare_confirmed"/>
+
+        <View
+            android:id="@+id/colorsquare_dead"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/black"
+            android:layout_below="@id/colorsquare_cured"/>
+
+        <TextView
+            android:id="@+id/text_confirmed"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@id/colorsquare_confirmed"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/confirmed_sum"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/text_cured"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@id/colorsquare_confirmed"
+            android:layout_below="@+id/text_confirmed"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/cured_sum"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/text_dead"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@id/colorsquare_confirmed"
+            android:layout_below="@+id/text_cured"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/dead_sum"
+            android:gravity="center_vertical"/>
+
+    </RelativeLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="150dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <lecho.lib.hellocharts.view.PreviewLineChartView
+                android:id="@+id/preview_line_chartview"
+                android:layout_width="1000dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="50dp"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</RelativeLayout>
