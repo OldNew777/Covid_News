@@ -66,6 +66,10 @@ public class NewsListFragment extends Fragment {
         this.type = type;
     }
 
+    public void setType(final String type){
+        
+    }
+
     private void hideSoftInput(){
         ((InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

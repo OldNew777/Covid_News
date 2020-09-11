@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/navigation_news"
-        android:icon="@drawable/newspaper"
+        android:icon="@drawable/book1"
         android:title="@string/news" />
 
     <item
@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/navigation_newsclustering"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/usb"
         android:title="@string/news_clustering" />
 
 </menu>

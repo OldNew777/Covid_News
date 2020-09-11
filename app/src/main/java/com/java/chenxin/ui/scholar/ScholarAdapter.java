@@ -38,6 +38,7 @@ public class ScholarAdapter extends ArrayAdapter<Scholar> {
         TextView name_en_textView = (TextView)view.findViewById(R.id.scholar_list_name_en);
         TextView scholarPostion = (TextView)view.findViewById(R.id.scholar_list_position);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_viewer);
+
         if(scholar.getIsPassaway()){
             cardView.setCardBackgroundColor(res.getColor(R.color.light_gray));
             name_zh_textView.setTextColor(res.getColor(R.color.white));
@@ -53,7 +54,7 @@ public class ScholarAdapter extends ArrayAdapter<Scholar> {
             name_zh = tmp;
         }
         if(scholar.getIsPassaway()){
-            name_zh += " (已故）";
+            name_zh += " - (已故)";
         }
 
         Glide.with(view).load(scholar.getImgUrl()).into(imageView);

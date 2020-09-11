@@ -5,56 +5,122 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.java.chenxin.R;
-import com.java.chenxin.ui.scholar.ScholarFragment;
-import com.java.chenxin.universal.FragmentAdapter;
+import com.java.chenxin.background.ClusterServer;
+import com.java.chenxin.background.NetWorkServer;
+import com.java.chenxin.background.ScholarServer;
+import com.java.chenxin.data_struct.NewsPiece;
+import com.java.chenxin.data_struct.Scholar;
+import com.java.chenxin.ui.news.newspiece.NewsPieceActivity;
+import com.java.chenxin.universal.DoubleClickCheck;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
+enum RefreshMode{
+    REFRESH, LOADMORE
+}
+
 public class ScholarListFragment extends Fragment {
-    private ScholarFragment allScholarFragment;
-    private ScholarFragment passawayScholarFragment;
-    private ScholarFragment highViewedScholarFragment;
+    // 记录刷新/结束刷新的layout
+    private RefreshLayout refreshLayout;
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    // 记录refresh/loadMore
+    private RefreshMode refreshMode;
+    // 记录all/news/paper
+    private String type;
 
-        allScholarFragment.onActivityResult(requestCode, resultCode, data);
-        passawayScholarFragment.onActivityResult(requestCode, resultCode, data);
-        highViewedScholarFragment.onActivityResult(requestCode, resultCode, data);
+    // 新闻列表
+    private List<Scholar> scholarInfo = new ArrayList<>(100);
+    private ScholarAdapter arrayAdapter;
+
+
+    // 列表的observer
+    private Observer<List<Scholar>> scholarOb;
+//    // 新闻正文的observer
+//    private Observer<NewsPiece> newsDetailsObserver;
+
+
+    public ScholarListFragment(final String type){
+        super();
+        this.type = type;
     }
 
-    @Nullable
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
-        List<Fragment> fragmentList = new ArrayList<>();
-        allScholarFragment = new ScholarFragment("all");
-        passawayScholarFragment = new ScholarFragment("passaway");
-        highViewedScholarFragment = new ScholarFragment("high");
-        fragmentList.add(allScholarFragment);
-        fragmentList.add(passawayScholarFragment);
-        fragmentList.add(highViewedScholarFragment);
-        List<String> titleList = new ArrayList<>();
-        titleList.add(getResources().getString(R.string.all_scholar));
-        titleList.add(getResources().getString(R.string.passaway_scholar));
-        titleList.add(getResources().getString(R.string.high_scholar));
+        // 获取控件
+        View root = inflater.inflate(R.layout.fragment_scholar, container, false);
+        ListView scholar_listView = root.findViewById(R.id.scholar_list);
 
-        ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
-        viewPager.setOffscreenPageLimit(fragmentList.size());
-        FragmentAdapter adapter = new FragmentAdapter(
-                getChildFragmentManager(), fragmentList, titleList);
-        viewPager.setAdapter(adapter);
+        // 各observer
+        // 列表的observer
+        scholarOb = new Observer<List<Scholar>>() {
+            @Override
+            // 绑定激活函数
+            public void onSubscribe(Disposable d) {}
 
+            @Override
+            public void onNext(List<Scholar> list) {
+                scholarInfo.clear();
+                scholarInfo.addAll(list);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onComplete() {
+                arrayAdapter.notifyDataSetChanged();
+            }
+        };
+
+        // 新闻列表
+        scholarInfo = new ArrayList<>(0);
+        arrayAdapter = new ScholarAdapter(getContext(), R.layout.item_scholar, scholarInfo);
+        scholar_listView.setAdapter(arrayAdapter);
+
+        if(type.equals("all")){
+            ScholarServer.getScholarList(scholarOb);
+        }
+        else if(type.equals("passaway")){
+            ScholarServer.getPassawayScholarList(scholarOb);
+        }
+        else{
+            ScholarServer.getHighViewScholarList(scholarOb);
+        }
+        // 点击跳转新闻详情页
+        scholar_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
+                Scholar s = scholarInfo.get(position);
+                Intent intent = new Intent(getContext(), ScholarActivity.class);
+                intent.putExtra("scholar", s);
+                startActivity(intent);
+            }
+        });
         return root;
     }
+
 }
