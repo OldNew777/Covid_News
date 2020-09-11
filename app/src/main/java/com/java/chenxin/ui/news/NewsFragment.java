@@ -10,13 +10,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.java.chenxin.R;
-import com.java.chenxin.ui.news.option.OptionActivity;
 import com.java.chenxin.universal.FragmentAdapter;
 import com.wenhuaijun.easytagdragview.EasyTipDragView;
 import com.wenhuaijun.easytagdragview.bean.SimpleTitleTip;

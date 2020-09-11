@@ -26,27 +26,33 @@ public class ScholarActivity extends AppCompatActivity {
         scholar = (Scholar) getIntent().getSerializableExtra("Scholar");
         ((TextView) findViewById(R.id.scholar_name)).setText(scholar.getName());
         ((TextView) findViewById(R.id.scholar_name_zh)).setText(scholar.getNameZh());
+
+        if (scholar.getNameZh().equals(""))
+            setTitle(getTitle() + " : " + scholar.getName());
+        else
+            setTitle(getTitle() + " : " + scholar.getNameZh());
+
         if(scholar.getIsPassaway()){
             ((TextView) findViewById(R.id.passaway)).setText(R.string.passaway);
         }
         if(scholar.getBio() != null){
-            ((TextView) findViewById(R.id.bio)).setText(scholar.getBio());
+            ((TextView) findViewById(R.id.bio)).setText(scholar.getBio().replaceAll("<br>", "\n"));
             ((TextView) findViewById(R.id.bio_title)).setText(res.getString(R.string.scholar_bio));
         }
         if(scholar.getEdu() != null){
-            ((TextView) findViewById(R.id.edu)).setText(scholar.getEdu());
+            ((TextView) findViewById(R.id.edu)).setText(scholar.getEdu().replaceAll("<br>", "\n"));
             ((TextView) findViewById(R.id.edu_title)).setText(res.getString(R.string.scholar_edu));
         }
         if(scholar.getWork() != null){
-            ((TextView) findViewById(R.id.work)).setText(scholar.getWork());
+            ((TextView) findViewById(R.id.work)).setText(scholar.getWork().replaceAll("<br>", "\n"));
             ((TextView) findViewById(R.id.work_title)).setText(res.getString(R.string.scholar_work));
         }
         if(scholar.getAffiliation() != null){
-            ((TextView) findViewById(R.id.affiliation)).setText(scholar.getAffiliation());
+            ((TextView) findViewById(R.id.affiliation)).setText(scholar.getAffiliation().replaceAll("<br>", "\n"));
             ((TextView) findViewById(R.id.affiliation_title)).setText(res.getString(R.string.scholar_affiliation));
         }
         if(scholar.getHomepage() != null){
-            ((TextView) findViewById(R.id.homepage)).setText(scholar.getHomepage());
+            ((TextView) findViewById(R.id.homepage)).setText(scholar.getHomepage().replaceAll("<br>", "\n"));
             ((TextView) findViewById(R.id.homepage_title)).setText(res.getString(R.string.scholar_homepage));
         }
 

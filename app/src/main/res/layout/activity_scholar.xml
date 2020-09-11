@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:scrollbars="vertical"
-    android:fadingEdge="vertical">
+    android:layout_height="match_parent"
+    android:fadingEdge="vertical"
+    android:scrollbars="vertical">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/news_detail_layout"
         android:layout_width="match_parent"
@@ -15,36 +15,42 @@
             android:id="@+id/scholar_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:gravity="center"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
 
-            android:textColor="#000000"
-            android:textSize="25sp"/>
+            android:textColor="@color/black"
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/scholar_name_zh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/scholar_name"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:gravity="right"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
 
-            android:textSize="15sp"/>
+            android:textColor="@color/font_dark"
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/image_viewer_sa"
             android:layout_width="250dp"
             android:layout_height="250dp"
+            android:layout_below="@+id/scholar_name_zh"
             android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
-            android:layout_below="@+id/scholar_name_zh">
+            android:layout_marginRight="100dp">
 
         </ImageView>
+
         <TextView
             android:id="@+id/passaway"
             android:layout_width="match_parent"
@@ -54,7 +60,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
 
-            android:textSize="12sp"/>
+            android:textSize="20sp" />
 
         <LinearLayout
             android:id="@+id/source_date_layout"
@@ -67,9 +73,10 @@
                 android:id="@+id/bio_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:textSize="40sp"
-                />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/bio"
@@ -78,17 +85,19 @@
                 android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:layout_weight="1"
 
-                android:textSize="20sp"/>
+                android:textColor="@color/font_dark"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/edu_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:textSize="40sp"
-                />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
             <TextView
                 android:id="@+id/edu"
                 android:layout_width="match_parent"
@@ -96,16 +105,19 @@
                 android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:layout_weight="4"
 
-                android:textSize="20sp"/>
+                android:textColor="@color/font_dark"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/work_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:textSize="40sp"
-                />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
             <TextView
                 android:id="@+id/work"
                 android:layout_width="match_parent"
@@ -113,16 +125,19 @@
                 android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:layout_weight="4"
 
-                android:textSize="20sp"/>
+                android:textColor="@color/font_dark"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/affiliation_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:textSize="40sp"
-                />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
             <TextView
                 android:id="@+id/affiliation"
                 android:layout_width="match_parent"
@@ -130,26 +145,30 @@
                 android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:layout_weight="4"
 
-                android:textSize="20sp"/>
+                android:textColor="@color/font_dark"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/homepage_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:textSize="40sp"
-                />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+
             <TextView
                 android:id="@+id/homepage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
                 android:gravity="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:layout_weight="4"
 
-                android:textSize="20sp"/>
+                android:textColor="@color/font_dark"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
