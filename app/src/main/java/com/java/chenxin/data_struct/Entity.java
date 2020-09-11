@@ -158,8 +158,6 @@ public class Entity {
             e.printStackTrace();
         }
     }
-
-
 }
 
 

@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Scholar implements Serializable {
+public class Scholar implements Serializable, Comparable {
     private String _avatar;
     private String _id;
     private String _name;
@@ -30,6 +30,7 @@ public class Scholar implements Serializable {
     private String _position;
     private String _work;
     private boolean _isPassedaway;
+    private int _numViewed;
 
     public String getImgUrl(){return _avatar;}
     public String get_id(){return _id;}
@@ -46,6 +47,7 @@ public class Scholar implements Serializable {
     public String getPosition(){return _position;}
     public String getWork(){return _work;}
     public boolean getIsPassaway(){return _isPassedaway;}
+    public int get_numViewed(){return _numViewed;}
 
     public Scholar(){
     }
@@ -64,6 +66,10 @@ public class Scholar implements Serializable {
         System.out.println("position: " + _position);
         System.out.println("work: " + _work);
         System.out.println("is Passaway: " + _isPassedaway);
+    }
+
+    public int compareTo(Object o){
+        return ( ((Scholar) o)._numViewed - this._numViewed);
     }
 
     public Scholar(JSONObject data){
@@ -114,6 +120,9 @@ public class Scholar implements Serializable {
             _nameZh = data.getString("name_zh");
         }catch(JSONException e){}
         try{
+            _numViewed = data.getInt("num_viewed");
+        }catch(JSONException e){}
+        try{
             JSONObject profile = data.getJSONObject("profile");
             try{
                 _address = profile.getString("address");
@@ -146,6 +155,9 @@ public class Scholar implements Serializable {
                 _work = profile.getString("work");
             }catch(JSONException e){}
         }catch(JSONException e){}
+//        _work.replace("<br>","");
+//        _edu.replace("<br>","");
+//        _bio.replace("<br>","");
     }
 }
 

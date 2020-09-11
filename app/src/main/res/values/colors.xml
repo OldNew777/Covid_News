@@ -9,6 +9,12 @@
     <color name="blue_pure">#0000ff</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="light_pink">#FFB6C1</color>
+    <color name="light_blue">#B0C4DE</color>
+    <color name="light_yellow">#F0E68C</color>
+    <color name="light_aqua">#D4F2E7</color>
+    <color name="light_wheat">#FFE4B5</color>
+    <color name="light_rose">#FFE4E1</color>
 
     <color name="black_deep">#34322F</color>
     <color name="orange">#fda76d</color>
@@ -16,6 +22,7 @@
     <color name="bantouming">#e0000000</color>
     <color name="touming">#00000000</color>
     <color name="gray_light">#f3f3f3</color>
+    <color name="light_gray">#708090</color>
     <color name="gray">#dedede</color>
     <color name="gray_item">#FFECECEC</color>
     <color name="gray_item_press">#dad8d8</color>

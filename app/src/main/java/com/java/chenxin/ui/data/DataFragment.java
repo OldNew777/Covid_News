@@ -14,7 +14,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.java.chenxin.R;
 import com.java.chenxin.ui.data.epidemicData.EpidemicDataFragment;
 import com.java.chenxin.ui.data.epidemicMap.EpidemicMapFragment;
-import com.java.chenxin.ui.newsClustering.NewsClusteringFragment;
 import com.java.chenxin.universal.FragmentAdapter;
 
 import java.util.ArrayList;

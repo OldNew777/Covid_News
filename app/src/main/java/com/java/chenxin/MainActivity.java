@@ -10,6 +10,7 @@ import com.java.chenxin.background.DataServer;
 import com.java.chenxin.ui.data.DataFragment;
 import com.java.chenxin.ui.news.NewsFragment;
 import com.java.chenxin.ui.newsClustering.NewsClusteringFragment;
+import com.java.chenxin.ui.scholar.ScholarListFragment;
 import com.java.chenxin.ui.scholar.ScholarFragment;
 import com.java.chenxin.universal.DoubleClickCheck;
 import com.orm.SugarContext;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     // 4个fragment
     private NewsFragment newsFragment;
     private DataFragment dataFragment;
-    private ScholarFragment scholarFragment;
+    private ScholarListFragment scholarListFragment;
     private NewsClusteringFragment newsClusteringFragment;
     // 正在使用的fragment
     private Fragment activeFragment = null;
@@ -66,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
                                 switchContent(activeFragment, dataFragment);
                                 return true;
                             case com.java.chenxin.R.id.navigation_scholar:
-                                if (scholarFragment == null) {
-                                    scholarFragment = new ScholarFragment();
+                                if (scholarListFragment == null) {
+                                    scholarListFragment = new ScholarListFragment();
                                 }
-                                switchContent(activeFragment, scholarFragment);
+                                switchContent(activeFragment, scholarListFragment);
                                 return true;
                             case R.id.navigation_newsclustering:
                                 if (newsClusteringFragment == null) {

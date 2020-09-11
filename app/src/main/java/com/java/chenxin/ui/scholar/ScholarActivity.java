@@ -1,6 +1,7 @@
 package com.java.chenxin.ui.scholar;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -23,7 +24,7 @@ public class ScholarActivity extends AppCompatActivity {
 
         // 设置新闻内容
         Resources res = getResources();
-        scholar = (Scholar) getIntent().getSerializableExtra("Scholar");
+        scholar = (Scholar) getIntent().getSerializableExtra("scholar");
         ((TextView) findViewById(R.id.scholar_name)).setText(scholar.getName());
         ((TextView) findViewById(R.id.scholar_name_zh)).setText(scholar.getNameZh());
 
