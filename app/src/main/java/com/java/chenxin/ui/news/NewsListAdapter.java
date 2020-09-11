@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 
 import com.java.chenxin.R;
 import com.java.chenxin.data_struct.NewsPiece;
+import com.java.chenxin.data_struct.NewsType;
 
 import java.util.List;
 
@@ -36,14 +37,11 @@ public class NewsListAdapter extends ArrayAdapter<NewsPiece> {
         CardView cardView = (CardView)view.findViewById(R.id.news_list_card);
         Resources res = getContext().getResources();
 
-        if(position % 3 == 1){
-            cardView.setCardBackgroundColor(res.getColor(R.color.light_pink));
-        }
-        else if(position % 3 == 2){
+        if(newsPiece.getType() == NewsType.NEWS){
             cardView.setCardBackgroundColor(res.getColor(R.color.light_blue));
         }
-        else{
-            cardView.setCardBackgroundColor(res.getColor(R.color.light_yellow));
+        else if(newsPiece.getType() == NewsType.PAPER){
+            cardView.setCardBackgroundColor(res.getColor(R.color.light_rose));
         }
         title.setText(newsPiece.getTitle());
         source.setText(newsPiece.getSource());

@@ -178,6 +178,3 @@ public class NewsPiece extends SugarRecord implements Serializable {
 
 }
 
-enum NewsType{
-    NEWS, PAPER,
-}

@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text_view"
-    android:textSize="18sp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/scholar_list_card"
     android:layout_height="wrap_content"
-    android:paddingLeft="40dp"
-    android:paddingRight="40dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:gravity="start">
-</TextView>
+    android:layout_gravity="center"
+    android:layout_margin="20dp"
+    android:layout_marginBottom="20dp"
+    card_view:cardCornerRadius="4dp"
+    android:padding="@dimen/activity_vertical_margin"
+    card_view:cardUseCompatPadding="true">
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/text_view"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="start">
+    </TextView>
+
+</androidx.cardview.widget.CardView>
