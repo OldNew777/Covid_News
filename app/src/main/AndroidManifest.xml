@@ -27,26 +27,31 @@
 
         <activity
             android:name=".ui.news.newspiece.NewsPieceActivity"
+            android:launchMode="singleTop"
             android:label="@string/news_details"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.news.search.SearchActivity"
+            android:launchMode="singleTop"
             android:label="@string/search"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.data.epidemicData.EpidemicDataActivity"
+            android:launchMode="singleTop"
             android:label="@string/epidemic_data"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.data.epidemicMap.EntityActivity"
+            android:launchMode="singleTop"
             android:label="@string/epidemic_map"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.scholar.ScholarActivity"
+            android:launchMode="singleTop"
             android:label="@string/scholar"
             android:screenOrientation="portrait"/>
 

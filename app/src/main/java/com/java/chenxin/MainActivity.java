@@ -2,6 +2,7 @@ package com.java.chenxin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -123,5 +124,13 @@ public class MainActivity extends AppCompatActivity {
             newsFragment.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100)
             dataFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (newsFragment.onKeyDown(keyCode, event))
+            return true;
+
+        return super.onKeyDown(keyCode, event);
     }
 }

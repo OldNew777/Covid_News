@@ -2,9 +2,12 @@ package com.java.chenxin.ui.data.epidemicData;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.java.chenxin.R;
@@ -16,17 +19,20 @@ import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.ValueShape;
+import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
 public class EpidemicDataActivity extends AppCompatActivity {
     // 组件
-    private PreviewLineChartView previewLineChartView;
+    private LineChartView previewLineChartView;
 
     // 数据
     private List<DataPerDay> dataPerDayList;
@@ -36,9 +42,26 @@ public class EpidemicDataActivity extends AppCompatActivity {
 
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:     // return
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_epidemic_data_chart);
+
+        // actionbar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         String districtName = (String) getIntent().getSerializableExtra("District");
         getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " : " + districtName);
@@ -91,7 +114,7 @@ public class EpidemicDataActivity extends AppCompatActivity {
         axisX.setValues(axisXValueList);
 
 
-        axisY.setName("死亡人数");
+        axisY.setName("人数");
         axisY.setLineColor(Color.BLACK);
         axisY.setTextColor(Color.BLACK);
         axisY.setTextSize(12);            // 设置文字大小
@@ -131,18 +154,21 @@ public class EpidemicDataActivity extends AppCompatActivity {
         // dead
         Line line_dead = new Line(pointValueList_dead);
         line_dead.setColor(Color.BLACK);
-        line_dead.setHasLabels(true);           // 是否显示节点数据
-        line_dead.setShape(ValueShape.CIRCLE);  // 节点图形样式 DIAMOND菱形、SQUARE方形、CIRCLE圆形
+        line_dead.setHasLabelsOnlyForSelected(true);    // 点击时才显示节点数据
+        line_dead.setShape(ValueShape.CIRCLE);          // 节点图形样式 DIAMOND菱形、SQUARE方形、CIRCLE圆形
+        line_dead.setFilled(true);
         // cured
         Line line_cured = new Line(pointValueList_cured);
         line_cured.setColor(Color.GREEN);
-        line_cured.setHasLabels(true);           // 是否显示节点数据
-        line_cured.setShape(ValueShape.DIAMOND);  // 节点图形样式 DIAMOND菱形、SQUARE方形、CIRCLE圆形
+        line_cured.setHasLabelsOnlyForSelected(true);    // 点击时才显示节点数据
+        line_cured.setShape(ValueShape.DIAMOND);        // 节点图形样式 DIAMOND菱形、SQUARE方形、CIRCLE圆形
+        line_cured.setFilled(true);
         // confirmed
         Line line_confirmed = new Line(pointValueList_confirmed);
         line_confirmed.setColor(Color.RED);
-        line_confirmed.setHasLabels(true);           // 是否显示节点数据
-        line_confirmed.setShape(ValueShape.SQUARE);  // 节点图形样式 DIAMOND菱形、SQUARE方形、CIRCLE圆形
+        line_confirmed.setHasLabelsOnlyForSelected(true);    // 点击时才显示节点数据
+        line_confirmed.setShape(ValueShape.SQUARE);         // 节点图形样式 DIAMOND菱形、SQUARE方形、CIRCLE圆形
+        line_confirmed.setFilled(true);
 
         lines.add(line_dead);
         lines.add(line_cured);
@@ -153,6 +179,20 @@ public class EpidemicDataActivity extends AppCompatActivity {
         data_lineChart.setAxisYLeft(axisY);
 
         previewLineChartView.setLineChartData(data_lineChart);
+
+        // 对显示界面进行处理
+        previewLineChartView.setInteractive(true);
+        previewLineChartView.setZoomEnabled(false);
+        previewLineChartView.setContainerScrollEnabled(
+                true, ContainerScrollType.HORIZONTAL);
+
+        Viewport viewport = new Viewport(previewLineChartView.getMaximumViewport());
+        viewport.top = maxY + (maxY - minY) / 5;
+        previewLineChartView.setMaximumViewport(viewport);
+
+        viewport.left = 0;
+        viewport.right = 4;
+        previewLineChartView.setCurrentViewport(viewport);
     }
 
 

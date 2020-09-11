@@ -2,6 +2,7 @@ package com.java.chenxin.ui.news;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,11 +124,9 @@ public class NewsFragment extends Fragment {
                 toBeAddedList.clear();
                 for (Tip tip : addedTipList) {
                     addedList.add(((SimpleTitleTip) tip).getTip());
-                    System.out.println("addedTipList : " + (SimpleTitleTip) tip);
                 }
                 for (Tip tip : toBeAddedTipList){
                     toBeAddedList.add(((SimpleTitleTip) tip).getTip());
-                    System.out.println("toBeAddedTipList : " + (SimpleTitleTip) tip);
                 }
 
                 // TODO
@@ -173,5 +172,19 @@ public class NewsFragment extends Fragment {
         });
 
         return root;
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            // 点击返回键
+            case KeyEvent.KEYCODE_BACK:
+                // 判断easyTipDragView是否已经显示出来
+                if(easyTipDragView.isOpen()){
+                    easyTipDragView.onKeyBackDown();
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 }
