@@ -124,6 +124,8 @@ public class EasyTipDragView extends RelativeLayout implements AbsTipAdapter.Dra
         lists = new ArrayList<>(tips);
         addTipAdapter.setData(tips);
     }
+    public List<Tip> getDragData() { return dragTipAdapter.getData(); }
+    public List<Tip> getAddData() { return addTipAdapter.getData(); }
     public void setDataResultCallback(OnDataChangeResultCallback dataResultCallback) {
         this.dataResultCallback = dataResultCallback;
     }

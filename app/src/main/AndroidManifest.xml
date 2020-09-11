@@ -7,13 +7,17 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:fullBackupContent="true"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/app_pic"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_pic"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.news.option.OptionActivity"
+            android:label="@string/title_activity_option"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -24,43 +28,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.news.newspiece.NewsPieceActivity"
             android:label="@string/news_details"
-            android:screenOrientation="portrait">
-        </activity>
-
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.news.search.SearchActivity"
             android:label="@string/search"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.data.epidemicData.EpidemicDataActivity"
             android:label="@string/epidemic_data"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.data.epidemicMap.EntityActivity"
             android:label="@string/epidemic_map"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.scholar.ScholarActivity"
             android:label="@string/scholar"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
-        <meta-data android:name="DATABASE" android:value="sugar_example.db" />
-        <meta-data android:name="VERSION" android:value="1.5" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.java.chenxin.data_struct" />
-
+        <meta-data
+            android:name="DATABASE"
+            android:value="sugar_example.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1.5" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.java.chenxin.data_struct" />
     </application>
 
 </manifest>

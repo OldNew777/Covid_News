@@ -5,7 +5,7 @@ import android.os.Environment;
 import java.io.File;
 
 public final class Constants {
-    public final static int PAGESIZE = 3;
+    public final static int PAGESIZE = 15;
     public final static int SEARCHHISTORYSIZE = 30;
     public final static int SEARCHMAX = 700;
     public final static String NAMELISTDATAPATH = Environment.getDataDirectory().toString() +  File.separator+ "data" +

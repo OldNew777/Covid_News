@@ -128,7 +128,7 @@ public class EpidemicMapFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 100 && data != null) {
-            String query = (String) data.getSerializableExtra("SearchQuery");
+            String query = data.getStringExtra("SearchQuery");
             searchView.setQuery(query, true);
         }
 

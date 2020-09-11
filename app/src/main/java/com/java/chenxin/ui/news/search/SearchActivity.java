@@ -53,7 +53,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         // 设置标题
-        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " : " + getIntent().getSerializableExtra("type"));
+        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " : " + getIntent().getStringExtra("type"));
 
         // 找组件
         searchView = (SearchView) findViewById(R.id.search_view);

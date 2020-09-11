@@ -2,6 +2,7 @@ package com.wenhuaijun.easytagdragview.adapter;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.graphics.Point;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -101,9 +102,14 @@ public class DragTipAdapter extends AbsTipAdapter implements View.OnLongClickLis
                 callback.firstDragStartCallback();
             }
             notifyDataSetChanged();
-
         }
-        v.startDrag(EMPTY_CLIP_DATA, new View.DragShadowBuilder(),
+        v.startDrag(EMPTY_CLIP_DATA, new View.DragShadowBuilder(){
+                    @Override
+                    public void onProvideShadowMetrics(Point outShadowSize, Point outShadowTouchPoint) {
+                        outShadowSize.set(1,1);
+                        outShadowTouchPoint.set(0,0);
+                    }
+                },
                 DragDropGirdView.DRAG_FAVORITE_TILE, 0);
     }
 }

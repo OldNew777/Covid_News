@@ -2,8 +2,8 @@
     <string name="app_name">Coffee News Focus</string>
 
     <string name="news">新闻</string>
-        <string name="all">全部</string>
-        <string name="paper">论文</string>
+    <string name="all">全部</string>
+    <string name="paper">论文</string>
 
     <string name="data">数据</string>
     <string name="scholar">知疫学者</string>
@@ -14,13 +14,13 @@
     <string name="scholar_affiliation">所属单位</string>
 
     <string name="epidemic_data">疫情数据</string>
-        <string name="input_country">请选择国家</string>
-        <string name="input_province">请选择省份</string>
-        <string name="input_city">请选择城市</string>
-        <string name="epidemic_checkHit">展示所选地区近14日数据(累计值)</string>
-        <string name="confirmed_sum">确诊人数</string>
-        <string name="cured_sum">治愈人数</string>
-        <string name="dead_sum">死亡人数</string>
+    <string name="input_country">请选择国家</string>
+    <string name="input_province">请选择省份</string>
+    <string name="input_city">请选择城市</string>
+    <string name="epidemic_checkHit">展示所选地区近14日数据(累计值)</string>
+    <string name="confirmed_sum">确诊人数</string>
+    <string name="cured_sum">治愈人数</string>
+    <string name="dead_sum">死亡人数</string>
 
 
     <string name="epidemic_map">疫情图谱</string>
@@ -32,5 +32,14 @@
     <string name="search">搜索</string>
     <string name="searchHint">请输入搜索关键词</string>
     <string name="check">查询</string>
+    <string name="title_activity_option">增删分类列表</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 </resources>

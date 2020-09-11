@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.java.chenxin.ui.news.NewsListFragment;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,6 +22,10 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         this.titleList = titleList;
     }
 
+    public void setFragmentList(List<Fragment> fragmentList){
+        this.fragmentList = fragmentList;
+    }
+
     @NotNull
     @Override
     public Fragment getItem(int position) {
@@ -33,5 +39,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     @Nullable
     @Override
-    public CharSequence getPageTitle(int position) { return titleList.get(position); }
+    public CharSequence getPageTitle(int position) {
+        return titleList.get(position);
+    }
 }

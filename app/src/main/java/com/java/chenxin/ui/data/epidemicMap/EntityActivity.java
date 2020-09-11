@@ -48,7 +48,7 @@ public class EntityActivity extends AppCompatActivity {
         relationListView = (ListView) findViewById(R.id.relations_listview);
 
         // 获取数据
-        String entityLabel = (String) getIntent().getSerializableExtra("EntityLabel");
+        String entityLabel = getIntent().getStringExtra("EntityLabel");
 
         // 设置observer
         entityObserver = new Observer<Entity>() {

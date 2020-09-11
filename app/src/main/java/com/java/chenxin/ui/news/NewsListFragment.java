@@ -47,7 +47,7 @@ public class NewsListFragment extends Fragment {
     // 记录refresh/loadMore
     private RefreshMode refreshMode;
     // 记录all/news/paper
-    private String type;
+    String type;
 
     // 新闻列表
     private List<NewsPiece> newsInfo = new ArrayList<>(100);
@@ -75,18 +75,13 @@ public class NewsListFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null){
-            if (    (requestCode == 1 && type.equals("all")) ||
-                    (requestCode == 2 && type.equals("news")) ||
-                    (requestCode == 3 && type.equals("paper"))     ){
-                searchView.setQuery((String) data.getSerializableExtra("SearchQuery"), true);
-            }
+            searchView.setQuery(data.getStringExtra("SearchQuery"), true);
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         // 获取控件
         View root = inflater.inflate(com.java.chenxin.R.layout.fragment_newslist, container, false);
         ListView news_listView = root.findViewById(com.java.chenxin.R.id.news_list);
