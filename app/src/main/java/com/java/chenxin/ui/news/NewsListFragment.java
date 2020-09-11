@@ -28,6 +28,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.wenhuaijun.easytagdragview.EasyTipDragView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,8 @@ public class NewsListFragment extends Fragment {
     private RefreshLayout refreshLayout;
     // 搜索框与子组件
     private SearchView searchView;
+
+    private EasyTipDragView easyTipDragView = null;
 
     // 记录refresh/loadMore
     private RefreshMode refreshMode;
@@ -68,6 +71,10 @@ public class NewsListFragment extends Fragment {
 
     public void setType(final String type){
         this.type = type;
+    }
+
+    public void setEasyTipDragView(EasyTipDragView easyTipDragView){
+        this.easyTipDragView = easyTipDragView;
     }
 
     private void hideSoftInput(){
@@ -174,7 +181,7 @@ public class NewsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
                 searchView.clearFocus();
                 hideSoftInput();
-                if (DoubleClickCheck.isDoubleClick())
+                if (DoubleClickCheck.isDoubleClick() || (easyTipDragView != null && easyTipDragView.isOpen()))
                     return;
                 String id = newsInfo.get(position).get_uid();
                 NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
@@ -185,7 +192,7 @@ public class NewsListFragment extends Fragment {
         searchView.findViewById(R.id.search_edit_frame).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DoubleClickCheck.isDoubleClick())
+                if (DoubleClickCheck.isDoubleClick() || (easyTipDragView != null && easyTipDragView.isOpen()))
                     return;
                 searchView.callOnClick();
             }
@@ -193,7 +200,7 @@ public class NewsListFragment extends Fragment {
         searchView.findViewById(R.id.search_src_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DoubleClickCheck.isDoubleClick())
+                if (DoubleClickCheck.isDoubleClick() || (easyTipDragView != null && easyTipDragView.isOpen()))
                     return;
                 searchView.callOnClick();
             }
@@ -201,7 +208,7 @@ public class NewsListFragment extends Fragment {
         searchView.findViewById(R.id.search_plate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DoubleClickCheck.isDoubleClick())
+                if (DoubleClickCheck.isDoubleClick() || (easyTipDragView != null && easyTipDragView.isOpen()))
                     return;
                 searchView.callOnClick();
             }
@@ -213,6 +220,8 @@ public class NewsListFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
                 hideSoftInput();
+                if ((easyTipDragView != null && easyTipDragView.isOpen()))
+                    return true;
                 Search.search(newsListObserver, query, type);
                 Toast.makeText(getContext(), "正在搜索："+ query, Toast.LENGTH_SHORT).show();
                 return true;
@@ -230,6 +239,8 @@ public class NewsListFragment extends Fragment {
             public void onClick(View view) {
                 searchView.clearFocus();
                 hideSoftInput();
+                if ((easyTipDragView != null && easyTipDragView.isOpen()))
+                    return;
                 int requestCode = 1;
                 if (type.equals("all"))
                     requestCode = 1;
@@ -251,6 +262,8 @@ public class NewsListFragment extends Fragment {
             public void onRefresh(RefreshLayout refreshLayout_tmp) {
                 searchView.clearFocus();
                 hideSoftInput();
+                if ((easyTipDragView != null && easyTipDragView.isOpen()))
+                    return;
                 String searchQuery = String.valueOf(searchView.getQuery());
                 // 如果搜索框有内容，则重新搜索
                 if (!searchQuery.isEmpty()){
@@ -274,6 +287,8 @@ public class NewsListFragment extends Fragment {
             public void onLoadMore(RefreshLayout refreshLayout_tmp) {
                 searchView.clearFocus();
                 hideSoftInput();
+                if ((easyTipDragView != null && easyTipDragView.isOpen()))
+                    return;
                 String searchQuery = String.valueOf(searchView.getQuery());
 
                 // 如果搜索框有内容，则加载更多搜索内容

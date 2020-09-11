@@ -91,6 +91,8 @@ public class NewsFragment extends Fragment {
         fragmentList_3.add(new NewsListFragment("all"));
         fragmentList_3.add(new NewsListFragment("news"));
         fragmentList_3.add(new NewsListFragment("paper"));
+        for (int i = 0; i < 3; ++i)
+            fragmentList_3.get(i).setEasyTipDragView(easyTipDragView);
         addedList = new ArrayList<>(3);
         toBeAddedList = new ArrayList<>(3);
         addedList.add("all");
