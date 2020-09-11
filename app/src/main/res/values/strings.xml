@@ -4,7 +4,9 @@
     <string name="news">新闻</string>
         <string name="all">全部</string>
         <string name="paper">论文</string>
-
+    <string name="passaway_scholar">追忆学者</string>
+    <string name="all_scholar">全部学者</string>
+    <string name="high_scholar">高关注度学者</string>
     <string name="data">数据</string>
     <string name="scholar">知疫学者</string>
         <string name="scholar_bio">生平经历</string>

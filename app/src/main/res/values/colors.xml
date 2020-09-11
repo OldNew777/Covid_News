@@ -22,6 +22,7 @@
     <color name="bantouming">#e0000000</color>
     <color name="touming">#00000000</color>
     <color name="gray_light">#f3f3f3</color>
+    <color name="light_gray">#708090</color>
     <color name="gray">#dedede</color>
     <color name="gray_item">#FFECECEC</color>
     <color name="gray_item_press">#dad8d8</color>

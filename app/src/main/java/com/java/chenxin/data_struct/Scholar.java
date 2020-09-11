@@ -69,7 +69,7 @@ public class Scholar implements Serializable, Comparable {
     }
 
     public int compareTo(Object o){
-        return (_numViewed - ((Scholar) o)._numViewed);
+        return ( ((Scholar) o)._numViewed - this._numViewed);
     }
 
     public Scholar(JSONObject data){
