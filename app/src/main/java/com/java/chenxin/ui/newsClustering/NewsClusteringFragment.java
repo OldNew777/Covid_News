@@ -12,16 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.java.chenxin.R;
-import com.java.chenxin.ui.scholar.ScholarListFragment;
 import com.java.chenxin.universal.FragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsClusteringFragment extends Fragment {
-    private EventListFragment spreadFragment;
-    private EventListFragment theoryFragment;
-    private EventListFragment treatFragment;
+    private com.java.chenxin.ui.newsClustering.EventListFragment spreadFragment;
+    private com.java.chenxin.ui.newsClustering.EventListFragment theoryFragment;
+    private com.java.chenxin.ui.newsClustering.EventListFragment treatFragment;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        spreadFragment.onActivityResult(requestCode, resultCode, data);
+        theoryFragment.onActivityResult(requestCode, resultCode, data);
+        treatFragment.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Nullable
     @Override
@@ -29,9 +37,9 @@ public class NewsClusteringFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        spreadFragment = new EventListFragment("spread");
-        theoryFragment = new EventListFragment("theory");
-        treatFragment = new EventListFragment("treat");
+        spreadFragment = new com.java.chenxin.ui.newsClustering.EventListFragment("spread");
+        theoryFragment = new com.java.chenxin.ui.newsClustering.EventListFragment("theory");
+        treatFragment = new com.java.chenxin.ui.newsClustering.EventListFragment("treat");
         fragmentList.add(spreadFragment);
         fragmentList.add(theoryFragment);
         fragmentList.add(treatFragment);

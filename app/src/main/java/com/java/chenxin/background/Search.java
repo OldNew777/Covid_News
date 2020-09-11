@@ -4,6 +4,7 @@ import com.java.chenxin.data_struct.Constants;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.SearchHistory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -56,11 +57,15 @@ public class Search {
         if(isFirstTime){
             isFirstTime = false;
             List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
+//            int max = -1;
+//            for(Sear)
+            Collections.sort(list);
             if(list.size() == 0){
                 _searchHistoryNum = 0;
             }
             else{
                 _searchHistoryNum = list.get(list.size() - 1).getTimestamp();
+                System.out.println(list.get(list.size() - 1));
             }
         }
         List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
@@ -97,6 +102,7 @@ public class Search {
         if(isFirstTime){
             isFirstTime = false;
             List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
+            Collections.sort(list);
             if(list.size() == 0){
                 _searchHistoryNum = 0;
             }
