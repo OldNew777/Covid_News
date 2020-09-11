@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsClusteringFragment extends Fragment {
-    private com.java.chenxin.ui.scholar.ScholarFragment spreadFragment;
-    private com.java.chenxin.ui.scholar.ScholarFragment theoryFragment;
-    private com.java.chenxin.ui.scholar.ScholarFragment treatFragment;
+    private com.java.chenxin.ui.newsClustering.EventListFragment spreadFragment;
+    private com.java.chenxin.ui.newsClustering.EventListFragment theoryFragment;
+    private com.java.chenxin.ui.newsClustering.EventListFragment treatFragment;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -37,9 +37,9 @@ public class NewsClusteringFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_viewpager, container, false);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        spreadFragment = new com.java.chenxin.ui.scholar.ScholarFragment("spread");
-        theoryFragment = new com.java.chenxin.ui.scholar.ScholarFragment("theory");
-        treatFragment = new com.java.chenxin.ui.scholar.ScholarFragment("treat");
+        spreadFragment = new com.java.chenxin.ui.newsClustering.EventListFragment("spread");
+        theoryFragment = new com.java.chenxin.ui.newsClustering.EventListFragment("theory");
+        treatFragment = new com.java.chenxin.ui.newsClustering.EventListFragment("treat");
         fragmentList.add(spreadFragment);
         fragmentList.add(theoryFragment);
         fragmentList.add(treatFragment);

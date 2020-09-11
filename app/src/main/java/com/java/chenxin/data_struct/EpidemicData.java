@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.SimpleTimeZone;
 
-public class EpidemicData extends SugarRecord implements Serializable {
+public class EpidemicData implements Serializable {
 //    private String _outbreakDate;
     protected List<DataPerDay> _data = new ArrayList<DataPerDay>();
     protected String _outbreakDate;
