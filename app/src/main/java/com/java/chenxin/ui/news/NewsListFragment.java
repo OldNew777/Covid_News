@@ -67,7 +67,7 @@ public class NewsListFragment extends Fragment {
     }
 
     public void setType(final String type){
-        
+        this.type = type;
     }
 
     private void hideSoftInput(){
@@ -77,11 +77,15 @@ public class NewsListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null){
+        if (    (data != null) &&
+                (       (requestCode == 1 && type.equals("all")) ||
+                        (requestCode == 2 && type.equals("news")) ||
+                        (requestCode == 3 && type.equals("paper"))        )
+        ){
             searchView.setQuery(data.getStringExtra("SearchQuery"), true);
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

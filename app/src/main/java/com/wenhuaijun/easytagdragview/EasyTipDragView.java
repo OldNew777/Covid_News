@@ -75,9 +75,9 @@ public class EasyTipDragView extends RelativeLayout implements AbsTipAdapter.Dra
         addTipAdapter = new AddTipAdapter();
         //加载view
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.view_easytagdrag,this);
-        closeImg =(ImageView)view.findViewById(R.id.drag_close_img);
-        completeTv =(TextView)view.findViewById(R.id.drag_finish_tv);
-        dragDropGirdView =(DragDropGirdView)view.findViewById(R.id.tagdrag_view);
+        closeImg = (ImageView) view.findViewById(R.id.drag_close_img);
+        completeTv = (TextView) view.findViewById(R.id.drag_finish_tv);
+        dragDropGirdView = (DragDropGirdView) view.findViewById(R.id.tagdrag_view);
         dragDropGirdView.getDragDropController().addOnDragDropListener(dragTipAdapter);
 
         dragDropGirdView.setDragShadowOverlay((ImageView) view.findViewById(R.id.tile_drag_shadow_overlay));

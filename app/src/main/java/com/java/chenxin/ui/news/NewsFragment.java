@@ -34,8 +34,8 @@ public class NewsFragment extends Fragment {
     private Tip tipAll;
     private Tip tipNews;
     private Tip tipPaper;
-    private List<Tip> addedTipList = new ArrayList<>(3);
-    private List<Tip> toBeAddedTipList = new ArrayList<>(3);
+    private List<Tip> addedTipList;
+    private List<Tip> toBeAddedTipList;
 
     private Map<String, String> titleMap;
 
@@ -44,22 +44,17 @@ public class NewsFragment extends Fragment {
     private FragmentAdapter fragmentAdapter;
 
     // fragment
-    private NewsListFragment allListFragment;
-    private NewsListFragment newsListFragment;
-    private NewsListFragment paperListFragment;
+    private List<NewsListFragment> fragmentList_3 = new ArrayList<>(3);
 
     private List<String> addedList;
     private List<String> toBeAddedList;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        for (int i = 0; i < 3; ++i)
+            fragmentList.get(i).onActivityResult(requestCode, resultCode, data);
+
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1)
-            allListFragment.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2)
-            newsListFragment.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 3)
-            paperListFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setTitleList() {
@@ -70,13 +65,9 @@ public class NewsFragment extends Fragment {
 
     private void setFragmentList(){
         fragmentList.clear();
-        for (String string : addedList){
-            if (string.equals("all"))
-                fragmentList.add(allListFragment);
-            else if (string.equals("news"))
-                fragmentList.add(newsListFragment);
-            else if (string.equals("paper"))
-                fragmentList.add(paperListFragment);
+        for (int i = 0; i < addedList.size(); ++i) {
+            fragmentList_3.get(i).setType(addedList.get(i));
+            fragmentList.add(fragmentList_3.get(i));
         }
     }
 
@@ -97,9 +88,9 @@ public class NewsFragment extends Fragment {
         titleMap.put("news", getResources().getString(R.string.news));
         titleMap.put("paper", getResources().getString(R.string.paper));
 
-        allListFragment = new NewsListFragment("all");
-        newsListFragment = new NewsListFragment("news");
-        paperListFragment = new NewsListFragment("paper");
+        fragmentList_3.add(new NewsListFragment("all"));
+        fragmentList_3.add(new NewsListFragment("news"));
+        fragmentList_3.add(new NewsListFragment("paper"));
         addedList = new ArrayList<>(3);
         toBeAddedList = new ArrayList<>(3);
         addedList.add("all");
@@ -114,41 +105,12 @@ public class NewsFragment extends Fragment {
         tipNews = new SimpleTitleTip(2, "news");
         tipPaper = new SimpleTitleTip(3, "paper");
 
-        // 设置点击“确定”按钮后最终数据的回调
-        easyTipDragView.setOnCompleteCallback(new EasyTipDragView.OnCompleteCallback() {
-            @Override
-            public void onComplete(ArrayList<Tip> tips) {
-                addedTipList = easyTipDragView.getDragData();
-                toBeAddedTipList = easyTipDragView.getAddData();
-                addedList.clear();
-                toBeAddedList.clear();
-                for (Tip tip : addedTipList) {
-                    addedList.add(((SimpleTitleTip) tip).getTip());
-                }
-                for (Tip tip : toBeAddedTipList){
-                    toBeAddedList.add(((SimpleTitleTip) tip).getTip());
-                }
-
-                // TODO
-                // viewpager的页面缓存不能清除！
-                setFragmentList();
-                setTitleList();
-                fragmentAdapter.notifyDataSetChanged();
-            }
-        });
-
-        viewPager.setOffscreenPageLimit(fragmentList.size());
-        fragmentAdapter = new FragmentAdapter(
-                getChildFragmentManager(), fragmentList, titleList);
-        viewPager.setAdapter(fragmentAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-
         // 点击option，跳出EasyTipDragView
         optionImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addedTipList.clear();
-                toBeAddedTipList.clear();
+                addedTipList = new ArrayList<>(3);
+                toBeAddedTipList = new ArrayList<>(3);
                 for (String string : addedList){
                     if (string.equals("all"))
                         addedTipList.add(tipAll);
@@ -170,6 +132,39 @@ public class NewsFragment extends Fragment {
                 easyTipDragView.open();
             }
         });
+
+        // 设置点击“确定”按钮后最终数据的回调
+        easyTipDragView.setOnCompleteCallback(new EasyTipDragView.OnCompleteCallback() {
+            @Override
+            public void onComplete(ArrayList<Tip> tips) {
+                addedTipList = easyTipDragView.getDragData();
+                toBeAddedTipList = easyTipDragView.getAddData();
+                addedList.clear();
+                toBeAddedList.clear();
+                for (Tip tip : addedTipList) {
+                    addedList.add(((SimpleTitleTip) tip).getTip());
+                }
+                for (Tip tip : toBeAddedTipList){
+                    toBeAddedList.add(((SimpleTitleTip) tip).getTip());
+                }
+
+                // TODO
+                // viewpager的页面缓存不能清除！
+                setFragmentList();
+                setTitleList();
+
+//                fragmentAdapter = new FragmentAdapter(
+//                        getChildFragmentManager(), fragmentList, titleList);
+//                fragmentAdapter.notifyDataSetChanged();
+                viewPager.setAdapter(fragmentAdapter);
+            }
+        });
+
+        viewPager.setOffscreenPageLimit(fragmentList.size());
+        fragmentAdapter = new FragmentAdapter(
+                getChildFragmentManager(), fragmentList, titleList);
+        viewPager.setAdapter(fragmentAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
         return root;
     }
