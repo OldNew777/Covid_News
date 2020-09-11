@@ -23,6 +23,7 @@ import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.background.Search;
 import com.java.chenxin.data_struct.Entity;
 import com.java.chenxin.ui.data.epidemicData.EpidemicDataFragment;
+import com.java.chenxin.universal.DoubleClickCheck;
 import com.java.chenxin.universal.StringListAdapter;
 
 import java.util.ArrayList;
@@ -110,6 +111,8 @@ public class EpidemicMapFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
                 hideSoftInput();
+                if (DoubleClickCheck.isDoubleClick())
+                    return true;
                 EntityServer.getEntityData(observerEntityList, query);
                 Toast.makeText(getContext(), "正在搜索："+ query, Toast.LENGTH_SHORT).show();
                 return true;

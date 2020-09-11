@@ -24,6 +24,7 @@ import com.java.chenxin.data_struct.Entity;
 import com.java.chenxin.data_struct.NewsPiece;
 import com.java.chenxin.data_struct.Scholar;
 import com.java.chenxin.ui.news.newspiece.NewsPieceActivity;
+import com.java.chenxin.universal.DoubleClickCheck;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 //import com.java.chenxin.ui.news.RefreshMode;
 
@@ -56,8 +57,6 @@ public class ScholarFragment extends Fragment{
             public void onNext(List<Scholar> scholars) {
                 scholarList.clear();
                 scholarList.addAll(scholars);
-                System.out.println("done!");
-                System.out.println(scholars.get(0).getNameZh());
             }
 
             @Override
@@ -77,6 +76,8 @@ public class ScholarFragment extends Fragment{
         scholarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 Scholar scholar = scholarList.get(position);
                 Intent intent = new Intent(getContext(), ScholarActivity.class);
                 intent.putExtra("Scholar", scholar);

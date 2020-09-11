@@ -17,6 +17,7 @@ import com.java.chenxin.background.ClusterServer;
 import com.java.chenxin.background.NetWorkServer;
 import com.java.chenxin.data_struct.NewsPiece;
 import com.java.chenxin.ui.news.newspiece.NewsPieceActivity;
+import com.java.chenxin.universal.DoubleClickCheck;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -132,6 +133,8 @@ public class EventListFragment extends Fragment {
         news_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 String id = newsInfo.get(position).get_uid();
                 NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
             }

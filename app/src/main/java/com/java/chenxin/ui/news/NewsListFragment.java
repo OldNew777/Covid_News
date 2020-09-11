@@ -23,6 +23,7 @@ import com.java.chenxin.background.Search;
 import com.java.chenxin.data_struct.NewsList;
 import com.java.chenxin.data_struct.NewsPiece;
 import com.java.chenxin.ui.news.search.SearchActivity;
+import com.java.chenxin.universal.DoubleClickCheck;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -165,6 +166,8 @@ public class NewsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long column) {
                 searchView.clearFocus();
                 hideSoftInput();
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 String id = newsInfo.get(position).get_uid();
                 NetWorkServer.loadNewsPiece(newsDetailsObserver, id);
             }
@@ -174,18 +177,24 @@ public class NewsListFragment extends Fragment {
         searchView.findViewById(R.id.search_edit_frame).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 searchView.callOnClick();
             }
         });
         searchView.findViewById(R.id.search_src_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 searchView.callOnClick();
             }
         });
         searchView.findViewById(R.id.search_plate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 searchView.callOnClick();
             }
         });

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.java.chenxin.R;
 import com.java.chenxin.background.DataServer;
+import com.java.chenxin.universal.DoubleClickCheck;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
@@ -99,6 +100,8 @@ public class EpidemicDataFragment extends Fragment  {
         checkButton.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if (DoubleClickCheck.isDoubleClick())
+                    return;
                 String districtName, token = (String) spinnerCountry.getSelectedItem();
                 if (token.equals(getResources().getString(R.string.input_country)) || token.equals(""))
                     return;

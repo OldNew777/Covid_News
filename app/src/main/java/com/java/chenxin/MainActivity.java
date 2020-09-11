@@ -11,6 +11,7 @@ import com.java.chenxin.ui.data.DataFragment;
 import com.java.chenxin.ui.news.NewsFragment;
 import com.java.chenxin.ui.newsClustering.NewsClusteringFragment;
 import com.java.chenxin.ui.scholar.ScholarFragment;
+import com.java.chenxin.universal.DoubleClickCheck;
 import com.orm.SugarContext;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         // 建立数据库
         SugarContext.init(this);
         DataServer.initializeEpidemicData();
