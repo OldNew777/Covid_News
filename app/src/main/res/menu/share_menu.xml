@@ -6,6 +6,7 @@
         android:orderInCategory="0"
         android:enabled="true"
         android:title="@string/share"
+        android:icon="@drawable/mark"
         app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"
         app:showAsAction="always" />
 </menu>

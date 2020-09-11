@@ -51,7 +51,7 @@ public class NewsFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < fragmentList.size(); ++i)
             fragmentList.get(i).onActivityResult(requestCode, resultCode, data);
 
         super.onActivityResult(requestCode, resultCode, data);
