@@ -48,12 +48,6 @@ public class EventListAdapter extends ArrayAdapter<NewsPiece> {
         title.setText(newsPiece.getTitle());
         source.setText(newsPiece.getSource());
         data.setText(newsPiece.getDate());
-//        if (newsPiece.getIsRead()){
-//            title.setTextColor(Color.GRAY);
-//        }
-//        else{
-//            title.setTextColor(Color.BLACK);
-//        }
 
         return view;
     }

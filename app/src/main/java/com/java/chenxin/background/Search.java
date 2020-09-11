@@ -65,7 +65,7 @@ public class Search {
         }
         List<SearchHistory> list =  SearchHistory.listAll(SearchHistory.class);
         for(int i = 0; i < list.size(); i ++){
-            System.out.println(list.get(i).getSearchhistory());
+//            System.out.println(list.get(i).getSearchhistory());
         }
         List<String> vec = new ArrayList<String>();
         int tmpid = _searchHistoryNum;

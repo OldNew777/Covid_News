@@ -2,6 +2,7 @@ package com.java.chenxin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -11,6 +12,7 @@ import com.java.chenxin.ui.news.NewsFragment;
 import com.java.chenxin.ui.newsClustering.NewsClusteringFragment;
 import com.java.chenxin.ui.scholar.ScholarListFragment;
 import com.java.chenxin.ui.scholar.ScholarFragment;
+import com.java.chenxin.universal.DoubleClickCheck;
 import com.orm.SugarContext;
 
 import androidx.annotation.NonNull;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         // 建立数据库
         SugarContext.init(this);
         DataServer.initializeEpidemicData();
@@ -124,5 +127,13 @@ public class MainActivity extends AppCompatActivity {
             newsFragment.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100)
             dataFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (newsFragment.onKeyDown(keyCode, event))
+            return true;
+
+        return super.onKeyDown(keyCode, event);
     }
 }
