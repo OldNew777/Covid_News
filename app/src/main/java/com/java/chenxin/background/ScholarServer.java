@@ -14,6 +14,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -40,6 +42,25 @@ public class ScholarServer {
                     }
                 }
                 emitter.onNext(passawayList);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()) //在io执行上述操作
+                .observeOn(AndroidSchedulers.mainThread())//在UI线程执行下面操作
+                .subscribe(ob);
+    }
+    public static void getHighViewScholarList(Observer<List<Scholar>> ob){//你唯一需要调用的接口 会返给你所有学者的一个list  也需要建一个observer
+        Observable.create(new ObservableOnSubscribe<List<Scholar>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Scholar>> emitter) throws Exception {
+                List<Scholar> list = ScholarServer.getScholarList();
+                Collections.sort(list);
+                if(list.size() != 0){
+                    System.out.println(list.get(0).get_numViewed());
+                    emitter.onNext(list.subList(0, Constants.PAGESIZE));
+                }
+                else{
+                    emitter.onNext(new ArrayList<Scholar>());
+                }
                 emitter.onComplete();
             }
         }).subscribeOn(Schedulers.io()) //在io执行上述操作
