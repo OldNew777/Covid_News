@@ -45,13 +45,22 @@
             android:layout_below="@+id/scholar_name_zh">
 
         </ImageView>
+        <TextView
+            android:id="@+id/passaway"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_viewer_sa"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
 
+            android:textSize="12sp"/>
 
         <LinearLayout
             android:id="@+id/source_date_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/image_viewer_sa"
+            android:layout_below="@id/passaway"
             android:orientation="vertical">
 
             <TextView

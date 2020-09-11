@@ -45,6 +45,7 @@ public class ClusterServer {
     }
 
     public static void getCluster(Observer<List<NewsPiece>> ob, final String type, final Context context){//第一次获得聚类事件列表，type是聚类的种类，contxt是当前上下文
+        System.out.println(type);
         _pageNum = 0;
         _setTypeNum(type);
         refreshCluster(ob, type, context);

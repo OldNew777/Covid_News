@@ -88,7 +88,8 @@ def kMeans(dataSet, k, distMeas=gen_sim, createCent=randCent):
     m = np.shape(dataSet)[0]
     clusterAssment = np.mat(np.zeros((m,2)))#create mat to assign data points
                                       #to a centroid, also holds SE of each point
-    centroids = createCent(dataSet, k)
+    # centroids = createCent(dataSet, k)
+    centroids = createCent
     clusterChanged = True
     counter = 0
     while counter <= 50:
@@ -117,22 +118,29 @@ file0 = open("0.txt", mode='w', encoding="utf-8")
 file1 = open("1.txt", mode='w', encoding="utf-8")
 file2 = open("2.txt", mode='w', encoding="utf-8")
 names, tfdif, wordSet = get_all_vector("./txt", "stopword.txt")
-centroids, clusterAssment = kMeans(tfdif, K)
+cent = np.vstack((tfdif[105,:], tfdif[47, :], tfdif[18,:]))
+centroids, clusterAssment = kMeans(tfdif, K, createCent=cent)
 # print(clusterAssment[:,0])
 wordCount0 = np.zeros(np.size(tfdif, 1))
 wordCount1 = np.zeros(np.size(tfdif, 1))
 wordCount2 = np.zeros(np.size(tfdif, 1))
+wordCount3 = np.zeros(np.size(tfdif, 1))
 
 rownum = np.size(clusterAssment, 0)
+print(names)
 for i in range(0, rownum):
+    print(clusterAssment[i,0])
     if clusterAssment[i,0] == 0. :
+        file0.write(names[i].split('.')[1].split('\\')[1] + "\n")
         wordCount0 += tfdif[i,:]
     if clusterAssment[i,0] == 1. :
+        file1.write(names[i].split('.')[1].split('\\')[1] + "\n")
         wordCount1 += tfdif[i,:]
     if clusterAssment[i,0] == 2. :
+        file2.write(names[i].split('.')[1].split('\\')[1] + "\n")
         wordCount2 += tfdif[i,:]
 
-wordFile = open("word1.txt", mode='w', encoding='utf-8')
+wordFile = open("word2.txt", mode='w', encoding='utf-8')
 
 wordFile.write("class 0:\n")
 for i in range(0, 15):
@@ -151,6 +159,7 @@ for i in range(0, 15):
     re = np.where(wordCount2 == np.max(wordCount2))
     wordFile.write(wordSet[re[0][0]] + " " + str(wordCount2[re[0][0]]) + '\n')
     wordCount2[re[0][0]] = 0.0
+wordFile.write("class 3:\n")
 
 file0.close()
 file1.close()
