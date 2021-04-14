@@ -22,10 +22,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    // 底部导航栏
-    private BottomNavigationView navView;
-    // fragment管理器
-    private FragmentManager fm;
     // 4个fragment
     private NewsFragment newsFragment;
     private DataFragment dataFragment;
@@ -33,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private NewsClusteringFragment newsClusteringFragment;
     // 正在使用的fragment
     private Fragment activeFragment = null;
+
+    // 底部导航栏
+    private BottomNavigationView navView;
+    // fragment管理器
+    private FragmentManager fm;
     // 底部导航栏的listener
     private BottomNavigationView.OnNavigationItemSelectedListener bottomNaviSelectedListener;
 

@@ -12,7 +12,7 @@
 
 ##### 前端部分（陈新完成）
 
-![image-20200911235354729](C:\Users\12437\AppData\Roaming\Typora\typora-user-images\image-20200911235354729.png)
+![components](./pictures/components.png)
 
 整体框架如上图所示，还有触发的**search页面、详情显示页面、绘制图表页面等等**没有在图中表现出来，但大致逻辑是没错的。
 
